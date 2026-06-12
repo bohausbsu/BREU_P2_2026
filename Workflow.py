@@ -56,7 +56,7 @@ class Workflow:
         if len(self._tasks) > 0:
             raise Exception("Workflow already has tasks.")
         else:
-            self._tasks = list(Task.TaskHead(self.WORKFLOW_ID))
+            self._tasks.append(Task.TaskHead(self.WORKFLOW_ID))
             self._CURR_TIDS = list(self._tasks[0].taskID)
 
     def __str__(self):
