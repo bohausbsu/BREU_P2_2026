@@ -1,0 +1,9 @@
+[project]
+name = "spectra"
+version = "0.1.0"
+description = "BREU2026 Blockchain for Decentralized Science Research Project; A granular provenance recording tool for complex machine learning model training workflows."
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "pytest>=9.0.3",
+]
