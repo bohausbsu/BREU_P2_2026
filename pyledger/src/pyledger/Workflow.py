@@ -19,7 +19,7 @@ class Workflow:
         if not Workflow.AVAILABLE_WIDS:
             raise Exception("No more available workflow IDs.")
         else:
-            self.WORKFLOW_ID: Final = Workflow._getUniqWorkflowID()
+            self.WORKFLOW_ID: Final = self._getUniqWorkflowID()
             self._tasks = []
             self._CURR_TIDS = []
             self._initializeTaskList()
@@ -30,13 +30,13 @@ class Workflow:
         workflowLen = random.randint(MIN_LEN_WORKFLOW, MAX_LEN_WORKFLOW)
         for _ in range(workflowLen):
             taskID = len(workflow.tasks)
-            dataInput = tasks[-1]
+            dataInput = workflow._tasks[-1]
             newTask = Task.Task(workflow.WORKFLOW_ID, taskID, dataInput)
             workflow.addTask(newTask)
         return workflow
 
     def addTask(self, task: Task.Task):
-        if (task.taskID in self.CURR_TIDS and task.workflowID == self.WORKFLOW_ID):
+        if (task.taskID in self._CURR_TIDS and task.workflowID == self.WORKFLOW_ID):
             raise Exception(f"Task ID {task.taskID} already exists in workflow {self.WORKFLOW_ID}.")
         self.tasks.append(task)
 
@@ -44,7 +44,7 @@ class Workflow:
     def tasks(self):
         return self._tasks
     
-    def _getUniqWorkflowID():
+    def _getUniqWorkflowID(self):
         if not Workflow.AVAILABLE_WIDS:
             raise Exception("No more available workflow IDs.")
         else:

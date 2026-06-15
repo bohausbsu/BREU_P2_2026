@@ -2,6 +2,13 @@ version = 1
 revision = 3
 requires-python = ">=3.14"
 
+[manifest]
+members = [
+    "pyledger",
+    "spectra",
+    "test",
+]
+
 [[package]]
 name = "colorama"
 version = "0.4.6"
@@ -369,6 +376,11 @@ wheels = [
 ]
 
 [[package]]
+name = "pyledger"
+version = "0.1.0"
+source = { editable = "pyledger" }
+
+[[package]]
 name = "pytest"
 version = "9.0.3"
 source = { registry = "https://pypi.org/simple" }
@@ -399,14 +411,18 @@ version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "numpy" },
+    { name = "pyledger" },
     { name = "pytest" },
+    { name = "test" },
     { name = "torch" },
 ]
 
 [package.metadata]
 requires-dist = [
     { name = "numpy", specifier = ">=2.4.6" },
+    { name = "pyledger", editable = "pyledger" },
     { name = "pytest", specifier = ">=9.0.3" },
+    { name = "test", editable = "test" },
     { name = "torch", specifier = ">=2.12.0" },
 ]
 
@@ -421,6 +437,17 @@ sdist = { url = "https://files.pythonhosted.org/packages/83/d3/803453b36afefb7c2
 wheels = [
     { url = "https://files.pythonhosted.org/packages/a2/09/77d55d46fd61b4a135c444fc97158ef34a095e5681d0a6c10b75bf356191/sympy-1.14.0-py3-none-any.whl", hash = "sha256:e091cc3e99d2141a0ba2847328f5479b05d94a6635cb96148ccb3f34671bd8f5", size = 6299353, upload-time = "2025-04-27T18:04:59.103Z" },
 ]
+
+[[package]]
+name = "test"
+version = "0.1.0"
+source = { editable = "test" }
+dependencies = [
+    { name = "pyledger" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "pyledger", editable = "pyledger" }]
 
 [[package]]
 name = "torch"
