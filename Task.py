@@ -1,6 +1,7 @@
 import random
 
 import Workflow
+from ProvenanceRecord import Entry
 
 # Represents a single task in a workflow.
 # Has unique taskID within the workflow,
@@ -10,7 +11,7 @@ import Workflow
 # of its workflowID and taskID.
 class Task:
 
-    def __init__(self, workflowID, taskID, dataInput: list[Task]):
+    def __init__(self, workflowID, taskID, dataInput: list[Task] | Task | None):
         self._workflowID = workflowID
         self._taskID = taskID
         self._dataInput = []
@@ -31,18 +32,9 @@ class Task:
     def addDataInput(self, inputTask):
         self._dataInput.append(inputTask)
 
+    def compute(self, dataProductsIn: set[Entry]):
 
-def randLinearTaskGen(workflow: Workflow.Workflow):
-    wID = workflow.WORKFLOW_ID
-    tasks = workflow.tasks
-    taskID = len(tasks)
 
-    if taskID == 0: # if 0, this is head task
-        task = TaskHead(wID)
-    else:
-        task = Task(wID, taskID, tasks[-1]) # link to previous task as parent
-
-    yield task
 
         
 class TaskHead(Task):
@@ -50,3 +42,5 @@ class TaskHead(Task):
     def __init__(self, workflowID):
         self._workflowID = workflowID
         self._taskID = 0  
+
+    

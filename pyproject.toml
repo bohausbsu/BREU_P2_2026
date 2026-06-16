@@ -1,23 +1,16 @@
 [project]
-name = "spectra"
+name = "test"
 version = "0.1.0"
-description = "BREU2026 Blockchain for Decentralized Science Research Project; A granular provenance recording tool for complex machine learning model training workflows."
+description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
-    "numpy>=2.4.6",
-    "pytest>=9.0.3",
-    "torch>=2.12.0",
-    "test",
-    "pyledger",
+    "mermaid-py>=0.8.4",
 ]
 
-[tool.uv.sources]
-pyledger = { workspace = true }
-test = { workspace = true }
-
-[tool.uv.workspace]
-members = [
-    "test",
-    "pyledger",
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+    "ipytest>=0.14.2",
+    "pytest>=9.1.0",
 ]
