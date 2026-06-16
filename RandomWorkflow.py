@@ -1,4 +1,4 @@
-from Task import Task, TaskHead
+from Tasks import Task, TaskHead
 import Workflow
 import random
 from typing import Final

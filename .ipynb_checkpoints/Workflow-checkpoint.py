@@ -1,10 +1,9 @@
 
 
 from typing import Final
-import Tasks
+from Tasks import Task, TaskHead
 import random
-# Task = Tasks.Task
-# TaskHead = Tasks.TaskHead
+
 
 MAX_WORFKLOWS: Final = 100
 MIN_LEN_WORKFLOW: Final = 2
@@ -25,7 +24,7 @@ class Workflow:
             raise Exception("No more available workflow IDs.")
         else:
             self.WORKFLOW_ID: Final = self._getUniqWorkflowID()
-            self._tasks: list[Tasks.Task] = []
+            self._tasks: list[Task] = []
             self._CURR_TIDS: list[int] = []
             self._initializeTaskList()
 
@@ -36,7 +35,7 @@ class Workflow:
         for _ in range(workflowLen):
             taskID = len(workflow.tasks)
             dataInput = workflow._tasks[-1]
-            newTask = Tasks.Task(workflow.WORKFLOW_ID, taskID, dataInput)
+            newTask = Task(workflow.WORKFLOW_ID, taskID, dataInput)
             workflow.addTask(newTask)
         return workflow
 
@@ -66,29 +65,22 @@ class Workflow:
             target.addDataInput(inpt)
         
         return workflow
-    
-    @property
-    def headTask(self):
-        return self._tasks[0]
                 
-    @property
-    def tailTask(self):
-        return self._tasks[-1]
 
 
-    def addTask(self, task: Tasks.Task | int):
+    def addTask(self, task: Task | int):
         if (self.hasTask(task)):
-            raise Exception(f"Task ID {task.taskID if isinstance(task, Tasks.Task) else task} already exists in workflow {self.WORKFLOW_ID}.")
+            raise Exception(f"Task ID {task.taskID if isinstance(task, Task) else task} already exists in workflow {self.WORKFLOW_ID}.")
         else:
             if isinstance(task, int):
-                task = Tasks.Task(self.WORKFLOW_ID, task, None)
+                task = Task(self.WORKFLOW_ID, task, None)
             self._tasks.append(task)
     
 
 
 
-    def hasTask(self, task: Tasks.Task | int):
-        if isinstance(task, Tasks.Task):
+    def hasTask(self, task: Task | int):
+        if isinstance(task, Task):
             tId = task.taskID
         else:
             tId = task
@@ -108,7 +100,7 @@ class Workflow:
         if len(self._tasks) > 0:
             raise Exception("Workflow already has tasks.")
         else:
-            self._tasks.append(Tasks.TaskHead(self.WORKFLOW_ID))
+            self._tasks.append(TaskHead(self.WORKFLOW_ID))
             self._CURR_TIDS.append(self._tasks[0].taskID)
 
     def __str__(self):
@@ -126,10 +118,9 @@ class Workflow:
 
         for task in self.tasks:
             # now draw all dependencies
-            if task.inputTaskUUIDs is not None:
-                for inpt in task.inputTaskUUIDs:
+            if task.dataInput is not None:
+                for inpt in task.dataInput:
                     if inpt is not None:
-                        repr += f"\t{task.uuID[1]} --> {inpt[1]}\n"
+                        repr += f"\t{task.taskID} --> {inpt.taskID}\n"
         return repr
-    
 
