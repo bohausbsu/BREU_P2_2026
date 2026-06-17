@@ -79,8 +79,6 @@ class _DataChain:
         self._DATA_ID: Final = dataID
         self._WORKFLOWS: Final = dict()
 
-
-
     def runComputes(self, taskUUID, dataSourceID, db: Database = GLOBAL_DB, wb: Workbase = GLOBAL_WB):
         from Tasks import TaskHead
 

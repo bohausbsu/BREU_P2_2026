@@ -11,4 +11,7 @@ def test_linear_dataflow():
     rawSrc = "raw data"
     wf = createLinearWorkflow(3)
     src = Data.GLOBAL_DB.addSource(rawSrc)
-    
+    Data.GLOBAL_WB.addWorkflow(wf)
+    chain = Data.GLOBAL_DB.getDataChain(src)
+    return chain
+
