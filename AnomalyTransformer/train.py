@@ -144,9 +144,7 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    na_vals = [args.na_values] if args.na_values is not None else None
-    data, feature_names = load_csv(args.csv, skip_cols=2, has_header=True,
-                                   sep=args.sep, decimal=args.decimal, na_values=na_vals)
+    data, feature_names = load_csv(args.csv, skip_cols=2, has_header=True)
     if not args.no_labels:
         gt_labels = data[:, -1].astype(int)
         data = data[:, :-1]
