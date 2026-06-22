@@ -22,19 +22,26 @@ def get_dataloader(data, window_size=100, batch_size=32, shuffle=True):
     dataset = SlidingWindowDataset(data, window_size)
     return DataLoader(dataset, batch_size=batch_size, shuffle=shuffle)
 
-def load_csv(path, skip_cols=1, has_header=True):
+def load_csv(path, skip_cols=1, has_header=True, sep=",", decimal=".", na_values=None):
     """Load a CSV, dropping the first `skip_cols` columns (e.g. a timestamp/index).
-    If has_header is False (e.g. raw headerless data files), every row is treated as
-    data and columns are auto-named. Returns (data, column_names)."""
-    if has_header:
-        with open(path) as f:
-            header = f.readline().strip().split(",")
-        raw = np.genfromtxt(path, delimiter=",", skip_header=1, dtype=np.float32)
-        columns = [c.strip('"') for c in header[skip_cols:]]
-    else:
-        raw = np.genfromtxt(path, delimiter=",", dtype=np.float32)
-        columns = [f"feature_{i}" for i in range(raw.shape[1] - skip_cols)]
-    return raw[:, skip_cols:], columns
+    sep/decimal handle non-standard formats (e.g. semicolon-delimited European CSVs).
+    na_values: extra values to treat as NaN (e.g. [-200] for UCI Air Quality).
+    Returns (data, column_names) with NaN rows dropped."""
+    df = pd.read_csv(
+        path,
+        sep=sep,
+        decimal=decimal,
+        na_values=na_values,
+        header=0 if has_header else None,
+        engine="python",
+    )
+    df = df.dropna(axis=1, how="all")  # remove fully-empty trailing columns (e.g. trailing ;;)
+    if not has_header:
+        df.columns = [f"feature_{i}" for i in range(len(df.columns))]
+    columns = list(df.columns[skip_cols:])
+    df = df.iloc[:, skip_cols:].apply(pd.to_numeric, errors="coerce")
+    df = df.dropna()
+    return df.to_numpy(dtype=np.float32), columns
 
 def split_data(data, train_frac=0.7, val_frac=0.85):
     """Split into train/val/test by index. val_frac is the cumulative fraction marking the end of val."""

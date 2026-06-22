@@ -134,6 +134,8 @@ def parse_args():
     parser.add_argument("--r", type=float, default=0.01)
     parser.add_argument("--out", default="anomaly_plot.png")
     parser.add_argument("--model-out", default="anomaly_transformer.pt")
+    parser.add_argument("--load-model", default=None, help="Path to a saved .pt file to load instead of training")
+    parser.add_argument("--no-labels", action="store_true", help="CSV has no ground-truth label column; skip precision/recall evaluation")
     return parser.parse_args()
 
 
@@ -142,10 +144,15 @@ if __name__ == "__main__":
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    data, feature_names = load_csv(args.csv, skip_cols=3, has_header=True)
-    gt_labels = data[:, -1].astype(int)
-    data = data[:, :-1]
-    feature_names = feature_names[:-1]
+    na_vals = [args.na_values] if args.na_values is not None else None
+    data, feature_names = load_csv(args.csv, skip_cols=2, has_header=True,
+                                   sep=args.sep, decimal=args.decimal, na_values=na_vals)
+    if not args.no_labels:
+        gt_labels = data[:, -1].astype(int)
+        data = data[:, :-1]
+        feature_names = feature_names[:-1]
+    else:
+        gt_labels = None
     print(f"Loaded {args.csv}: {data.shape[0]} rows, features={feature_names}")
 
     train_data, val_data, test_data = split_data(data, args.train_frac)
@@ -154,9 +161,13 @@ if __name__ == "__main__":
     train_loader, val_loader, test_loader = make_loaders(train_data, val_data, test_data, args.window_size, args.batch_size)
 
     model = AnomalyTransformer(d_input=data.shape[1], d_model=args.d_model, n_heads=args.n_heads, d_ff=args.d_ff, n_layers=args.n_layers).to(device)
-    train(model, train_loader, val_loader, n_epochs=args.n_epochs, lam=args.lam, lr=args.lr, patience=args.patience, device=device)
-    torch.save(model.state_dict(), args.model_out)
-    print(f"Saved model weights to {args.model_out}")
+    if args.load_model:
+        model.load_state_dict(torch.load(args.load_model, map_location=device))
+        print(f"Loaded model weights from {args.load_model}")
+    else:
+        train(model, train_loader, val_loader, n_epochs=args.n_epochs, lam=args.lam, lr=args.lr, patience=args.patience, device=device)
+        torch.save(model.state_dict(), args.model_out)
+        print(f"Saved model weights to {args.model_out}")
 
     val_scores = get_window_scores(model, val_loader, device=device)
     val_timeline = windows_to_timeline(val_scores, len(val_data))
@@ -168,12 +179,13 @@ if __name__ == "__main__":
     flagged = (timeline_scores > threshold).numpy()
     print(f"Flagged {flagged.sum()} / {len(flagged)} timesteps as anomalous")
 
-    test_labels = gt_labels[int(len(gt_labels) * 0.85):]
-    tp = int((flagged & (test_labels == 1)).sum())
-    fp = int((flagged & (test_labels == 0)).sum())
-    fn = int((~flagged & (test_labels == 1)).sum())
-    precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
-    recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
-    print(f"Precision: {precision:.4f}  Recall: {recall:.4f}")
+    if gt_labels is not None:
+        test_labels = gt_labels[int(len(gt_labels) * 0.85):]
+        tp = int((flagged & (test_labels == 1)).sum())
+        fp = int((flagged & (test_labels == 0)).sum())
+        fn = int((~flagged & (test_labels == 1)).sum())
+        precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
+        recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
+        print(f"Precision: {precision:.4f}  Recall: {recall:.4f}")
 
     plot_anomalies(raw_test_data, flagged, feature_names, args.out)

@@ -71,17 +71,33 @@ class AnomalyTransformerBlock(nn.Module):
         return x, P, S
 
 
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, max_len=5000, dropout=0.1):
+        super().__init__()
+        self.drop = nn.Dropout(dropout)
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        self.register_buffer('pe', pe.unsqueeze(0))  # (1, max_len, d_model)
+
+    def forward(self, x):
+        return self.drop(x + self.pe[:, :x.size(1)])
+
+
 class AnomalyTransformer(nn.Module):
     def __init__(self, d_input, d_model, n_heads, d_ff, n_layers, dropout=0.1):
         super().__init__()
         self.embedding = nn.Linear(d_input, d_model)
+        self.pos_enc = PositionalEncoding(d_model, dropout=dropout)
         self.blocks = nn.ModuleList([
             AnomalyTransformerBlock(d_model, n_heads, d_ff, dropout) for _ in range(n_layers)
         ])
         self.reconstruction = nn.Linear(d_model, d_input)
 
     def forward(self, x):
-        x = self.embedding(x)
+        x = self.pos_enc(self.embedding(x))
         P_list, S_list = [], []
         for block in self.blocks:
             x, P, S = block(x)

@@ -35,6 +35,10 @@ if __name__ == "__main__":
     args = parse_args()
 
     df = load_dataset(args.csv)
+    if "median_house_value" in df.columns:
+        capped = (df["median_house_value"] == 500_000).sum()
+        df = df[df["median_house_value"] < 500_000]
+        print(f"Dropped {capped} capped rows (median_house_value == 500000)")
     print(f"Loaded {len(df)} rows, {df.shape[1]} features")
 
     labels, X = run_dbscan(df, features=args.features, eps=args.eps, min_samples=args.min_samples)

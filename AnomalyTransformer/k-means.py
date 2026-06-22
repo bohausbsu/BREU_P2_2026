@@ -39,6 +39,10 @@ if __name__ == "__main__":
     args = parse_args()
 
     df = load_dataset(args.csv)
+    if "median_house_value" in df.columns:
+        capped = (df["median_house_value"] == 500_000).sum()
+        df = df[df["median_house_value"] < 500_000]
+        print(f"Dropped {capped} capped rows (median_house_value == 500000)")
     print(f"Loaded {len(df)} rows, {df.shape[1]} features")
 
     labels, kmeans, X = run_kmeans(df, features=args.features, n_clusters=args.n_clusters, random_state=args.random_state)
