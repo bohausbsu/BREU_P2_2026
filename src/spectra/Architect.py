@@ -8,3 +8,13 @@ This is useful, as requiring all task objects to be in memory will quickly becom
 
 """
 
+import src.spectra.Workbase as wb
+
+class WorkbaseArchitect:
+    """
+    The WorkbaseArchitect assists in the CRUD cycle of tasks. It attaches to a workbase and allows simple task reference to other tasks within the same reference workbase.
+    """
+
+    def __init__(self, workbase: wb.Workbase):
+        
+        pass
