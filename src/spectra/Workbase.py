@@ -28,8 +28,11 @@ class Workbase:
         adds a task to the workbase under the defined workflow. The task's input tasks are checked for existence within the workbase. A warning is printed if the input task does not yet exist.
         """
         workflowID = task.workflowID
+        taskIdCheck = task.taskID
         if workflowID not in self._WORKBASE:
             raise Exception(f"Workflow {workflowID} doesn't exist in workbase")
+        if taskIdCheck in self._WORKBASE[workflowID]:
+            raise Exception(f"Task already exists within workbase")
         
         for inputUUID in task.inputTaskUUIDs:
             inWID, inTID = inputUUID
