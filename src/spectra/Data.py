@@ -36,7 +36,7 @@ class Database:
 GLOBAL_DB: Final = Database()
 
 class Workbase:
-    import Workflow
+    import src.spectra.Workflow as Workflow
 
     def __init__(self):
         self._WORKBASE = dict()
@@ -80,7 +80,7 @@ class _DataChain:
         self._WORKFLOWS: Final = dict()
 
     def runComputes(self, taskUUID, dataSourceID, db: Database = GLOBAL_DB, wb: Workbase = GLOBAL_WB):
-        from Tasks import TaskHead
+        from src.spectra.Tasks import TaskHead
 
         wID, tID = taskUUID
         
@@ -126,7 +126,7 @@ class _DataChain:
             return None
         
     def __contains__(self, item):
-        import Tasks
+        import src.spectra.Tasks as Tasks
         taskUUID: tuple[int, int]
         if isinstance(item, Tasks.Task):
             taskUUID = item.uuID

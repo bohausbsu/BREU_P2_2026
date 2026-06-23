@@ -1,9 +1,9 @@
 import random
-import Workflow
-import Data
+import src.spectra.Workflow as Workflow
+import src.spectra.Data as Data
 from typing import Final
 
-from ProvenanceRecord import Entry
+from src.spectra.ProvenanceRecord import Entry
 
 # Represents a single task in a workflow.
 # Has unique taskID within the workflow,

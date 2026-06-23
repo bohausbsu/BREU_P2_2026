@@ -1,4 +1,4 @@
-import Tasks
+import src.spectra.Tasks as Tasks
 
 # Task Section
 
@@ -28,7 +28,7 @@ def test_task_chaining():
 
 
 # Workflow Section
-import Workflow
+import src.spectra.Workflow as Workflow
 
 # Proven methods
 
