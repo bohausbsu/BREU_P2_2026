@@ -5,6 +5,9 @@ class Workbase:
     """
     This class defines a workbase object-- a database specializing in storing workflow design. It holds no actual instantiated workflows (i.e. provenance records).
     Rather, it maintains a record of defined tasks and workflows in order to provide referencing capability for other tasks and workflows. 
+    TODO: 
+        - port and refactor relevant code from Data.py's Workbase class, then deprecate that one
+        - establish a singleton to serve as the central workbase-- i.e. the global workbase
     """
 
     def __init__(self):
