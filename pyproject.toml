@@ -1,0 +1,16 @@
+[project]
+name = "spectra"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "mermaid-py>=0.8.4",
+]
+
+[dependency-groups]
+dev = [
+    "ipykernel>=7.3.0",
+    "ipytest>=0.14.2",
+    "pytest>=9.1.0",
+]
