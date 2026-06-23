@@ -40,7 +40,7 @@ class Task:
         
         # simple passthrough for now
         memory = []
-        for (var, val) in variableDict:
+        for var, val in variableDict.items():
             memory.append((var, val))
         return memory
         # # queries from db for available data derived from specified raws

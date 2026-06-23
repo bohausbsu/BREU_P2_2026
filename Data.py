@@ -90,7 +90,7 @@ class _DataChain:
             self._WORKFLOWS[wID] = dict()
             wDB = self._WORKFLOWS[wID]
         
-        tDB = self._WORKFLOWS.get(tID, None)
+        tDB = wDB.get(tID, None)
         if tDB is None:
             wDB[tID] = deque() # better time access for LIFO access
             tDB = wDB[tID]
@@ -121,8 +121,8 @@ class _DataChain:
         try:
             wDB = self._WORKFLOWS[wID]
             tDB = wDB[tID]
-            return tDB.peek()
-        except NameError:
+            return tDB[-1]
+        except KeyError:
             return None
         
     def __contains__(self, item):
