@@ -1,9 +1,9 @@
 import random
 import src.spectra.Workflow as Workflow
-import src.spectra.Data as Data
+import deprecated.spectra.Data as Data
 from typing import Final
 
-from src.spectra.ProvenanceRecord import Entry
+from deprecated.spectra.ProvenanceRecord import Entry
 
 class Task:
     """

@@ -1,4 +1,4 @@
-import src.spectra.Data as Data
+import deprecated.spectra.Data as Data
 from tests.test_workflow import createLinearWorkflow
 
 def test_db_global_init():

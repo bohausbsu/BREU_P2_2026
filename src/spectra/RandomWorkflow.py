@@ -1,5 +1,5 @@
 from src.spectra.Tasks import Task, TaskHead
-import src.spectra.Workflow as Workflow
+import spectra.Workflow as Workflow
 import random
 from typing import Final
 
