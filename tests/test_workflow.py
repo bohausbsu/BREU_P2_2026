@@ -17,14 +17,14 @@ def test_task_creation():
     task = createTask(wID, tID, None)
     assert task.workflowID == wID
     assert task.taskID == tID
-    assert task.inputTaskUUIDs == []
+    assert task.inputTaskLocators == []
 
 def test_task_chaining():
     task1 = createTask(1, 1, None)
     task2 = createNextTask(task1)
     assert task2.workflowID == task1.workflowID
     assert task2.taskID == task1.taskID + 1
-    assert task2.inputTaskUUIDs == [task1.uuID]
+    assert task2.inputTaskLocators == [task1.locator]
 
 
 # Workflow Section
@@ -60,10 +60,10 @@ def test_linear_workflow():
             task = next(tasks)
             
             # only one data input
-            assert len(task.inputTaskUUIDs) == 1
+            assert len(task.inputTaskLocators) == 1
 
             # ensure prev lead to this one
-            assert prev.uuID in task.inputTaskUUIDs
+            assert prev.locator in task.inputTaskLocators
 
             prev = task
         except StopIteration:
@@ -93,26 +93,26 @@ def test_tuple_workflow():
 
     # t0
     assert t0 == workflow.headTask
-    assert t0.inputTaskUUIDs == []
+    assert t0.inputTaskLocators == []
 
     #t1
-    assert t0.uuID in t1.inputTaskUUIDs
-    assert len(t1.inputTaskUUIDs) == 1
+    assert t0.locator in t1.inputTaskLocators
+    assert len(t1.inputTaskLocators) == 1
 
     #t2
-    assert t1.uuID in t2.inputTaskUUIDs
-    assert t0.uuID in t2.inputTaskUUIDs
-    assert len(t2.inputTaskUUIDs) == 2
+    assert t1.locator in t2.inputTaskLocators
+    assert t0.locator in t2.inputTaskLocators
+    assert len(t2.inputTaskLocators) == 2
 
     #t3
-    assert t2.uuID in t3.inputTaskUUIDs
-    assert len(t3.inputTaskUUIDs) == 1
+    assert t2.locator in t3.inputTaskLocators
+    assert len(t3.inputTaskLocators) == 1
 
     #t4
-    assert t3.uuID in t4.inputTaskUUIDs
-    assert len(t4.inputTaskUUIDs) == 1
+    assert t3.locator in t4.inputTaskLocators
+    assert len(t4.inputTaskLocators) == 1
     
     #t5
-    assert t4.uuID in t5.inputTaskUUIDs
-    assert t1.uuID in t5.inputTaskUUIDs
-    assert len(t5.inputTaskUUIDs) == 2
+    assert t4.locator in t5.inputTaskLocators
+    assert t1.locator in t5.inputTaskLocators
+    assert len(t5.inputTaskLocators) == 2

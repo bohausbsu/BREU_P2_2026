@@ -13,7 +13,8 @@ The Controllers module defines controllers to interact with the various componen
 
 # """
 
-import src.spectra.Workbase as wb
+import src.spectra.Workbase as Workbase
+from typing import Final
 
 class WorkbaseController:
     """
@@ -27,7 +28,21 @@ class WorkbaseController:
         - add unit tests in the test directory relating to the workbase architect
     """
 
-    def __init__(self, workbase: wb.Workbase):
-        
-        pass
+    def __init__(self):
+        self._WB: Final = Workbase.GLOBAL_WB
+
+    def allocateWorkflowID(self, workflowID):
+        self._WB.addWorkflow(workflowID)
+
+    def addTask(self, task):
+        self._WB.addTask(task)
+    
+    def _getVarDict(self, tasks: list[tuple]) -> dict:
+        vars = dict()
+        for task in tasks:
+            t = self._WB.getTask(task)
+            key = t.locator
+            vars[key] = None
+        return vars
+
 

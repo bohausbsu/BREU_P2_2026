@@ -19,10 +19,10 @@ class Task:
         # locator fields
         self.workflowID: Final = workflowID
         self.taskID: Final = taskID
-        self.uuID: Final = (workflowID, taskID)
+        self.locator: Final = (workflowID, taskID)
         
         # data processing fields
-        self.inputTaskUUIDs: Final = []
+        self.inputTaskLocators: Final = []
         # self.inputTaskData: Final = dict()
         
         # parsing data in
@@ -63,7 +63,7 @@ class Task:
         
         # get prereq tasks
         tasks = []
-        for taskUUID in self.inputTaskUUIDs:
+        for taskUUID in self.inputTaskLocators:
             tasks.append(workbase.getTask(taskUUID))
 
         # ensure data values exist in specified DB
@@ -76,26 +76,26 @@ class Task:
 
     def __eq__(self, other):
         if isinstance(other, Task):
-            return self.uuID == other.uuID
+            return self.locator == other.locator
         elif isinstance(other, tuple) and len(other) == 2:
-            return self.uuID == other
+            return self.locator == other
         else:
             return False
 
     def _addTaskInputs(self, src: Task | list[Task] | tuple[int, int] | list[tuple[int, int]]):
         uuids = []
         if isinstance(src, Task):
-            uuids.append(src.uuID)
+            uuids.append(src.locator)
         elif isinstance(src, tuple):
             if len(src) == 2 and all(isinstance(e, int) for e in src):
                 uuids.append(src)
         elif isinstance(src, list):
             for e in src:
                 if isinstance(e, Task):
-                    uuids.append(e.uuID)
+                    uuids.append(e.locator)
                 elif isinstance(e, tuple) and len(src) == 2 and all(isinstance(i, int) for i in e):
                     uuids.append(e)
-        self.inputTaskUUIDs.extend(uuids)
+        self.inputTaskLocators.extend(uuids)
                     
         # if isinstance(src, tuple) or (isinstance(src, list) and all(isinstance(item, tuple) for item in src)):
         #     # adds from tuples

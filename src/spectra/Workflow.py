@@ -126,10 +126,10 @@ class Workflow:
 
         for task in self.tasks:
             # now draw all dependencies
-            if task.inputTaskUUIDs is not None:
-                for inpt in task.inputTaskUUIDs:
+            if task.inputTaskLocators is not None:
+                for inpt in task.inputTaskLocators:
                     if inpt is not None:
-                        repr += f"\t{task.uuID[1]} --> {inpt[1]}\n"
+                        repr += f"\t{task.locator[1]} --> {inpt[1]}\n"
         return repr
     
 

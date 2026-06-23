@@ -57,7 +57,7 @@ class Workbase:
         # populate subdict with tasks
         wDict = self._WORKBASE[wID]
         for task in workflow.tasks:
-            wDict[task.uuID] = task
+            wDict[task.locator] = task
 
 
     def getTask(self, taskUUID: tuple[int, int], db: Database = GLOBAL_DB):
@@ -129,7 +129,7 @@ class _DataChain:
         import src.spectra.Tasks as Tasks
         taskUUID: tuple[int, int]
         if isinstance(item, Tasks.Task):
-            taskUUID = item.uuID
+            taskUUID = item.locator
         elif isinstance(item, tuple) and len(item) == 2 and all(isinstance(e, int) for e in item):
             taskUUID = item
         else:

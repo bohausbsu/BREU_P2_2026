@@ -31,14 +31,14 @@ class Workbase:
         if workflowID not in self._WORKBASE:
             raise Exception(f"Workflow {workflowID} doesn't exist in workbase")
         
-        for inputUUID in task.inputTaskUUIDs:
+        for inputUUID in task.inputTaskLocators:
             inWID, inTID = inputUUID
             wf = self._WORKBASE.get(inWID, None)
             if wf is None or inTID not in wf:
-                print(f"Warning: input task {inputUUID} for task {task.uuID} is not yet registered")
+                print(f"Warning: input task {inputUUID} for task {task.locator} is not yet registered")
         self._WORKBASE[workflowID][task.taskID] = task
 
-    def getTask(self, locator: tuple):
+    def getTask(self, locator: tuple) -> Tasks.Task:
         """
         Returns the task referenced by the locator.
         
