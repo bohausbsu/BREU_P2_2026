@@ -22,7 +22,7 @@ class Task:
         self.uuID: Final = (workflowID, taskID)
         
         # data processing fields
-        self.inputTaskUUIDs: Final = []
+        self.inputTaskUUIDs: list = []
         # self.inputTaskData: Final = dict()
         
         # parsing data in
@@ -93,7 +93,7 @@ class Task:
             for e in src:
                 if isinstance(e, Task):
                     uuids.append(e.uuID)
-                elif isinstance(e, tuple) and len(src) == 2 and all(isinstance(i, int) for i in e):
+                elif isinstance(e, tuple) and len(e) == 2 and all(isinstance(i, int) for i in e):
                     uuids.append(e)
         self.inputTaskUUIDs.extend(uuids)
                     

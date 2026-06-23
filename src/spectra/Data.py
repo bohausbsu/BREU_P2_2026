@@ -107,9 +107,9 @@ class _DataChain:
 
         # get data in vals, or computer them if they DNE
         for inpt in task.taskInputUUIDs:
-            data = datachain.query(inpt.uuID)
+            data = datachain.query(inpt)
             if data is None:
-                self.runComputes(inpt.taskUUID, dataSourceID, db, wb)
+                self.runComputes(inpt, dataSourceID, db, wb)
                 data = datachain.query(inpt.uuID)
             inputVars[inpt.uuID] = data
         
