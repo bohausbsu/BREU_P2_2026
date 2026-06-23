@@ -1,5 +1,5 @@
-import Data
-from test_workflow import createLinearWorkflow
+import src.spectra.Data as Data
+from tests.test_workflow import createLinearWorkflow
 
 def test_db_global_init():
     assert Data.GLOBAL_DB
@@ -13,5 +13,6 @@ def test_linear_dataflow():
     src = Data.GLOBAL_DB.addSource(rawSrc)
     Data.GLOBAL_WB.addWorkflow(wf)
     chain = Data.GLOBAL_DB.getDataChain(src)
-    return chain
+    # return chain
+    pass
 

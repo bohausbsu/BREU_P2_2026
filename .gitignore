@@ -20,3 +20,6 @@ housing.csv
 
 # pytest cache
 .pytest_cache
+
+#jupyter
+.ipynb_checkpoints

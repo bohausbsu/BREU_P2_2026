@@ -1,17 +1,18 @@
 import random
-import Workflow
-import Data
+import src.spectra.Workflow as Workflow
+import src.spectra.Data as Data
 from typing import Final
 
-from ProvenanceRecord import Entry
+from src.spectra.ProvenanceRecord import Entry
 
-# Represents a single task in a workflow.
-# Has unique taskID within the workflow,
-# a list of tasks that produce data inputs,
-# and a validity flag (not yet implemented)
-# A task should be uniquely identifiable through the combination
-# of its workflowID and taskID.
 class Task:
+    """
+    Represents a single task within a workflow. The task holds a list of workbase pointers to other tasks that serve as data inputs for this task. The task operates on the data inputs to produce 
+    its own data output, referenceable by latter tasks in a workbase. 
+    TODO:
+        - refactor to utilize locator style identification (wID, tID) only
+        - separate blueprint code from provenance code
+    """
 
     def __init__(self, workflowID, taskID, dataInput: list[Task] | Task | list[tuple[int, int]] | tuple[int, int] | None):
         

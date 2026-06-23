@@ -1,7 +1,7 @@
 
 
 from typing import Final
-import Tasks
+import src.spectra.Tasks as Tasks
 import random
 # Task = Tasks.Task
 # TaskHead = Tasks.TaskHead
