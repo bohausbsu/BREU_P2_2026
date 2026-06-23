@@ -11,6 +11,12 @@ wheels/
 AnomalyTransformer/venv
 AnomalyTransformer/venv/*
 
+# datasets
 dataset.csv
-
 housing.csv
+
+# jupyter cache
+.ipynb_checkpoints
+
+# pytest cache
+.pytest_cache
