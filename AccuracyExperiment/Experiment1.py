@@ -22,7 +22,7 @@ Detection
 ---------
   The trained AT is applied to each scientist run's snapshot sequence.
   If the fraction of flagged timesteps > --flag-frac, the run is predicted
-  malicious.  TP / FP / TN / FN, precision, recall, F1, and accuracy are
+  malicious.  TP / FP / TN / FN, precision, recall, and F1 are
   computed per input-vector-size.
 
 Sweep
@@ -144,9 +144,11 @@ def run_experiment(
     X_all, y_all = load_full_dataset(dataset_path, target_col)
     n_miner = int(len(X_all) * train_frac)
     X_miner, y_miner = X_all[:n_miner], y_all[:n_miner]
-    X_sci,   y_sci   = X_all[n_miner:], y_all[n_miner:]
-    print(f"Dataset: {len(X_all)} rows  →  miner {len(X_miner)} ({train_frac:.0%}), "
-          f"scientist {len(X_sci)} ({1-train_frac:.0%})")
+    X_sci,   y_sci   = X_all, y_all
+    #X_sci,   y_sci   = X_all[n_miner:], y_all[n_miner:]
+
+    print(f"Dataset: {len(X_all)} rows  →  miner {len(X_miner)}, "
+          f"scientist {len(X_sci)}")
 
     all_results = []
 
@@ -249,25 +251,23 @@ def run_experiment(
             recall    = tp / (tp + fn) if (tp + fn) > 0 else 0.0
             f1        = (2 * precision * recall / (precision + recall)
                          if (precision + recall) > 0 else 0.0)
-            accuracy  = (tp + tn) / len(valid) if valid else 0.0
 
             print(f"\n  TP={tp}  FP={fp}  TN={tn}  FN={fn}")
             print(f"  Precision={precision:.3f}  Recall={recall:.3f}  "
-                  f"F1={f1:.3f}  Accuracy={accuracy:.3f}")
+                  f"F1={f1:.3f}")
 
             all_results.append({
                 "input_vec_size": vec_size,
                 "tp": tp, "fp": fp, "tn": tn, "fn": fn,
                 "precision": round(precision, 4),
                 "recall":    round(recall,    4),
-                "f1":        round(f1,        4),
-                "accuracy":  round(accuracy,  4),
+                "f1":        round(f1,        4)
             })
 
     # ── Outputs ──────────────────────────────────────────────────────────────
     if out_csv and all_results:
         fields = ["input_vec_size", "tp", "fp", "tn", "fn",
-                  "precision", "recall", "f1", "accuracy"]
+                  "precision", "recall", "f1"]
         with open(out_csv, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fields)
             writer.writeheader()
@@ -277,11 +277,9 @@ def run_experiment(
     if out_png and all_results:
         sizes = [r["input_vec_size"] for r in all_results]
         f1s   = [r["f1"]       for r in all_results]
-        accs  = [r["accuracy"] for r in all_results]
 
         fig, ax = plt.subplots(figsize=(9, 5))
         ax.plot(sizes, f1s,  "b-o", label="F1 score")
-        ax.plot(sizes, accs, "g-s", label="Accuracy")
         ax.set_xlabel("Input Vector Size")
         ax.set_ylabel("Score")
         ax.set_title("Experiment 1: SPECTRA Detection vs Input Vector Size")
