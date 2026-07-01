@@ -193,7 +193,7 @@ def run_experiment(
             run_records = []
 
             for i in range(n_benign):
-                seed = 1000 + i
+                seed = 9000 + i
                 sci_csv = os.path.join(tmpdir, f"sci_ben_{i}_{vec_size}.csv")
                 sci_snaps = snapshot_run(
                     data_path=dataset_path,
@@ -217,7 +217,7 @@ def run_experiment(
                 print(f"  Benign   run {i+1:2d}: flagged={frac_str}  → {'BAD' if pred == 1 else 'ok'}")
 
             for i in range(n_malicious):
-                seed = 2000 + i
+                seed = 10000 + i
                 sci_csv = os.path.join(tmpdir, f"sci_mal_{i}_{vec_size}.csv")
                 sci_snaps = snapshot_run(
                     data_path=dataset_path,
@@ -316,8 +316,8 @@ def parse_args():
                    help="Flagged-fraction threshold to classify a run as malicious")
     p.add_argument("--n-benign",        type=int, default=10)
     p.add_argument("--n-malicious",     type=int, default=10)
-    p.add_argument("--out",             default="experiment1_results.png")
-    p.add_argument("--out-csv",         default="experiment1_results.csv")
+    p.add_argument("--out",             default="experiment5_results.png")
+    p.add_argument("--out-csv",         default="experiment5_results.csv")
 
     mg = p.add_argument_group("miner snapshot trainer")
     mg.add_argument("--miner-batch-size", type=int,   default=64)
