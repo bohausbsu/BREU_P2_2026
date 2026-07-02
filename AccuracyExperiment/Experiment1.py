@@ -4,7 +4,7 @@ Experiment 1 – SPECTRA accuracy experiment (improved design).
 Dataset split
 -------------
   30 % → miner training set
-  70 % → scientist test set
+  100 % → scientist test set
 
 Miner phase
 -----------
@@ -321,14 +321,14 @@ def parse_args():
 
     mg = p.add_argument_group("miner snapshot trainer")
     mg.add_argument("--miner-batch-size", type=int,   default=64)
-    mg.add_argument("--miner-epochs",     type=int,   default=40,
+    mg.add_argument("--miner-epochs",     type=int,   default=25,
                     help="More epochs → more AT training data")
     mg.add_argument("--miner-lr",         type=float, default=1e-3)
     mg.add_argument("--miner-hidden",     type=int,   default=64)
 
     sg = p.add_argument_group("scientist snapshot trainer")
     sg.add_argument("--snap-batch-size", type=int,   default=64)
-    sg.add_argument("--snap-epochs",     type=int,   default=10)
+    sg.add_argument("--snap-epochs",     type=int,   default=25)
     sg.add_argument("--snap-lr",         type=float, default=1e-3)
     sg.add_argument("--snap-hidden",     type=int,   default=64)
 
