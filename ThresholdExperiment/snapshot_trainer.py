@@ -132,14 +132,12 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
                              (random 50 % sign-flip each batch).
     seed                   : torch + numpy RNG seed for reproducibility.
     X_data / y_data        : pre-split numpy arrays (skip file loading).
-    device                 : torch.device to train on (defaults to CPU).
+    device                 : torch.device (or str) to train on. Defaults to CPU.
 
     Returns
     -------
     numpy array of shape (n_total_batches, input_vec_size)
     """
-    device = device or torch.device("cpu")
-
     if seed is not None:
         torch.manual_seed(seed)
         np.random.seed(seed)
