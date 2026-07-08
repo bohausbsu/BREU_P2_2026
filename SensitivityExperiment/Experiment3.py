@@ -1,5 +1,5 @@
 """
-Experiment 1 – SPECTRA accuracy experiment (improved design).
+Experiment 3 – SPECTRA accuracy experiment (improved design).
 
 Dataset split
 -------------
@@ -15,7 +15,8 @@ Miner phase
 Scientist phase  (20 independent runs)
 --------------------------------------
   10 benign runs   – standard training on the scientist set, unique seed each.
-  10 malicious runs – Byzantine gradient attack (random 50 % sign-flip),
+  10 malicious runs – Byzantine gradient attack (random sign-flip of a
+                      configurable fraction of each gradient tensor),
                       unique seed each.
 
 Detection
@@ -23,18 +24,18 @@ Detection
   The trained AT is applied to each scientist run's snapshot sequence.
   If the fraction of flagged timesteps > --flag-frac, the run is predicted
   malicious.  TP / FP / TN / FN, precision, recall, and F1 are
-  computed per input-vector-size.
+  computed per gradient-flip fraction.
 
 Sweep
 -----
   The full pipeline (miner → AT training → 20 scientist runs → metrics) is
-  repeated for each input-vector size in {32, 64, 96, 128, 160}.
-  The input-vector size is the number of features extracted from each model
-  snapshot (= d_input of the AT).
+  repeated for each gradient-flip fraction in {0.1, 0.2, 0.3, 0.4, 0.5}
+  (i.e. 10 %, 20 %, 30 %, 40 %, 50 % of gradient entries sign-flipped in
+  malicious runs).  The input-vector size is fixed at 96 for every run.
 
 Usage
 -----
-  python Experiment2.py --dataset data.csv --target-col Placement
+  python Experiment3.py --dataset data.csv --target-col Placement
 """
 
 import sys
@@ -143,7 +144,7 @@ def resolve_device(device_arg):
 
 def run_experiment(
     dataset_path, target_col,
-    input_vec_sizes, window_size, flag_frac,
+    input_vec_size, flip_fracs, window_size, flag_frac,
     miner_snap_cfg, snap_cfg, at_cfg,
     n_benign, n_malicious, train_frac,
     out_csv, out_png,
@@ -167,53 +168,54 @@ def run_experiment(
 
     with tempfile.TemporaryDirectory() as tmpdir:
 
-        for vec_size in input_vec_sizes:
+        # ── Miner phase (run once, input-vector size fixed at 96) ───────────
+        print("  [Miner] Training model and collecting snapshots...")
+        miner_csv = os.path.join(tmpdir, f"miner_{input_vec_size}.csv")
+        miner_snaps = snapshot_run(
+            data_path=dataset_path,
+            target_col=target_col,
+            out_csv=miner_csv,
+            input_vec_size=input_vec_size,
+            batch_size=miner_snap_cfg["batch_size"],
+            n_epochs=miner_snap_cfg["n_epochs"],
+            lr=miner_snap_cfg["lr"],
+            hidden=miner_snap_cfg["hidden"],
+            is_malicious=False,
+            seed=42,
+            X_data=X_miner,
+            y_data=y_miner,
+            device=device,
+        )
+        print(f"  [Miner] {len(miner_snaps)} snapshots  (shape {miner_snaps.shape})")
+
+        # ── AT training phase (also run once) ────────────────────────────
+        print("  [AT] Training Anomaly Transformer on miner snapshots...")
+        at_model, threshold, norm_mean, norm_std = _train_at(
+            miner_snaps, window_size, at_cfg, device
+        )
+        if at_model is None:
+            raise RuntimeError(
+                f"need ≥ {window_size * 3} miner snapshots (got {len(miner_snaps)}). "
+                "Increase --miner-epochs."
+            )
+        print(f"  [AT] Threshold: {threshold:.4f}")
+
+        for flip_frac in flip_fracs:
             print(f"\n{'='*64}")
-            print(f"Input vector size: {vec_size}")
+            print(f"Gradient flip fraction: {flip_frac}")
             print(f"{'='*64}")
-
-            # ── Miner phase ──────────────────────────────────────────────────
-            print("  [Miner] Training model and collecting snapshots...")
-            miner_csv = os.path.join(tmpdir, f"miner_{vec_size}.csv")
-            miner_snaps = snapshot_run(
-                data_path=dataset_path,
-                target_col=target_col,
-                out_csv=miner_csv,
-                input_vec_size=vec_size,
-                batch_size=miner_snap_cfg["batch_size"],
-                n_epochs=miner_snap_cfg["n_epochs"],
-                lr=miner_snap_cfg["lr"],
-                hidden=miner_snap_cfg["hidden"],
-                is_malicious=False,
-                seed=42,
-                X_data=X_miner,
-                y_data=y_miner,
-                device=device,
-            )
-            print(f"  [Miner] {len(miner_snaps)} snapshots  (shape {miner_snaps.shape})")
-
-            # ── AT training phase ────────────────────────────────────────────
-            print("  [AT] Training Anomaly Transformer on miner snapshots...")
-            at_model, threshold, norm_mean, norm_std = _train_at(
-                miner_snaps, window_size, at_cfg, device
-            )
-            if at_model is None:
-                print(f"  SKIP vec_size={vec_size}: need ≥ {window_size * 3} miner snapshots "
-                      f"(got {len(miner_snaps)}). Increase --miner-epochs.")
-                continue
-            print(f"  [AT] Threshold: {threshold:.4f}")
 
             # ── Scientist phase ──────────────────────────────────────────────
             run_records = []
 
             for i in range(n_benign):
                 seed = benign_seed_base + i
-                sci_csv = os.path.join(tmpdir, f"sci_ben_{i}_{vec_size}.csv")
+                sci_csv = os.path.join(tmpdir, f"sci_ben_{i}_{flip_frac}.csv")
                 sci_snaps = snapshot_run(
                     data_path=dataset_path,
                     target_col=target_col,
                     out_csv=sci_csv,
-                    input_vec_size=vec_size,
+                    input_vec_size=input_vec_size,
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
@@ -234,17 +236,18 @@ def run_experiment(
 
             for i in range(n_malicious):
                 seed = malicious_seed_base + i
-                sci_csv = os.path.join(tmpdir, f"sci_mal_{i}_{vec_size}.csv")
+                sci_csv = os.path.join(tmpdir, f"sci_mal_{i}_{flip_frac}.csv")
                 sci_snaps = snapshot_run(
                     data_path=dataset_path,
                     target_col=target_col,
                     out_csv=sci_csv,
-                    input_vec_size=vec_size,
+                    input_vec_size=input_vec_size,
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
                     hidden=snap_cfg["hidden"],
                     is_malicious=True,
+                    flip_frac=flip_frac,
                     seed=seed,
                     X_data=X_sci,
                     y_data=y_sci,
@@ -275,7 +278,7 @@ def run_experiment(
                   f"F1={f1:.3f}")
 
             all_results.append({
-                "input_vec_size": vec_size,
+                "flip_frac": flip_frac,
                 "tp": tp, "fp": fp, "tn": tn, "fn": fn,
                 "precision": round(precision, 4),
                 "recall":    round(recall,    4),
@@ -284,7 +287,7 @@ def run_experiment(
 
     # ── Outputs ──────────────────────────────────────────────────────────────
     if out_csv and all_results:
-        fields = ["input_vec_size", "tp", "fp", "tn", "fn",
+        fields = ["flip_frac", "tp", "fp", "tn", "fn",
                   "precision", "recall", "f1"]
         with open(out_csv, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fields)
@@ -293,15 +296,15 @@ def run_experiment(
         print(f"\nSaved results → {out_csv}")
 
     if out_png and all_results:
-        sizes = [r["input_vec_size"] for r in all_results]
-        f1s   = [r["f1"]       for r in all_results]
+        fracs = [r["flip_frac"] for r in all_results]
+        f1s   = [r["f1"]        for r in all_results]
 
         fig, ax = plt.subplots(figsize=(9, 5))
-        ax.plot(sizes, f1s,  "b-o", label="F1 score")
-        ax.set_xlabel("Input Vector Size")
+        ax.plot(fracs, f1s,  "b-o", label="F1 score")
+        ax.set_xlabel("Gradient Flip Fraction")
         ax.set_ylabel("Score")
-        ax.set_title("Experiment 2: SPECTRA Detection vs Input Vector Size")
-        ax.set_xticks(sizes)
+        ax.set_title("Experiment 3: SPECTRA Detection vs Gradient Flip Fraction")
+        ax.set_xticks(fracs)
         ax.set_ylim(0, 1.05)
         ax.legend()
         ax.grid(True)
@@ -318,19 +321,21 @@ def run_experiment(
 
 def parse_args():
     p = argparse.ArgumentParser(
-        description="SPECTRA Experiment 2 (improved)",
+        description="SPECTRA Experiment 3 (improved)",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
     )
     p.add_argument("--dataset",         required=True,  help="Path to CSV dataset")
     p.add_argument("--target-col",      required=True,  help="Target column name")
     p.add_argument("--train-frac",      type=float, default=0.3,
                    help="Fraction of data given to miners")
-    p.add_argument("--input-vec-sizes", type=int, nargs="+",
-                   default=[32, 64, 96, 128, 160], metavar="S",
-                   help="Snapshot feature-vector sizes to sweep")
+    p.add_argument("--input-vec-size",  type=int, default=96,
+                   help="Snapshot feature-vector size (fixed across the sweep)")
+    p.add_argument("--flip-fracs",      type=float, nargs="+",
+                   default=[0.1, 0.2, 0.3, 0.4, 0.5], metavar="F",
+                   help="Gradient sign-flip fractions to sweep for malicious runs")
     p.add_argument("--window-size",     type=int, default=30,
                    help="AT sliding-window length in timesteps")
-    p.add_argument("--flag-frac",       type=float, default=0.3,
+    p.add_argument("--flag-frac",       type=float, default=0.2,
                    help="Flagged-fraction threshold to classify a run as malicious")
     p.add_argument("--n-benign",        type=int, default=10)
     p.add_argument("--n-malicious",     type=int, default=10)
@@ -341,8 +346,8 @@ def parse_args():
     p.add_argument("--device",          choices=["auto", "cpu", "cuda"], default="auto",
                    help="Device to train on. 'cuda' forces GPU (errors if unavailable), "
                         "'auto' uses GPU when available")
-    p.add_argument("--out",             default="experiment1_results.png")
-    p.add_argument("--out-csv",         default="experiment1_results.csv")
+    p.add_argument("--out",             default="experiment1a_results.png")
+    p.add_argument("--out-csv",         default="experiment1a_results.csv")
 
     mg = p.add_argument_group("miner snapshot trainer")
     mg.add_argument("--miner-batch-size", type=int,   default=64)
@@ -370,7 +375,7 @@ def parse_args():
     ag.add_argument("--at-batch-size", type=int,   default=32)
 
     ag = p.add_argument_group("cut off mark")
-    ag.add_argument("--cutoff", type=float, default=0.5)
+    ag.add_argument("--cutoff", type=float, default=1.0)
 
     return p.parse_args()
 
@@ -406,7 +411,8 @@ if __name__ == "__main__":
     run_experiment(
         dataset_path=os.path.abspath(args.dataset),
         target_col=args.target_col,
-        input_vec_sizes=args.input_vec_sizes,
+        input_vec_size=args.input_vec_size,
+        flip_fracs=args.flip_fracs,
         window_size=args.window_size,
         flag_frac=args.flag_frac,
         miner_snap_cfg=miner_snap_cfg,

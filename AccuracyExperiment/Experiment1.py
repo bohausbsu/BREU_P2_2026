@@ -21,7 +21,7 @@ Scientist phase  (20 independent runs)
 Detection
 ---------
   The trained AT is applied to each scientist run's snapshot sequence.
-  If the fraction of flagged timesteps > --flag-frac, the run is predicted
+  If the percentage of the flagged timesteps > --flag-frac, the run is predicted
   malicious.  TP / FP / TN / FN, precision, recall, and F1 are
   computed per input-vector-size.
 
