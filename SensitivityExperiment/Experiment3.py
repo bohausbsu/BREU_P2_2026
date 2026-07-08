@@ -143,8 +143,7 @@ def resolve_device(device_arg):
 
 
 def run_experiment(
-    dataset_path, target_col,
-    input_vec_size, flip_fracs, window_size, flag_frac,
+    dataset_path, target_col, flip_fracs, window_size, flag_frac,
     miner_snap_cfg, snap_cfg, at_cfg,
     n_benign, n_malicious, train_frac,
     out_csv, out_png,
@@ -170,12 +169,12 @@ def run_experiment(
 
         # ── Miner phase (run once, input-vector size fixed at 96) ───────────
         print("  [Miner] Training model and collecting snapshots...")
-        miner_csv = os.path.join(tmpdir, f"miner_{input_vec_size}.csv")
+        miner_csv = os.path.join(tmpdir, f"miner.csv")
         miner_snaps = snapshot_run(
             data_path=dataset_path,
             target_col=target_col,
             out_csv=miner_csv,
-            input_vec_size=input_vec_size,
+            #input_vec_size=input_vec_size,
             batch_size=miner_snap_cfg["batch_size"],
             n_epochs=miner_snap_cfg["n_epochs"],
             lr=miner_snap_cfg["lr"],
@@ -215,7 +214,7 @@ def run_experiment(
                     data_path=dataset_path,
                     target_col=target_col,
                     out_csv=sci_csv,
-                    input_vec_size=input_vec_size,
+                    #input_vec_size=input_vec_size,
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
@@ -241,7 +240,7 @@ def run_experiment(
                     data_path=dataset_path,
                     target_col=target_col,
                     out_csv=sci_csv,
-                    input_vec_size=input_vec_size,
+                    #input_vec_size=input_vec_size,
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
@@ -411,7 +410,7 @@ if __name__ == "__main__":
     run_experiment(
         dataset_path=os.path.abspath(args.dataset),
         target_col=args.target_col,
-        input_vec_size=args.input_vec_size,
+        #input_vec_size=args.input_vec_size,
         flip_fracs=args.flip_fracs,
         window_size=args.window_size,
         flag_frac=args.flag_frac,

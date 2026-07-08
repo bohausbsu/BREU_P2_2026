@@ -103,7 +103,9 @@ def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=
     n_scalar = len(scalars)  # always 7
 
     if input_vec_size <= n_scalar:
+        
         return scalars[:input_vec_size]
+    
 
     n_sample = input_vec_size - n_scalar
     indices = torch.linspace(0, len(all_g) - 1, n_sample).long()

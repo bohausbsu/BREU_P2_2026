@@ -20,6 +20,7 @@ class SimpleMLP(nn.Module):
         )
 
     def forward(self, x):
+
         return self.net(x)
 
 
@@ -62,7 +63,7 @@ def load_full_dataset(path, target_col):
     return X, y
 
 
-def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=None):
+def extract_snapshot(model, loss_val, prev_loss=0.0, prev_all_w=None):
     """Return a 1-D numpy array of exactly `input_vec_size` features.
 
     The first 7 slots are phase-invariant dynamics features designed to expose
@@ -102,13 +103,17 @@ def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=
 
     n_scalar = len(scalars)  # always 7
 
-    if input_vec_size <= n_scalar:
-        return scalars[:input_vec_size]
+    # if input_vec_size <= n_scalar:
+    #     return scalars[:input_vec_size]
 
-    n_sample = input_vec_size - n_scalar
-    indices = torch.linspace(0, len(all_g) - 1, n_sample).long()
-    sampled = all_g[indices].detach().cpu().numpy().astype(np.float32)
-    return np.concatenate([scalars, sampled])
+    # n_sample = input_vec_size - n_scalar
+    # indices = torch.linspace(0, len(all_g) - 1, n_sample).long()
+    # sampled = all_g[indices].detach().cpu().numpy().astype(np.float32)
+    # =return np.concatenate([scalars, sampled])
+    # print("Scalars: ", scalars.shape)
+    # print("Grads: ", all_g.shape)
+    return np.concatenate([scalars, all_g], axis=0)
+
 
 
 def gradient_norm(model):
@@ -119,7 +124,7 @@ def gradient_norm(model):
     return math.sqrt(total)
 
 
-def run(data_path, target_col, out_csv, input_vec_size=7,
+def run(data_path, target_col, out_csv,
         batch_size=64, n_epochs=5, lr=1e-3, hidden=64,
         is_malicious=False, flip_frac=0.5, seed=None, X_data=None, y_data=None, device=None):
     """Train a SimpleMLP and collect per-batch snapshots.
@@ -127,7 +132,6 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
     Parameters
     ----------
     data_path / target_col : used only when X_data / y_data are not provided.
-    input_vec_size         : number of features in each snapshot row.
     is_malicious           : if True, apply a Byzantine gradient attack
                              (random sign-flip of `flip_frac` of each
                              gradient tensor, each batch).
@@ -184,8 +188,7 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
                             p.grad.data[mask] *= -1.0
 
             optimizer.step()
-            snapshots.append(extract_snapshot(model, loss.item(), input_vec_size,
-                                              prev_loss, prev_all_w))
+            snapshots.append(extract_snapshot(model, loss.item(), prev_loss, prev_all_w))
 
             with torch.no_grad():
                 prev_all_w = torch.cat([
@@ -197,7 +200,7 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
     arr = np.array(snapshots, dtype=np.float32)
 
     if out_csv:
-        fieldnames = ["batch_idx"] + [f"f{i}" for i in range(input_vec_size)]
+        fieldnames = ["batch_idx"] + [f"f{i}" for i in range(sum(p.numel() for p in model.parameters() if p.requires_grad))]
         with open(out_csv, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -230,7 +233,7 @@ if __name__ == "__main__":
         data_path=args.dataset,
         target_col=args.target_col,
         out_csv=args.out,
-        input_vec_size=args.input_vec_size,
+        #input_vec_size=args.input_vec_size,
         batch_size=args.batch_size,
         n_epochs=args.n_epochs,
         lr=args.lr,
