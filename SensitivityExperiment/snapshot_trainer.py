@@ -62,13 +62,19 @@ def load_full_dataset(path, target_col):
     return X, y
 
 
-def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=None):
-    """Return a 1-D numpy array of exactly `input_vec_size` features.
+def extract_snapshot(model, loss_val, prev_loss=0.0, prev_all_w=None):
+    """Return a 1-D numpy array: 7 phase-invariant dynamics scalars followed by
+    a small block of basis-invariant gradient-distribution statistics.
 
-    The first 7 slots are phase-invariant dynamics features designed to expose
-    Byzantine gradient attacks regardless of where in training a run is.
-    Remaining slots are uniformly sampled gradient values so the AT can see
-    the raw sign distribution (50% sign-flip makes it near-symmetric).
+    Raw per-coordinate gradient values (sampled or otherwise) are deliberately
+    excluded. Two runs with different random seeds have their hidden units in
+    different, arbitrarily permuted/rotated bases, so the same *semantic*
+    gradient can land at different flattened coordinates across runs.
+    Comparing raw coordinates across independently-initialized models
+    therefore injects nuisance variance that swamps the actual attack
+    signal. Summary statistics of the gradient distribution (sign balance,
+    magnitude quantiles, shape) are invariant to that permutation/rotation
+    and still shift visibly under a sign-flip attack.
     """
     weights, grads = [], []
     for module in model.modules():
@@ -100,15 +106,26 @@ def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=
         w_norm,
     ], dtype=np.float32)
 
-    n_scalar = len(scalars)  # always 7
+    # Basis-invariant gradient-distribution statistics (no raw coordinates).
+    frac_pos = (all_g > 0).float().mean().item()
+    abs_g = all_g.abs()
+    q10, q50, q90 = torch.quantile(
+        abs_g, torch.tensor([0.1, 0.5, 0.9], device=all_g.device)
+    ).tolist()
+    g_z = (all_g - g_mean) / g_std
+    skew     = (g_z ** 3).mean().item()
+    kurtosis = (g_z ** 4).mean().item() - 3.0
+    layer_norms = [g.norm(2).item() for g in grads] if grads else [0.0] * len(weights)
 
-    if input_vec_size <= n_scalar:
-        return scalars[:input_vec_size]
+    dist_stats = np.array([
+        frac_pos,
+        q10, q50, q90,
+        skew,
+        kurtosis,
+        *layer_norms,
+    ], dtype=np.float32)
 
-    n_sample = input_vec_size - n_scalar
-    indices = torch.linspace(0, len(all_g) - 1, n_sample).long()
-    sampled = all_g[indices].detach().cpu().numpy().astype(np.float32)
-    return np.concatenate([scalars, sampled])
+    return np.concatenate([scalars, dist_stats])
 
 
 def gradient_norm(model):
@@ -119,7 +136,7 @@ def gradient_norm(model):
     return math.sqrt(total)
 
 
-def run(data_path, target_col, out_csv, input_vec_size=7,
+def run(data_path, target_col, out_csv,
         batch_size=64, n_epochs=5, lr=1e-3, hidden=64,
         is_malicious=False, flip_frac=0.5, seed=None, X_data=None, y_data=None, device=None):
     """Train a SimpleMLP and collect per-batch snapshots.
@@ -127,7 +144,6 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
     Parameters
     ----------
     data_path / target_col : used only when X_data / y_data are not provided.
-    input_vec_size         : number of features in each snapshot row.
     is_malicious           : if True, apply a Byzantine gradient attack
                              (random sign-flip of `flip_frac` of each
                              gradient tensor, each batch).
@@ -139,7 +155,7 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
 
     Returns
     -------
-    numpy array of shape (n_total_batches, input_vec_size)
+    numpy array of shape (n_total_batches, 7 + n_gradient_entries)
     """
     device = device or torch.device("cpu")
 
@@ -184,7 +200,7 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
                             p.grad.data[mask] *= -1.0
 
             optimizer.step()
-            snapshots.append(extract_snapshot(model, loss.item(), input_vec_size,
+            snapshots.append(extract_snapshot(model, loss.item(),
                                               prev_loss, prev_all_w))
 
             with torch.no_grad():
@@ -196,8 +212,8 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
 
     arr = np.array(snapshots, dtype=np.float32)
 
-    if out_csv:
-        fieldnames = ["batch_idx"] + [f"f{i}" for i in range(input_vec_size)]
+    if out_csv and snapshots:
+        fieldnames = ["batch_idx"] + [f"f{i}" for i in range(len(snapshots[0]))]
         with open(out_csv, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -216,7 +232,6 @@ if __name__ == "__main__":
     parser.add_argument("--dataset",        required=True)
     parser.add_argument("--target-col",     required=True)
     parser.add_argument("--out",            default="snapshots.csv")
-    parser.add_argument("--input-vec-size", type=int,   default=7)
     parser.add_argument("--batch-size",     type=int,   default=64)
     parser.add_argument("--n-epochs",       type=int,   default=5)
     parser.add_argument("--lr",             type=float, default=1e-3)
@@ -230,7 +245,6 @@ if __name__ == "__main__":
         data_path=args.dataset,
         target_col=args.target_col,
         out_csv=args.out,
-        input_vec_size=args.input_vec_size,
         batch_size=args.batch_size,
         n_epochs=args.n_epochs,
         lr=args.lr,

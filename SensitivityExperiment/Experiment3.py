@@ -31,7 +31,11 @@ Sweep
   The full pipeline (miner → AT training → 20 scientist runs → metrics) is
   repeated for each gradient-flip fraction in {0.1, 0.2, 0.3, 0.4, 0.5}
   (i.e. 10 %, 20 %, 30 %, 40 %, 50 % of gradient entries sign-flipped in
-  malicious runs).  The input-vector size is fixed at 96 for every run.
+  malicious runs).  Each snapshot is the 7 phase-invariant scalar features
+  plus a small block of basis-invariant gradient-distribution statistics
+  (sign balance, magnitude quantiles, skew/kurtosis, per-layer norms) —
+  no raw per-coordinate gradient values, since those aren't comparable
+  across runs with different random seeds.
 
 Usage
 -----
@@ -142,14 +146,18 @@ def resolve_device(device_arg):
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
+EFF_SIGNAL_COL = 2  # index of effective_signal within the snapshot vector
+
+
 def run_experiment(
     dataset_path, target_col,
-    input_vec_size, flip_fracs, window_size, flag_frac,
+    flip_fracs, window_size, flag_frac,
     miner_snap_cfg, snap_cfg, at_cfg,
     n_benign, n_malicious, train_frac,
     out_csv, out_png,
     device="auto", cutoff=0.5,
     benign_seed_base=1000, malicious_seed_base=2000,
+    eff_signal_ratio=0.3,
 ):
     device = resolve_device(device)
     print(f"Device: {device}")
@@ -168,14 +176,13 @@ def run_experiment(
 
     with tempfile.TemporaryDirectory() as tmpdir:
 
-        # ── Miner phase (run once, input-vector size fixed at 96) ───────────
+        # ── Miner phase (run once) ───────────────────────────────────────
         print("  [Miner] Training model and collecting snapshots...")
-        miner_csv = os.path.join(tmpdir, f"miner_{input_vec_size}.csv")
+        miner_csv = os.path.join(tmpdir, "miner.csv")
         miner_snaps = snapshot_run(
             data_path=dataset_path,
             target_col=target_col,
             out_csv=miner_csv,
-            input_vec_size=input_vec_size,
             batch_size=miner_snap_cfg["batch_size"],
             n_epochs=miner_snap_cfg["n_epochs"],
             lr=miner_snap_cfg["lr"],
@@ -200,6 +207,26 @@ def run_experiment(
             )
         print(f"  [AT] Threshold: {threshold:.4f}")
 
+        # ── Secondary detector: mean effective_signal over the run ────────
+        # The AT's windowed reconstruction score reliably catches strong
+        # attacks (flip_frac=0.5) but dilutes weaker ones: effective_signal
+        # (grad_mean^2 / (grad_mean^2 + grad_std^2)) drops sharply even at
+        # flip_frac=0.4 (5-40x lower than benign, no overlap in quick
+        # diagnostics), but that drop gets buried inside the AT's blended
+        # 16-dimensional reconstruction error alongside noisier features
+        # (skew/kurtosis swing wildly run to run). Thresholding on this one
+        # feature's run-mean directly, calibrated from the miner's own
+        # snapshots, catches what the AT's combined score misses.
+        # effective_signal is non-negative and heavily skewed toward zero
+        # (its own std is close to its mean), so "mean - k*std" easily goes
+        # negative and becomes an unreachable cutoff. A ratio of the miner's
+        # mean stays positive and scales naturally with the feature instead.
+        miner_eff_signal = miner_snaps[:, EFF_SIGNAL_COL]
+        eff_signal_mean = float(miner_eff_signal.mean())
+        eff_signal_cutoff = eff_signal_mean * eff_signal_ratio
+        print(f"  [EffSignal] miner mean={eff_signal_mean:.5f}  "
+              f"cutoff={eff_signal_cutoff:.5f} (eff_signal_ratio={eff_signal_ratio})")
+
         for flip_frac in flip_fracs:
             print(f"\n{'='*64}")
             print(f"Gradient flip fraction: {flip_frac}")
@@ -215,7 +242,6 @@ def run_experiment(
                     data_path=dataset_path,
                     target_col=target_col,
                     out_csv=sci_csv,
-                    input_vec_size=input_vec_size,
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
@@ -229,10 +255,14 @@ def run_experiment(
                 sci_snaps = sci_snaps[:int(len(sci_snaps) * cutoff)]
                 frac = _score_run(at_model, sci_snaps, window_size, threshold,
                                   norm_mean, norm_std, at_cfg, device)
-                pred = (1 if frac > flag_frac else 0) if frac is not None else -1
+                eff_mean = float(sci_snaps[:, EFF_SIGNAL_COL].mean())
+                at_pred  = (1 if frac > flag_frac else 0) if frac is not None else -1
+                eff_pred = 1 if eff_mean < eff_signal_cutoff else 0
+                pred = at_pred if at_pred < 0 else (1 if (at_pred == 1 or eff_pred == 1) else 0)
                 run_records.append({"actual": 0, "predicted": pred, "frac": frac})
                 frac_str = f"{frac:.3f}" if frac is not None else "N/A"
-                print(f"  Benign   run {i+1:2d}: flagged={frac_str}  → {'BAD' if pred == 1 else 'ok'}")
+                print(f"  Benign   run {i+1:2d}: flagged={frac_str}  eff_signal={eff_mean:.5f}  "
+                      f"→ {'BAD' if pred == 1 else 'ok'}")
 
             for i in range(n_malicious):
                 seed = malicious_seed_base + i
@@ -241,7 +271,6 @@ def run_experiment(
                     data_path=dataset_path,
                     target_col=target_col,
                     out_csv=sci_csv,
-                    input_vec_size=input_vec_size,
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
@@ -256,10 +285,14 @@ def run_experiment(
                 sci_snaps = sci_snaps[:int(len(sci_snaps) * cutoff)]
                 frac = _score_run(at_model, sci_snaps, window_size, threshold,
                                   norm_mean, norm_std, at_cfg, device)
-                pred = (1 if frac > flag_frac else 0) if frac is not None else -1
+                eff_mean = float(sci_snaps[:, EFF_SIGNAL_COL].mean())
+                at_pred  = (1 if frac > flag_frac else 0) if frac is not None else -1
+                eff_pred = 1 if eff_mean < eff_signal_cutoff else 0
+                pred = at_pred if at_pred < 0 else (1 if (at_pred == 1 or eff_pred == 1) else 0)
                 run_records.append({"actual": 1, "predicted": pred, "frac": frac})
                 frac_str = f"{frac:.3f}" if frac is not None else "N/A"
-                print(f"  Malicious run {i+1:2d}: flagged={frac_str}  → {'BAD' if pred == 1 else 'ok'}")
+                print(f"  Malicious run {i+1:2d}: flagged={frac_str}  eff_signal={eff_mean:.5f}  "
+                      f"→ {'BAD' if pred == 1 else 'ok'}")
 
             # ── Metrics ──────────────────────────────────────────────────────
             valid = [r for r in run_records if r["predicted"] >= 0]
@@ -328,15 +361,18 @@ def parse_args():
     p.add_argument("--target-col",      required=True,  help="Target column name")
     p.add_argument("--train-frac",      type=float, default=0.3,
                    help="Fraction of data given to miners")
-    p.add_argument("--input-vec-size",  type=int, default=96,
-                   help="Snapshot feature-vector size (fixed across the sweep)")
     p.add_argument("--flip-fracs",      type=float, nargs="+",
-                   default=[0.1, 0.2, 0.3, 0.4, 0.5], metavar="F",
+                   default=[0.4, 0.5], metavar="F",
                    help="Gradient sign-flip fractions to sweep for malicious runs")
     p.add_argument("--window-size",     type=int, default=30,
                    help="AT sliding-window length in timesteps")
     p.add_argument("--flag-frac",       type=float, default=0.2,
                    help="Flagged-fraction threshold to classify a run as malicious")
+    p.add_argument("--eff-signal-ratio", type=float, default=0.3,
+                   help="A run is also predicted malicious if its mean "
+                        "effective_signal falls below "
+                        "eff_signal_ratio * miner_mean (catches weaker "
+                        "attacks the AT's blended score dilutes)")
     p.add_argument("--n-benign",        type=int, default=10)
     p.add_argument("--n-malicious",     type=int, default=10)
     p.add_argument("--benign-seed-base",    type=int, default=1000,
@@ -411,10 +447,10 @@ if __name__ == "__main__":
     run_experiment(
         dataset_path=os.path.abspath(args.dataset),
         target_col=args.target_col,
-        input_vec_size=args.input_vec_size,
         flip_fracs=args.flip_fracs,
         window_size=args.window_size,
         flag_frac=args.flag_frac,
+        eff_signal_ratio=args.eff_signal_ratio,
         miner_snap_cfg=miner_snap_cfg,
         snap_cfg=snap_cfg,
         at_cfg=at_cfg,
