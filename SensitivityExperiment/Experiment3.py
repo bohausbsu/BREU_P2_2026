@@ -362,7 +362,7 @@ def parse_args():
     p.add_argument("--train-frac",      type=float, default=0.3,
                    help="Fraction of data given to miners")
     p.add_argument("--flip-fracs",      type=float, nargs="+",
-                   default=[0.4, 0.5], metavar="F",
+                   default=[0.1, 0.2, 0.3, 0.4, 0.5], metavar="F",
                    help="Gradient sign-flip fractions to sweep for malicious runs")
     p.add_argument("--window-size",     type=int, default=30,
                    help="AT sliding-window length in timesteps")
