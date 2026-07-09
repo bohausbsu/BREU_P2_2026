@@ -8,8 +8,68 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
 
-class SimpleMLP(nn.Module):
-    def __init__(self, in_features, hidden=64, out_features=1):
+class FourKMLP(nn.Module):
+    def __init__(self, in_features=8, hidden=58, out_features=1):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, out_features),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class SixKMLP(nn.Module):
+    def __init__(self, in_features=8, hidden=72, out_features=1):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, out_features),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class EightKMLP(nn.Module):
+    def __init__(self, in_features=8, hidden=84, out_features=1):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, out_features),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class TenKMLP(nn.Module):
+    def __init__(self, in_features=8, hidden=95, out_features=1):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_features, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, hidden),
+            nn.ReLU(),
+            nn.Linear(hidden, out_features),
+        )
+
+    def forward(self, x):
+        return self.net(x)
+
+
+class TwelveKMLP(nn.Module):
+    def __init__(self, in_features=8, hidden=104, out_features=1):
         super().__init__()
         self.net = nn.Sequential(
             nn.Linear(in_features, hidden),
@@ -26,15 +86,19 @@ class SimpleMLP(nn.Module):
 def make_loader(X_train, y_train, batch_size=64):
     X_t = torch.from_numpy(X_train)
     y_t = torch.from_numpy(y_train).unsqueeze(1)
+
     return DataLoader(TensorDataset(X_t, y_t), batch_size=batch_size, shuffle=True)
 
 
 def load_dataset(path, target_col, train_frac=0.7):
     df = pd.read_csv(path)
+
     for col in df.select_dtypes(include="object").columns:
         vals = df[col].dropna().str.lower().unique()
+
         if set(vals).issubset({"yes", "no"}):
             df[col] = df[col].str.lower().map({"yes": 1.0, "no": 0.0})
+
     df = df.select_dtypes(include="number").dropna()
 
     y = df[target_col].to_numpy(dtype=np.float32)
@@ -52,13 +116,17 @@ def load_dataset(path, target_col, train_frac=0.7):
 def load_full_dataset(path, target_col):
     """Return (X, y) for the whole file without any splitting or normalisation."""
     df = pd.read_csv(path)
+
     for col in df.select_dtypes(include="object").columns:
         vals = df[col].dropna().str.lower().unique()
+
         if set(vals).issubset({"yes", "no"}):
             df[col] = df[col].str.lower().map({"yes": 1.0, "no": 0.0})
+
     df = df.select_dtypes(include="number").dropna()
     y = df[target_col].to_numpy(dtype=np.float32)
     X = df.drop(columns=[target_col]).to_numpy(dtype=np.float32)
+
     return X, y
 
 
@@ -81,55 +149,92 @@ def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=
     all_g = torch.cat(grads) if grads else torch.zeros(len(all_w))
 
     g_mean = all_g.mean().item()
-    g_std  = all_g.std().item() + 1e-8
+    g_std = all_g.std().item() + 1e-8
 
-    grad_snr         = abs(g_mean) / g_std
-    loss_delta       = float(loss_val) - float(prev_loss)
-    effective_signal = g_mean ** 2 / (g_mean ** 2 + g_std ** 2)
-    g_norm           = all_g.norm(2).item()
-    w_norm           = all_w.norm(2).item()
-    weight_delta_norm = (all_w.cpu() - prev_all_w).norm(2).item() if prev_all_w is not None else 0.0
+    grad_snr = abs(g_mean) / g_std
+    loss_delta = float(loss_val) - float(prev_loss)
+    effective_signal = g_mean**2 / (g_mean**2 + g_std**2)
+    g_norm = all_g.norm(2).item()
+    w_norm = all_w.norm(2).item()
+    weight_delta_norm = (
+        (all_w.cpu() - prev_all_w).norm(2).item() if prev_all_w is not None else 0.0
+    )
 
-    scalars = np.array([
-        grad_snr,
-        loss_delta,
-        effective_signal,
-        g_norm,
-        weight_delta_norm,
-        float(loss_val),
-        w_norm,
-    ], dtype=np.float32)
+    scalars = np.array(
+        [
+            grad_snr,
+            loss_delta,
+            effective_signal,
+            g_norm,
+            weight_delta_norm,
+            float(loss_val),
+            w_norm,
+        ],
+        dtype=np.float32,
+    )
 
-    n_scalar = len(scalars)  # always 7
+    frac_pos = (all_g > 0).float().mean().item()
+    abs_g = all_g.abs()
+    q10, q50, q90 = torch.quantile(
+        abs_g, torch.tensor([0.1, 0.5, 0.9], device=all_g.device)
+    ).tolist()
+    g_z = (all_g - g_mean) / g_std
+    skew = (g_z**3).mean().item()
+    kurtosis = (g_z**4).mean().item() - 3.0
+    layer_norms = [g.norm(2).item() for g in grads] if grads else [0.0] * len(weights)
 
-    if input_vec_size <= n_scalar:
-        return scalars[:input_vec_size]
+    dist_stats = np.array(
+        [
+            frac_pos,
+            q10,
+            q50,
+            q90,
+            skew,
+            kurtosis,
+            *layer_norms,
+        ],
+        dtype=np.float32,
+    )
 
-    n_sample = input_vec_size - n_scalar
-    indices = torch.linspace(0, len(all_g) - 1, n_sample).long()
-    sampled = all_g[indices].detach().cpu().numpy().astype(np.float32)
-    return np.concatenate([scalars, sampled])
+    return np.concatenate([scalars, dist_stats], axis=0)
 
 
 def gradient_norm(model):
     total = 0.0
+
     for p in model.parameters():
         if p.grad is not None:
             total += p.grad.data.norm(2).item() ** 2
+
     return math.sqrt(total)
 
 
-def run(data_path, target_col, out_csv, input_vec_size=7,
-        batch_size=64, n_epochs=5, lr=1e-3, hidden=64,
-        is_malicious=False, seed=None, X_data=None, y_data=None, device=None):
+def run(
+    data_path,
+    target_col,
+    out_csv,
+    batch_size=64,
+    n_epochs=5,
+    lr=1e-3,
+    hidden=64,
+    is_malicious=False,
+    flip_frac=0.5,
+    seed=None,
+    X_data=None,
+    y_data=None,
+    device=None,
+    model_class_str="SixKMLP",
+):
     """Train a SimpleMLP and collect per-batch snapshots.
 
     Parameters
     ----------
     data_path / target_col : used only when X_data / y_data are not provided.
-    input_vec_size         : number of features in each snapshot row.
     is_malicious           : if True, apply a Byzantine gradient attack
-                             (random 50 % sign-flip each batch).
+                             (random sign-flip of `flip_frac` of each
+                             gradient tensor, each batch).
+    flip_frac              : fraction of gradient entries to sign-flip when
+                             is_malicious is True (default 0.5 = 50 %).
     seed                   : torch + numpy RNG seed for reproducibility.
     X_data / y_data        : pre-split numpy arrays (skip file loading).
     device                 : torch.device to train on (defaults to CPU).
@@ -154,12 +259,36 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
         X_train, y_train = load_dataset(data_path, target_col)
 
     loader = make_loader(X_train, y_train, batch_size)
-    model = SimpleMLP(in_features=X_train.shape[1], hidden=hidden).to(device)
+    model = (
+        FourKMLP(in_features=X_train.shape[1])
+        if model_class_str == "FourKMLP"
+        else (
+            SixKMLP(in_features=X_train.shape[1])
+            if model_class_str == "SixKMLP"
+            else (
+                EightKMLP(in_features=X_train.shape[1])
+                if model_class_str == "EightKMLP"
+                else (
+                    TenKMLP(in_features=X_train.shape[1])
+                    if model_class_str == "TenKMLP"
+                    else (
+                        TwelveKMLP(in_features=X_train.shape[1])
+                        if model_class_str == "TwelveKMLP"
+                        else None
+                    )
+                )
+            )
+        )
+    )
+
+    if model is None:
+        raise RuntimeError(f"Invalid model class name: {model_class_str}")
+
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.MSELoss()
 
     snapshots = []
-    prev_loss  = 0.0
+    prev_loss = 0.0
     prev_all_w = None
 
     for _ in range(n_epochs):
@@ -173,28 +302,37 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
             loss.backward()
 
             if is_malicious:
-                # Byzantine attack: randomly flip sign of 50 % of each gradient tensor
+                # Byzantine attack: randomly flip sign of `flip_frac` of each gradient tensor
                 with torch.no_grad():
                     for p in model.parameters():
                         if p.grad is not None:
-                            mask = torch.rand_like(p.grad) > 0.5
+                            mask = torch.rand_like(p.grad) < flip_frac
                             p.grad.data[mask] *= -1.0
 
             optimizer.step()
-            snapshots.append(extract_snapshot(model, loss.item(), input_vec_size,
-                                              prev_loss, prev_all_w))
+            snapshots.append(
+                extract_snapshot(model, loss.item(), prev_loss, prev_all_w)
+            )
 
             with torch.no_grad():
-                prev_all_w = torch.cat([
-                    m.weight.data.flatten()
-                    for m in model.modules() if isinstance(m, nn.Linear)
-                ]).cpu()
+                prev_all_w = torch.cat(
+                    [
+                        m.weight.data.flatten()
+                        for m in model.modules()
+                        if isinstance(m, nn.Linear)
+                    ]
+                ).cpu()
             prev_loss = loss.item()
 
     arr = np.array(snapshots, dtype=np.float32)
 
     if out_csv:
-        fieldnames = ["batch_idx"] + [f"f{i}" for i in range(input_vec_size)]
+        fieldnames = ["batch_idx"] + [
+            f"f{i}"
+            for i in range(
+                sum(p.numel() for p in model.parameters() if p.requires_grad)
+            )
+        ]
         with open(out_csv, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -210,27 +348,28 @@ def run(data_path, target_col, out_csv, input_vec_size=7,
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--dataset",        required=True)
-    parser.add_argument("--target-col",     required=True)
-    parser.add_argument("--out",            default="snapshots.csv")
-    parser.add_argument("--input-vec-size", type=int,   default=7)
-    parser.add_argument("--batch-size",     type=int,   default=64)
-    parser.add_argument("--n-epochs",       type=int,   default=5)
-    parser.add_argument("--lr",             type=float, default=1e-3)
-    parser.add_argument("--hidden",         type=int,   default=64)
-    parser.add_argument("--is-malicious",   action="store_true")
-    parser.add_argument("--seed",           type=int,   default=None)
+    parser.add_argument("--dataset", required=True)
+    parser.add_argument("--target-col", required=True)
+    parser.add_argument("--out", default="snapshots.csv")
+    parser.add_argument("--input-vec-size", type=int, default=7)
+    parser.add_argument("--batch-size", type=int, default=64)
+    parser.add_argument("--n-epochs", type=int, default=5)
+    parser.add_argument("--lr", type=float, default=1e-3)
+    parser.add_argument("--hidden", type=int, default=64)
+    parser.add_argument("--is-malicious", action="store_true")
+    parser.add_argument("--flip-frac", type=float, default=0.5)
+    parser.add_argument("--seed", type=int, default=None)
     args = parser.parse_args()
 
     run(
         data_path=args.dataset,
         target_col=args.target_col,
         out_csv=args.out,
-        input_vec_size=args.input_vec_size,
         batch_size=args.batch_size,
         n_epochs=args.n_epochs,
         lr=args.lr,
         hidden=args.hidden,
         is_malicious=args.is_malicious,
+        flip_frac=args.flip_frac,
         seed=args.seed,
     )
