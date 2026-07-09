@@ -1,96 +1,97 @@
 Device: cuda
 Dataset: 10000 rows  →  miner 3000, scientist 10000
   [Miner] Training model and collecting snapshots...
-Saved 1175 snapshots → /tmp/tmpudycntnd/miner.csv
-  [Miner] 1175 snapshots  (shape (1175, 4679))
+Saved 1175 snapshots → /tmp/tmpkoc042_w/miner.csv
+  [Miner] 1175 snapshots  (shape (1175, 16))
   [AT] Training Anomaly Transformer on miner snapshots...
-Epoch 1/15 - min_loss: 44.4995  max_loss: -42.1355  val_loss: 1.6847
-Epoch 2/15 - min_loss: 49.3652  max_loss: -47.4628  val_loss: 1.4939
-Epoch 3/15 - min_loss: 52.1428  max_loss: -50.4741  val_loss: 1.4244
-Epoch 4/15 - min_loss: 55.8498  max_loss: -54.2434  val_loss: 1.4025
-Epoch 5/15 - min_loss: 59.0465  max_loss: -57.4574  val_loss: 1.3894
-Epoch 6/15 - min_loss: 58.2169  max_loss: -56.5998  val_loss: 1.3758
-Epoch 7/15 - min_loss: 56.7178  max_loss: -55.1011  val_loss: 1.3482
-Epoch 8/15 - min_loss: 56.2542  max_loss: -54.7196  val_loss: 1.3178
-Epoch 9/15 - min_loss: 57.6051  max_loss: -56.1582  val_loss: 1.3062
-Epoch 10/15 - min_loss: 59.2406  max_loss: -57.7891  val_loss: 1.2951
-Epoch 11/15 - min_loss: 60.5860  max_loss: -59.1536  val_loss: 1.2863
-Epoch 12/15 - min_loss: 61.4357  max_loss: -60.0049  val_loss: 1.2792
-Epoch 13/15 - min_loss: 61.8167  max_loss: -60.4333  val_loss: 1.2658
-Epoch 14/15 - min_loss: 61.9623  max_loss: -60.5452  val_loss: 1.2515
-Epoch 15/15 - min_loss: 61.8100  max_loss: -60.3863  val_loss: 1.2356
-Restored best model (val_loss: 1.2356)
-  [AT] Threshold: 1750.0410
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_0.csv
-  Benign   run  1: flagged=0.702  → BAD
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_1.csv
-  Benign   run  2: flagged=0.442  → ok
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_2.csv
-  Benign   run  3: flagged=0.689  → ok
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_3.csv
-  Benign   run  4: flagged=0.762  → BAD
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_4.csv
-  Benign   run  5: flagged=0.692  → ok
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_5.csv
-  Benign   run  6: flagged=0.445  → ok
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_6.csv
-  Benign   run  7: flagged=0.809  → BAD
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_7.csv
-  Benign   run  8: flagged=0.814  → BAD
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_8.csv
-  Benign   run  9: flagged=0.936  → BAD
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_ben_9.csv
-  Benign   run 10: flagged=0.466  → ok
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_0.csv
-  Malicious run  1: flagged=0.967  → BAD
+Epoch 1/15 - min_loss: 40.7573  max_loss: -38.5050  val_loss: 0.8739
+Epoch 2/15 - min_loss: 38.2496  max_loss: -36.6058  val_loss: 0.6585
+Epoch 3/15 - min_loss: 37.2309  max_loss: -35.8713  val_loss: 0.5517
+Epoch 4/15 - min_loss: 38.5393  max_loss: -37.3809  val_loss: 0.5032
+Epoch 5/15 - min_loss: 42.0742  max_loss: -40.9808  val_loss: 0.4855
+Epoch 6/15 - min_loss: 47.1900  max_loss: -46.2015  val_loss: 0.4698
+Epoch 7/15 - min_loss: 53.6697  max_loss: -52.6569  val_loss: 0.4533
+Epoch 8/15 - min_loss: 58.8280  max_loss: -57.8994  val_loss: 0.4050
+Epoch 9/15 - min_loss: 61.5362  max_loss: -60.5804  val_loss: 0.3484
+Epoch 10/15 - min_loss: 62.8802  max_loss: -61.9882  val_loss: 0.2952
+Epoch 11/15 - min_loss: 64.6477  max_loss: -63.9008  val_loss: 0.2679
+Epoch 12/15 - min_loss: 67.0273  max_loss: -66.2913  val_loss: 0.2529
+Epoch 13/15 - min_loss: 69.2023  max_loss: -68.3791  val_loss: 0.2412
+Epoch 14/15 - min_loss: 70.6357  max_loss: -69.9381  val_loss: 0.2322
+Epoch 15/15 - min_loss: 71.8197  max_loss: -71.1035  val_loss: 0.2171
+Restored best model (val_loss: 0.2171)
+  [AT] Threshold: 3.9465
+  [EffSignal] miner mean=0.01028  cutoff=0.00309 (eff_signal_ratio=0.3)
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_0.csv
+  Benign   run  1: flagged=0.022  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_1.csv
+  Benign   run  2: flagged=0.021  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_2.csv
+  Benign   run  3: flagged=0.030  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_3.csv
+  Benign   run  4: flagged=0.025  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_4.csv
+  Benign   run  5: flagged=0.023  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_5.csv
+  Benign   run  6: flagged=0.029  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_6.csv
+  Benign   run  7: flagged=0.023  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_7.csv
+  Benign   run  8: flagged=0.036  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_8.csv
+  Benign   run  9: flagged=0.023  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_ben_9.csv
+  Benign   run 10: flagged=0.027  → ok
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_0.csv
+  Malicious run  1: flagged=0.263  → BAD
 
-  TP=1  FP=5  TN=5  FN=0
-  Precision=0.167  Recall=1.000  F1=0.286
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_1.csv
-  Malicious run  2: flagged=0.988  → BAD
+  TP=1  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_1.csv
+  Malicious run  2: flagged=0.128  → BAD
 
-  TP=2  FP=5  TN=5  FN=0
-  Precision=0.286  Recall=1.000  F1=0.444
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_2.csv
-  Malicious run  3: flagged=0.776  → BAD
+  TP=2  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_2.csv
+  Malicious run  3: flagged=0.216  → BAD
 
-  TP=3  FP=5  TN=5  FN=0
-  Precision=0.375  Recall=1.000  F1=0.545
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_3.csv
-  Malicious run  4: flagged=0.894  → BAD
+  TP=3  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_3.csv
+  Malicious run  4: flagged=0.294  → BAD
 
-  TP=4  FP=5  TN=5  FN=0
-  Precision=0.444  Recall=1.000  F1=0.615
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_4.csv
-  Malicious run  5: flagged=0.918  → BAD
+  TP=4  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_4.csv
+  Malicious run  5: flagged=0.334  → BAD
 
-  TP=5  FP=5  TN=5  FN=0
-  Precision=0.500  Recall=1.000  F1=0.667
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_5.csv
-  Malicious run  6: flagged=0.593  → ok
+  TP=5  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_5.csv
+  Malicious run  6: flagged=0.153  → BAD
 
-  TP=5  FP=5  TN=5  FN=1
-  Precision=0.500  Recall=0.833  F1=0.625
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_6.csv
-  Malicious run  7: flagged=0.989  → BAD
+  TP=6  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_6.csv
+  Malicious run  7: flagged=0.401  → BAD
 
-  TP=6  FP=5  TN=5  FN=1
-  Precision=0.545  Recall=0.857  F1=0.667
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_7.csv
-  Malicious run  8: flagged=0.866  → BAD
+  TP=7  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_7.csv
+  Malicious run  8: flagged=0.284  → BAD
 
-  TP=7  FP=5  TN=5  FN=1
-  Precision=0.583  Recall=0.875  F1=0.700
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_8.csv
-  Malicious run  9: flagged=0.962  → BAD
+  TP=8  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_8.csv
+  Malicious run  9: flagged=0.254  → BAD
 
-  TP=8  FP=5  TN=5  FN=1
-  Precision=0.615  Recall=0.889  F1=0.727
-Saved 3925 snapshots → /tmp/tmpudycntnd/sci_mal_9.csv
-  Malicious run 10: flagged=0.715  → BAD
+  TP=9  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
+Saved 3925 snapshots → /tmp/tmpkoc042_w/sci_mal_9.csv
+  Malicious run 10: flagged=0.222  → BAD
 
-  TP=9  FP=5  TN=5  FN=1
-  Precision=0.643  Recall=0.900  F1=0.750
+  TP=10  FP=0  TN=10  FN=0
+  Precision=1.000  Recall=1.000  F1=1.000
 
 Saved results → grid_search_results/result_ff0.7_r0.02.csv
 Saved plot → grid_search_results/result_ff0.7_r0.02.png

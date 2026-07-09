@@ -107,18 +107,30 @@ def extract_snapshot(model, loss_val, prev_loss=0.0, prev_all_w=None):
         dtype=np.float32,
     )
 
-    n_scalar = len(scalars)  # always 7
+    frac_pos = (all_g > 0).float().mean().item()
+    abs_g = all_g.abs()
+    q10, q50, q90 = torch.quantile(
+        abs_g, torch.tensor([0.1, 0.5, 0.9], device=all_g.device)
+    ).tolist()
+    g_z = (all_g - g_mean) / g_std
+    skew = (g_z**3).mean().item()
+    kurtosis = (g_z**4).mean().item() - 3.0
+    layer_norms = [g.norm(2).item() for g in grads] if grads else [0.0] * len(weights)
 
-    # if input_vec_size <= n_scalar:
-    #     return scalars[:input_vec_size]
+    dist_stats = np.array(
+        [
+            frac_pos,
+            q10,
+            q50,
+            q90,
+            skew,
+            kurtosis,
+            *layer_norms,
+        ],
+        dtype=np.float32,
+    )
 
-    # n_sample = input_vec_size - n_scalar
-    # indices = torch.linspace(0, len(all_g) - 1, n_sample).long()
-    # sampled = all_g[indices].detach().cpu().numpy().astype(np.float32)
-    # =return np.concatenate([scalars, sampled])
-    # print("Scalars: ", scalars.shape)
-    # print("Grads: ", all_g.shape)
-    return np.concatenate([scalars, all_g.cpu()], axis=0)
+    return np.concatenate([scalars, dist_stats], axis=0)
 
 
 def gradient_norm(model):

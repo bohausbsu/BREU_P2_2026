@@ -1,0 +1,53 @@
+Traceback (most recent call last):
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/GridSearch/experiment.py", line 19, in <module>
+    import torch
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/__init__.py", line 2885, in <module>
+    from torch import _meta_registrations
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_meta_registrations.py", line 12, in <module>
+    from torch._decomp import (
+    ...<4 lines>...
+    )
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_decomp/__init__.py", line 286, in <module>
+    import torch._decomp.decompositions
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_decomp/decompositions.py", line 17, in <module>
+    import torch._prims as prims
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_prims/__init__.py", line 1158, in <module>
+    minimum = _make_elementwise_binary_prim(
+        "minimum",
+    ...<2 lines>...
+        type_promotion=ELEMENTWISE_PRIM_TYPE_PROMOTION_KIND.DEFAULT,
+    )
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_prims/__init__.py", line 524, in _make_elementwise_binary_prim
+    return _make_prim(
+        schema=f"{name}(Tensor self, Tensor other) -> Tensor",
+    ...<2 lines>...
+        **kwargs,
+    )
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_prims/__init__.py", line 334, in _make_prim
+    prim_def = torch.library.custom_op(
+        "prims::" + name,
+    ...<2 lines>...
+        schema=schema,
+    )
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/custom_ops.py", line 268, in custom_op
+    return inner(fn)
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/custom_ops.py", line 249, in inner
+    result = CustomOpDef(namespace, opname, schema_str, fn, normalized_tags)
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/custom_ops.py", line 309, in __init__
+    self._register_to_dispatcher(self._tags)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/custom_ops.py", line 751, in _register_to_dispatcher
+    self._register_autograd_dispatcher_impl()
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/custom_ops.py", line 789, in _register_autograd_dispatcher_impl
+    autograd_impl = autograd.make_autograd_impl(self._opoverload, self)
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/autograd.py", line 100, in make_autograd_impl
+    if any(
+       ^^^
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/autograd.py", line 101, in <genexpr>
+    utils.is_tensorlist_like_type(a.type)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^
+  File "/home/midge/repos/bsu/research/reu/2026/ab/BREU_P2_2026/.venv/lib/python3.14/site-packages/torch/_library/utils.py", line 158, in is_tensorlist_like_type
+    or typ == _C.OptionalType(_C.ListType(_C.OptionalType(_C.TensorType.get())))
+                              ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+KeyboardInterrupt

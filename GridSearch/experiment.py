@@ -32,6 +32,8 @@ from AnomalyTransformer import train as at_train
 from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
 from AnomalyTransformer.dataset import get_dataloader, split_data
 
+EFF_SIGNAL_COL = 2
+
 # ---------------------------------------------------------------------------
 # AT helpers
 # ---------------------------------------------------------------------------
@@ -133,8 +135,10 @@ def run_experiment(
     out_csv,
     out_png,
     device="auto",
+    cutoff=0.5,
     benign_seed_base=1000,
     malicious_seed_base=2000,
+    eff_signal_ratio=0.3,
 ):
     device = resolve_device(device)
     print(f"Device: {device}")
@@ -184,6 +188,14 @@ def run_experiment(
             )
         print(f"  [AT] Threshold: {threshold:.4f}")
 
+        miner_eff_signal = miner_snaps[:, EFF_SIGNAL_COL]
+        eff_signal_mean = float(miner_eff_signal.mean())
+        eff_signal_cutoff = eff_signal_mean * eff_signal_ratio
+        print(
+            f"  [EffSignal] miner mean={eff_signal_mean:.5f}  "
+            f"cutoff={eff_signal_cutoff:.5f} (eff_signal_ratio={eff_signal_ratio})"
+        )
+
         # ── Scientist phase ──────────────────────────────────────────────
         run_records = []
 
@@ -204,6 +216,9 @@ def run_experiment(
                 y_data=y_sci,
                 device=device,
             )
+
+            sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
+
             frac = _score_run(
                 at_model,
                 sci_snaps,
@@ -214,7 +229,14 @@ def run_experiment(
                 at_cfg,
                 device,
             )
-            pred = (1 if frac > flag_frac else 0) if frac is not None else -1
+            eff_mean = float(sci_snaps[:, EFF_SIGNAL_COL].mean())
+            at_pred = (1 if frac > flag_frac else 0) if frac is not None else -1
+            eff_pred = 1 if eff_mean < eff_signal_cutoff else 0
+            pred = (
+                at_pred
+                if at_pred < 0
+                else (1 if (at_pred == 1 or eff_pred == 1) else 0)
+            )
             run_records.append({"actual": 0, "predicted": pred, "frac": frac})
             frac_str = f"{frac:.3f}" if frac is not None else "N/A"
             print(
@@ -238,6 +260,8 @@ def run_experiment(
                 y_data=y_sci,
                 device=device,
             )
+            sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
+
             frac = _score_run(
                 at_model,
                 sci_snaps,
@@ -248,7 +272,15 @@ def run_experiment(
                 at_cfg,
                 device,
             )
-            pred = (1 if frac > flag_frac else 0) if frac is not None else -1
+
+            eff_mean = float(sci_snaps[:, EFF_SIGNAL_COL].mean())
+            at_pred = (1 if frac > flag_frac else 0) if frac is not None else -1
+            eff_pred = 1 if eff_mean < eff_signal_cutoff else 0
+            pred = (
+                at_pred
+                if at_pred < 0
+                else (1 if (at_pred == 1 or eff_pred == 1) else 0)
+            )
             run_records.append({"actual": 1, "predicted": pred, "frac": frac})
             frac_str = f"{frac:.3f}" if frac is not None else "N/A"
             print(
