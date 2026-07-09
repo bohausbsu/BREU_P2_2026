@@ -23,3 +23,6 @@ housing.csv
 
 #jupyter
 .ipynb_checkpoints
+
+# IDE files
+.idea
