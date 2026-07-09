@@ -16,10 +16,8 @@ set -euo pipefail
 # ---- defaults ---------------------------------------------------------------
 DATASET="college_student_placement_dataset.csv"
 TARGET_COL="Placement"
-# FLAG_FRACS=(0.1 0.2 0.3 0.4 0.5 0.6 0.7)
-# AT_RS=(0.01 0.02 0.05 0.1 0.15 0.2 0.25)
-FLAG_FRACS=(0.1)
-AT_RS=(0.01)
+FLAG_FRACS=(0.1 0.2 0.3 0.4 0.5 0.6 0.7)
+AT_RS=(0.01 0.02 0.05 0.1 0.15 0.2 0.25)
 OUTDIR="grid_search_results"
 EXPERIMENT_PY="$(cd "$(dirname "$0")" && pwd)/experiment.py"
 EXTRA_ARGS=()

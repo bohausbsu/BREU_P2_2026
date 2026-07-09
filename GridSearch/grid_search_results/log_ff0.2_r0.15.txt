@@ -1,0 +1,96 @@
+Device: cuda
+Dataset: 10000 rows  →  miner 3000, scientist 10000
+  [Miner] Training model and collecting snapshots...
+Saved 1175 snapshots → /tmp/tmp4a39wjka/miner.csv
+  [Miner] 1175 snapshots  (shape (1175, 4679))
+  [AT] Training Anomaly Transformer on miner snapshots...
+Epoch 1/15 - min_loss: 44.4995  max_loss: -42.1355  val_loss: 1.6847
+Epoch 2/15 - min_loss: 49.3652  max_loss: -47.4628  val_loss: 1.4939
+Epoch 3/15 - min_loss: 52.1428  max_loss: -50.4741  val_loss: 1.4244
+Epoch 4/15 - min_loss: 55.8498  max_loss: -54.2434  val_loss: 1.4025
+Epoch 5/15 - min_loss: 59.0465  max_loss: -57.4574  val_loss: 1.3894
+Epoch 6/15 - min_loss: 58.2169  max_loss: -56.5998  val_loss: 1.3758
+Epoch 7/15 - min_loss: 56.7178  max_loss: -55.1011  val_loss: 1.3482
+Epoch 8/15 - min_loss: 56.2542  max_loss: -54.7196  val_loss: 1.3178
+Epoch 9/15 - min_loss: 57.6051  max_loss: -56.1582  val_loss: 1.3062
+Epoch 10/15 - min_loss: 59.2406  max_loss: -57.7891  val_loss: 1.2951
+Epoch 11/15 - min_loss: 60.5860  max_loss: -59.1536  val_loss: 1.2863
+Epoch 12/15 - min_loss: 61.4357  max_loss: -60.0049  val_loss: 1.2792
+Epoch 13/15 - min_loss: 61.8167  max_loss: -60.4333  val_loss: 1.2658
+Epoch 14/15 - min_loss: 61.9623  max_loss: -60.5452  val_loss: 1.2515
+Epoch 15/15 - min_loss: 61.8100  max_loss: -60.3863  val_loss: 1.2356
+Restored best model (val_loss: 1.2356)
+  [AT] Threshold: 256.2594
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_0.csv
+  Benign   run  1: flagged=0.833  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_1.csv
+  Benign   run  2: flagged=0.703  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_2.csv
+  Benign   run  3: flagged=0.790  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_3.csv
+  Benign   run  4: flagged=0.877  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_4.csv
+  Benign   run  5: flagged=0.841  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_5.csv
+  Benign   run  6: flagged=0.603  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_6.csv
+  Benign   run  7: flagged=0.872  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_7.csv
+  Benign   run  8: flagged=0.935  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_8.csv
+  Benign   run  9: flagged=0.968  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_ben_9.csv
+  Benign   run 10: flagged=0.646  → BAD
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_0.csv
+  Malicious run  1: flagged=0.977  → BAD
+
+  TP=1  FP=10  TN=0  FN=0
+  Precision=0.091  Recall=1.000  F1=0.167
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_1.csv
+  Malicious run  2: flagged=0.993  → BAD
+
+  TP=2  FP=10  TN=0  FN=0
+  Precision=0.167  Recall=1.000  F1=0.286
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_2.csv
+  Malicious run  3: flagged=0.853  → BAD
+
+  TP=3  FP=10  TN=0  FN=0
+  Precision=0.231  Recall=1.000  F1=0.375
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_3.csv
+  Malicious run  4: flagged=0.932  → BAD
+
+  TP=4  FP=10  TN=0  FN=0
+  Precision=0.286  Recall=1.000  F1=0.444
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_4.csv
+  Malicious run  5: flagged=0.960  → BAD
+
+  TP=5  FP=10  TN=0  FN=0
+  Precision=0.333  Recall=1.000  F1=0.500
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_5.csv
+  Malicious run  6: flagged=0.766  → BAD
+
+  TP=6  FP=10  TN=0  FN=0
+  Precision=0.375  Recall=1.000  F1=0.545
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_6.csv
+  Malicious run  7: flagged=0.994  → BAD
+
+  TP=7  FP=10  TN=0  FN=0
+  Precision=0.412  Recall=1.000  F1=0.583
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_7.csv
+  Malicious run  8: flagged=0.926  → BAD
+
+  TP=8  FP=10  TN=0  FN=0
+  Precision=0.444  Recall=1.000  F1=0.615
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_8.csv
+  Malicious run  9: flagged=0.970  → BAD
+
+  TP=9  FP=10  TN=0  FN=0
+  Precision=0.474  Recall=1.000  F1=0.643
+Saved 3925 snapshots → /tmp/tmp4a39wjka/sci_mal_9.csv
+  Malicious run 10: flagged=0.853  → BAD
+
+  TP=10  FP=10  TN=0  FN=0
+  Precision=0.500  Recall=1.000  F1=0.667
+
+Saved results → grid_search_results/result_ff0.2_r0.15.csv
+Saved plot → grid_search_results/result_ff0.2_r0.15.png

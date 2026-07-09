@@ -1,7 +1,7 @@
 Device: cuda
 Dataset: 10000 rows  →  miner 3000, scientist 10000
   [Miner] Training model and collecting snapshots...
-Saved 1175 snapshots → /tmp/tmpl_ko9x_k/miner.csv
+Saved 1175 snapshots → /tmp/tmpzsm4inzq/miner.csv
   [Miner] 1175 snapshots  (shape (1175, 4679))
   [AT] Training Anomaly Transformer on miner snapshots...
 Epoch 1/15 - min_loss: 44.4995  max_loss: -42.1355  val_loss: 1.6847
@@ -21,76 +21,76 @@ Epoch 14/15 - min_loss: 61.9623  max_loss: -60.5452  val_loss: 1.2515
 Epoch 15/15 - min_loss: 61.8100  max_loss: -60.3863  val_loss: 1.2356
 Restored best model (val_loss: 1.2356)
   [AT] Threshold: 2444.1768
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_0.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_0.csv
   Benign   run  1: flagged=0.674  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_1.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_1.csv
   Benign   run  2: flagged=0.394  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_2.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_2.csv
   Benign   run  3: flagged=0.663  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_3.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_3.csv
   Benign   run  4: flagged=0.734  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_4.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_4.csv
   Benign   run  5: flagged=0.659  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_5.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_5.csv
   Benign   run  6: flagged=0.415  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_6.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_6.csv
   Benign   run  7: flagged=0.786  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_7.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_7.csv
   Benign   run  8: flagged=0.787  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_8.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_8.csv
   Benign   run  9: flagged=0.924  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_ben_9.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_ben_9.csv
   Benign   run 10: flagged=0.435  → BAD
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_0.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_0.csv
   Malicious run  1: flagged=0.964  → BAD
 
   TP=1  FP=10  TN=0  FN=0
   Precision=0.091  Recall=1.000  F1=0.167
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_1.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_1.csv
   Malicious run  2: flagged=0.987  → BAD
 
   TP=2  FP=10  TN=0  FN=0
   Precision=0.167  Recall=1.000  F1=0.286
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_2.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_2.csv
   Malicious run  3: flagged=0.757  → BAD
 
   TP=3  FP=10  TN=0  FN=0
   Precision=0.231  Recall=1.000  F1=0.375
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_3.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_3.csv
   Malicious run  4: flagged=0.881  → BAD
 
   TP=4  FP=10  TN=0  FN=0
   Precision=0.286  Recall=1.000  F1=0.444
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_4.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_4.csv
   Malicious run  5: flagged=0.902  → BAD
 
   TP=5  FP=10  TN=0  FN=0
   Precision=0.333  Recall=1.000  F1=0.500
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_5.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_5.csv
   Malicious run  6: flagged=0.558  → BAD
 
   TP=6  FP=10  TN=0  FN=0
   Precision=0.375  Recall=1.000  F1=0.545
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_6.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_6.csv
   Malicious run  7: flagged=0.986  → BAD
 
   TP=7  FP=10  TN=0  FN=0
   Precision=0.412  Recall=1.000  F1=0.583
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_7.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_7.csv
   Malicious run  8: flagged=0.851  → BAD
 
   TP=8  FP=10  TN=0  FN=0
   Precision=0.444  Recall=1.000  F1=0.615
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_8.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_8.csv
   Malicious run  9: flagged=0.961  → BAD
 
   TP=9  FP=10  TN=0  FN=0
   Precision=0.474  Recall=1.000  F1=0.643
-Saved 3925 snapshots → /tmp/tmpl_ko9x_k/sci_mal_9.csv
+Saved 3925 snapshots → /tmp/tmpzsm4inzq/sci_mal_9.csv
   Malicious run 10: flagged=0.682  → BAD
 
   TP=10  FP=10  TN=0  FN=0
   Precision=0.500  Recall=1.000  F1=0.667
 
-Saved results → grid_search_results/result_ff0.1_r0.01.csv
-Saved plot → grid_search_results/result_ff0.1_r0.01.png
+Saved results → grid_search_results/result_ff0.2_r0.01.csv
+Saved plot → grid_search_results/result_ff0.2_r0.01.png
