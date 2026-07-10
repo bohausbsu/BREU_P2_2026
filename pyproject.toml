@@ -10,8 +10,10 @@ dependencies = [
     "mermaid-py>=0.8.4",
     "numpy>=2.5.0",
     "pandas>=3.0.3",
+    "pillow>=12.2.0",
     "scikit-learn>=1.9.0",
     "torch>=2.12.1",
+    "torchvision>=0.27",
 ]
 
 [dependency-groups]
@@ -28,5 +30,8 @@ explicit = true
 
 [tool.uv.sources]
 torch = [
+    { index = "pt" }
+]
+torchvision = [
     { index = "pt" }
 ]

@@ -14,6 +14,8 @@ AnomalyTransformer/venv/*
 # datasets
 dataset.csv
 housing.csv
+AccuracyExperiment/mnist
+AccuracyExperiment/PetImages
 
 # jupyter cache
 .ipynb_checkpoints
