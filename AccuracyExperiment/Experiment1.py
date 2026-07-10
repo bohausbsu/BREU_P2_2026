@@ -37,10 +37,10 @@ Usage
   python Experiment1.py --dataset data.csv --target-col Placement
 """
 
-import sys
-import os
-import csv
 import argparse
+import csv
+import os
+import sys
 import tempfile
 
 import matplotlib
@@ -57,17 +57,18 @@ sys.path.insert(0, _AT_PKG_DIR)
 sys.path.insert(0, _HERE)
 
 from snapshot_trainer import (
-    run as snapshot_run,
-    load_full_dataset,
+    EightKMLP,
     FourKMLP,
     SixKMLP,
-    EightKMLP,
     TenKMLP,
     TwelveKMLP,
+    load_full_dataset,
 )
-from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
-from AnomalyTransformer.dataset import split_data, get_dataloader
+from snapshot_trainer import run as snapshot_run
+
 from AnomalyTransformer import train as at_train
+from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
+from AnomalyTransformer.dataset import get_dataloader, split_data
 
 MODEL_CLASSES = [FourKMLP, SixKMLP, EightKMLP, TenKMLP, TwelveKMLP]
 EFF_SIGNAL_COL = 2
@@ -172,6 +173,7 @@ def run_experiment(
     train_frac,
     out_csv,
     out_png,
+    flip_frac=0.5,
     device="auto",
     cutoff=0.5,
     benign_seed_base=1000,
@@ -208,9 +210,9 @@ def run_experiment(
                 batch_size=miner_snap_cfg["batch_size"],
                 n_epochs=miner_snap_cfg["n_epochs"],
                 lr=miner_snap_cfg["lr"],
-                hidden=miner_snap_cfg["hidden"],
                 is_malicious=False,
                 seed=42,
+                flip_frac=flip_frac,
                 X_data=X_miner,
                 y_data=y_miner,
             )
@@ -252,8 +254,8 @@ def run_experiment(
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
-                    hidden=snap_cfg["hidden"],
                     is_malicious=False,
+                    flip_frac=flip_frac,
                     seed=seed,
                     X_data=X_sci,
                     y_data=y_sci,
@@ -296,8 +298,8 @@ def run_experiment(
                     batch_size=snap_cfg["batch_size"],
                     n_epochs=snap_cfg["n_epochs"],
                     lr=snap_cfg["lr"],
-                    hidden=snap_cfg["hidden"],
                     is_malicious=True,
+                    flip_frac=flip_frac,
                     seed=seed,
                     X_data=X_sci,
                     y_data=y_sci,
@@ -371,28 +373,16 @@ def run_experiment(
         print(f"\nSaved results → {out_csv}")
 
     if out_png and all_results:
-        sizes = [r["model_class"] for r in all_results]
+        sizes = ["4k", "6k", "8k", "10k", "12k"]
         f1s = [r["f1"] for r in all_results]
-
-        m_sz = (
-            "6k"
-            if model_class_str == "SixKMLP"
-            else (
-                "8k"
-                if model_class_str == "EightKMLP"
-                else (
-                    "10k"
-                    if model_class_str == "TenKMLP"
-                    else "12k" if model_class_str == "TwelveKMLP" else "Unknown Size"
-                )
-            )
-        )
 
         fig, ax = plt.subplots(figsize=(9, 5))
         ax.plot(sizes, f1s, "b-o", label="F1 score")
         ax.set_xlabel("Model Size")
         ax.set_ylabel("Score")
-        ax.set_title(f"Experiment 1: SPECTRA Detection vs Model Size {m_sz}")
+        ax.set_title(
+            f"Experiment 1: SPECTRA Detection vs FFNN Model Size with {flip_frac * 100.0}% of signs flipped"
+        )
         ax.set_xticks(sizes)
         ax.set_ylim(0, 1.05)
         ax.legend()
@@ -515,20 +505,34 @@ if __name__ == "__main__":
         "batch_size": args.at_batch_size,
     }
 
-    run_experiment(
-        dataset_path=os.path.abspath(args.dataset),
-        target_col=args.target_col,
-        window_size=args.window_size,
-        flag_frac=args.flag_frac,
-        miner_snap_cfg=miner_snap_cfg,
-        snap_cfg=snap_cfg,
-        at_cfg=at_cfg,
-        n_benign=args.n_benign,
-        n_malicious=args.n_malicious,
-        train_frac=args.train_frac,
-        out_csv=args.out_csv,
-        out_png=args.out,
-        device=args.device,
-        benign_seed_base=args.benign_seed_base,
-        malicious_seed_base=args.malicious_seed_base,
-    )
+    for flip_frac in [0.1, 0.2, 0.3, 0.4, 0.5]:
+        csv_parts = args.out_csv.split(".")
+        png_parts = args.out.split(".")
+
+        csv_name = f"{csv_parts[0]}_{flip_frac}.{csv_parts[-1]}"
+        png_name = f"{png_parts[0]}_{flip_frac}.{png_parts[-1]}"
+
+        print(
+            f"Running an Accuracy Experiment with {flip_frac * 100.0}% of signs flipped."
+        )
+
+        print(f"\tSaving experiment results in {csv_name} & {png_name}.")
+
+        run_experiment(
+            dataset_path=os.path.abspath(args.dataset),
+            target_col=args.target_col,
+            window_size=args.window_size,
+            flag_frac=args.flag_frac,
+            miner_snap_cfg=miner_snap_cfg,
+            snap_cfg=snap_cfg,
+            at_cfg=at_cfg,
+            n_benign=args.n_benign,
+            n_malicious=args.n_malicious,
+            train_frac=args.train_frac,
+            out_csv=csv_name,
+            out_png=png_name,
+            flip_frac=flip_frac,
+            device=args.device,
+            benign_seed_base=args.benign_seed_base,
+            malicious_seed_base=args.malicious_seed_base,
+        )

@@ -1,6 +1,7 @@
 import argparse
 import csv
 import math
+
 import numpy as np
 import pandas as pd
 import torch
@@ -130,7 +131,7 @@ def load_full_dataset(path, target_col):
     return X, y
 
 
-def extract_snapshot(model, loss_val, input_vec_size, prev_loss=0.0, prev_all_w=None):
+def extract_snapshot(model, loss_val, prev_loss=0.0, prev_all_w=None):
     """Return a 1-D numpy array of exactly `input_vec_size` features.
 
     The first 7 slots are phase-invariant dynamics features designed to expose
@@ -216,7 +217,6 @@ def run(
     batch_size=64,
     n_epochs=5,
     lr=1e-3,
-    hidden=64,
     is_malicious=False,
     flip_frac=0.5,
     seed=None,
@@ -283,6 +283,8 @@ def run(
 
     if model is None:
         raise RuntimeError(f"Invalid model class name: {model_class_str}")
+
+    model.to(device)
 
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.MSELoss()
@@ -368,7 +370,6 @@ if __name__ == "__main__":
         batch_size=args.batch_size,
         n_epochs=args.n_epochs,
         lr=args.lr,
-        hidden=args.hidden,
         is_malicious=args.is_malicious,
         flip_frac=args.flip_frac,
         seed=args.seed,
