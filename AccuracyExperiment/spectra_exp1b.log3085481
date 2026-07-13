@@ -1674,3 +1674,4 @@ Saved 1175 snapshots -> /tmp/tmp4ofqg_ed/sci_mal_9.csv
 Saved results -> cnn_acc_1-0.3-0.02_0.5.csv
 Saved plot -> cnn_acc_1-0.3-0.02_0.5.png
 Run 2 of 10
+slurmstepd: error: *** JOB 3085481 ON gpu118 CANCELLED AT 2026-07-13T16:57:04 ***
