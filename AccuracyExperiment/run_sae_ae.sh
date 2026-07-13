@@ -1,11 +1,10 @@
 #!/bin/bash
-#SBATCH -J spectra_exp_sae_ffnn
-#SBATCH -o spectra_exp_sae_ffnn.log%j
-#SBATCH --cpus-per-task=7
-#SBATCH --ntasks=4
+#SBATCH -J spectra_exp_sae_ae
+#SBATCH -o spectra_exp_sae_ae.log%j
+#SBATCH --cpus-per-task=48
+#SBATCH --ntasks=1
 #SBATCH --nodes=1
-#SBATCH --gres=gpu:1
-#SBATCH -p gpu
+#SBATCH -p bsudfq
 #SBATCH -t 24:00:00
 echo "Date              = $(date)"
 echo "Working Directory = $(pwd)"
@@ -13,7 +12,6 @@ echo ""
 echo "Number of Nodes Allocated  = $SLURM_JOB_NUM_NODES"
 echo "Number of Tasks Allocated  = $SLURM_NTASKS"
 echo "Number of CPUs Allocated   = $SLURM_JOB_CPUS_PER_NODE"
-echo "GPU Allocated              = $SLURM_JOB_GPUS"
 echo ""
 set -euo pipefail
 
