@@ -42,6 +42,7 @@ import csv
 import os
 import sys
 import tempfile
+from pathlib import Path
 
 import matplotlib
 
@@ -491,6 +492,7 @@ def parse_args():
 
 
 if __name__ == "__main__":
+    print("Started python")
     args = parse_args()
 
     miner_snap_cfg = {
@@ -519,11 +521,10 @@ if __name__ == "__main__":
     }
 
     for flip_frac in [0.1, 0.2, 0.3, 0.4, 0.5]:
-        csv_parts = args.out_csv.split(".")
-        png_parts = args.out.split(".")
-
-        csv_name = f"{csv_parts[0]}_{flip_frac}.{csv_parts[-1]}"
-        png_name = f"{png_parts[0]}_{flip_frac}.{png_parts[-1]}"
+        csv_filename = Path(args.out_csv)
+        csv_name = csv_filename.with_stem(csv_filename.stem + f"_{flip_frac}")
+        png_filename = Path(args.out)
+        png_name = png_filename.with_stem(png_filename.stem + f"_{flip_frac}")
 
         print(
             f"Running an Accuracy Experiment with {flip_frac * 100.0}% of signs flipped."
