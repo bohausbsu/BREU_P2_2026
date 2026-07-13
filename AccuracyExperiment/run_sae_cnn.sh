@@ -31,12 +31,9 @@ which python
 # Find Python version
 python --version
 
-# Find GPU details from pytorch
-python -c "import torch; print(torch.cuda.get_device_name(0)); print(torch.cuda.get_device_properties())"
-
-echo "Testing Scalability & Efficiency for CNN..."
+echo "Testing Scalability for CNN..."
 
 time python ExperimentSAE.py --seed 1 --model FourKCNN --data-root-cnn PetImages --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_cnn_4k-$FLAG_FRAC-$AT_R.csv"
 mv sae_* sae_exp/
 
-echo "Finished running the Scalability & Efficiency Experiment for the CNN."
+echo "Finished running the Scalability Experiment for the CNN."
