@@ -12,7 +12,6 @@ echo ""
 echo "Number of Nodes Allocated  = $SLURM_JOB_NUM_NODES"
 echo "Number of Tasks Allocated  = $SLURM_NTASKS"
 echo "Number of CPUs Allocated   = $SLURM_JOB_CPUS_PER_NODE"
-echo "GPU Allocated              = $SLURM_JOB_GPUS"
 echo ""
 set -euo pipefail
 
@@ -31,9 +30,6 @@ which python
 
 # Find Python version
 python --version
-
-# Find Nvidia/GPU details
-nvidia-smi
 
 # Find GPU details from pytorch
 python -c "import torch; print(torch.cuda.get_device_name(0)); print(torch.cuda.get_device_properties())"
