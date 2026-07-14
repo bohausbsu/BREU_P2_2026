@@ -1,0 +1,2 @@
+experiment,seed,model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
+sae_mem_TwelveKMLP,1,TwelveKMLP,ffnn,10,0,10,0,1.0,1.0,1.0,481411072,481.411,9690873856,9690.874,525664256,525.664,10697949184,10697.949

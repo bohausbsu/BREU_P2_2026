@@ -1,0 +1,271 @@
+Date              = Mon Jul 13 23:15:49 MDT 2026
+Working Directory = /bsuhome/dylangresham/scratch/BREU_P2_2026/AccuracyExperiment
+
+Number of Nodes Allocated  = 1
+Number of Tasks Allocated  = 1
+Number of CPUs Allocated   = 48
+
+/bsuhome/dylangresham/miniforge3/envs/reu26_ab/bin/python
+Python 3.10.20
+Testing Scalability for FFNN...
+Model: FourKMLP  (family=ffnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 10000 rows  ->  miner 3000, scientist 10000
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 1175 snapshots  peak_rss=483.5 MB
+Scientist ben_0   : peak_rss=480.3 MB (running total 480.3 MB)
+Scientist ben_1   : peak_rss=480.3 MB (running total 960.7 MB)
+Scientist ben_2   : peak_rss=480.3 MB (running total 1441.0 MB)
+Scientist ben_3   : peak_rss=480.3 MB (running total 1921.3 MB)
+Scientist ben_4   : peak_rss=480.3 MB (running total 2401.6 MB)
+Scientist ben_5   : peak_rss=480.3 MB (running total 2881.9 MB)
+Scientist ben_6   : peak_rss=480.3 MB (running total 3362.3 MB)
+Scientist ben_7   : peak_rss=480.3 MB (running total 3842.6 MB)
+Scientist ben_8   : peak_rss=480.4 MB (running total 4323.0 MB)
+Scientist ben_9   : peak_rss=480.4 MB (running total 4803.4 MB)
+Scientist mal_0   : peak_rss=480.6 MB (running total 5283.9 MB)
+Scientist mal_1   : peak_rss=480.6 MB (running total 5764.5 MB)
+Scientist mal_2   : peak_rss=480.6 MB (running total 6245.1 MB)
+Scientist mal_3   : peak_rss=480.6 MB (running total 6725.6 MB)
+Scientist mal_4   : peak_rss=480.6 MB (running total 7206.2 MB)
+Scientist mal_5   : peak_rss=480.5 MB (running total 7686.7 MB)
+Scientist mal_6   : peak_rss=480.6 MB (running total 8167.3 MB)
+Scientist mal_7   : peak_rss=480.6 MB (running total 8647.9 MB)
+Scientist mal_8   : peak_rss=480.6 MB (running total 9128.4 MB)
+Scientist mal_9   : peak_rss=480.6 MB (running total 9609.0 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 38.6366  max_loss: -36.6041  val_loss: 0.8229
+Epoch 2/15 - min_loss: 36.2863  max_loss: -34.8357  val_loss: 0.5902
+Epoch 3/15 - min_loss: 35.1746  max_loss: -34.0327  val_loss: 0.4694
+Epoch 4/15 - min_loss: 36.1791  max_loss: -35.2026  val_loss: 0.4139
+Epoch 5/15 - min_loss: 39.4026  max_loss: -38.5171  val_loss: 0.3807
+Epoch 6/15 - min_loss: 44.3204  max_loss: -43.5231  val_loss: 0.3636
+Epoch 7/15 - min_loss: 50.7859  max_loss: -50.0535  val_loss: 0.3598
+Epoch 8/15 - min_loss: 58.1097  max_loss: -57.3222  val_loss: 0.3516
+Epoch 9/15 - min_loss: 62.4583  max_loss: -61.7263  val_loss: 0.3205
+Epoch 10/15 - min_loss: 64.6686  max_loss: -63.9029  val_loss: 0.2817
+Epoch 11/15 - min_loss: 67.5464  max_loss: -66.7862  val_loss: 0.2629
+Epoch 12/15 - min_loss: 70.2774  max_loss: -69.5571  val_loss: 0.2455
+Epoch 13/15 - min_loss: 72.2788  max_loss: -71.6452  val_loss: 0.2373
+Epoch 14/15 - min_loss: 73.1821  max_loss: -72.5757  val_loss: 0.2277
+Epoch 15/15 - min_loss: 74.1596  max_loss: -73.4252  val_loss: 0.2199
+Restored best model (val_loss: 0.2199)
+[AT] threshold=1.0145  peak_rss=526.0 MB
+TP=10  FP=1  TN=9  FN=0
+Precision=0.909  Recall=1.000  F1=0.952
+Memory: miner=483.5 MB  scientist(sum of 20)=9609.0 MB  AT=526.0 MB  total=10618.4 MB
+
+Saved results -> sae_ffnn_4k-1-0.3-0.02.csv
+
+real	7m2.073s
+user	240m57.731s
+sys	0m17.459s
+Model: FourKMLP  (family=ffnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 10000 rows  ->  miner 3000, scientist 10000
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 1175 snapshots  peak_rss=483.5 MB
+Scientist ben_0   : peak_rss=480.3 MB (running total 480.3 MB)
+Scientist ben_1   : peak_rss=480.3 MB (running total 960.7 MB)
+Scientist ben_2   : peak_rss=480.3 MB (running total 1441.0 MB)
+Scientist ben_3   : peak_rss=480.3 MB (running total 1921.3 MB)
+Scientist ben_4   : peak_rss=480.3 MB (running total 2401.6 MB)
+Scientist ben_5   : peak_rss=480.3 MB (running total 2881.9 MB)
+Scientist ben_6   : peak_rss=480.3 MB (running total 3362.3 MB)
+Scientist ben_7   : peak_rss=480.4 MB (running total 3842.6 MB)
+Scientist ben_8   : peak_rss=480.4 MB (running total 4323.0 MB)
+Scientist ben_9   : peak_rss=480.4 MB (running total 4803.4 MB)
+Scientist mal_0   : peak_rss=480.5 MB (running total 5283.9 MB)
+Scientist mal_1   : peak_rss=480.6 MB (running total 5764.4 MB)
+Scientist mal_2   : peak_rss=480.6 MB (running total 6245.0 MB)
+Scientist mal_3   : peak_rss=480.6 MB (running total 6725.6 MB)
+Scientist mal_4   : peak_rss=480.6 MB (running total 7206.1 MB)
+Scientist mal_5   : peak_rss=480.5 MB (running total 7686.7 MB)
+Scientist mal_6   : peak_rss=480.5 MB (running total 8167.2 MB)
+Scientist mal_7   : peak_rss=480.5 MB (running total 8647.7 MB)
+Scientist mal_8   : peak_rss=480.5 MB (running total 9128.2 MB)
+Scientist mal_9   : peak_rss=480.5 MB (running total 9608.8 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 39.9269  max_loss: -37.9867  val_loss: 0.7430
+Epoch 2/15 - min_loss: 37.6881  max_loss: -36.2484  val_loss: 0.5595
+Epoch 3/15 - min_loss: 37.0310  max_loss: -35.8793  val_loss: 0.4774
+Epoch 4/15 - min_loss: 38.5595  max_loss: -37.5591  val_loss: 0.4504
+Epoch 5/15 - min_loss: 42.5310  max_loss: -41.5984  val_loss: 0.4593
+Epoch 6/15 - min_loss: 49.9611  max_loss: -48.9567  val_loss: 0.4837
+Epoch 7/15 - min_loss: 59.0285  max_loss: -58.0449  val_loss: 0.5044
+Epoch 8/15 - min_loss: 64.5805  max_loss: -63.4780  val_loss: 0.4705
+Epoch 9/15 - min_loss: 67.2896  max_loss: -66.2431  val_loss: 0.4160
+Epoch 10/15 - min_loss: 68.6973  max_loss: -67.6728  val_loss: 0.3906
+Epoch 11/15 - min_loss: 69.5540  max_loss: -68.5293  val_loss: 0.3817
+Epoch 12/15 - min_loss: 69.7595  max_loss: -68.9016  val_loss: 0.3601
+Epoch 13/15 - min_loss: 69.6799  max_loss: -68.8094  val_loss: 0.3410
+Epoch 14/15 - min_loss: 69.4053  max_loss: -68.4174  val_loss: 0.3312
+Epoch 15/15 - min_loss: 68.9324  max_loss: -67.9810  val_loss: 0.3166
+Restored best model (val_loss: 0.3166)
+[AT] threshold=4.9737  peak_rss=525.7 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=483.5 MB  scientist(sum of 20)=9608.8 MB  AT=525.7 MB  total=10617.9 MB
+
+Saved results -> sae_ffnn_4k-2-0.3-0.02.csv
+
+real	6m32.491s
+user	245m54.367s
+sys	0m15.919s
+Model: FourKMLP  (family=ffnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 10000 rows  ->  miner 3000, scientist 10000
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 1175 snapshots  peak_rss=483.4 MB
+Scientist ben_0   : peak_rss=480.4 MB (running total 480.4 MB)
+Scientist ben_1   : peak_rss=480.3 MB (running total 960.7 MB)
+Scientist ben_2   : peak_rss=480.3 MB (running total 1441.0 MB)
+Scientist ben_3   : peak_rss=480.3 MB (running total 1921.3 MB)
+Scientist ben_4   : peak_rss=480.3 MB (running total 2401.6 MB)
+Scientist ben_5   : peak_rss=480.3 MB (running total 2881.9 MB)
+Scientist ben_6   : peak_rss=480.3 MB (running total 3362.3 MB)
+Scientist ben_7   : peak_rss=480.3 MB (running total 3842.6 MB)
+Scientist ben_8   : peak_rss=480.3 MB (running total 4322.9 MB)
+Scientist ben_9   : peak_rss=480.3 MB (running total 4803.2 MB)
+Scientist mal_0   : peak_rss=480.5 MB (running total 5283.7 MB)
+Scientist mal_1   : peak_rss=480.5 MB (running total 5764.3 MB)
+Scientist mal_2   : peak_rss=480.5 MB (running total 6244.8 MB)
+Scientist mal_3   : peak_rss=480.5 MB (running total 6725.3 MB)
+Scientist mal_4   : peak_rss=480.5 MB (running total 7205.8 MB)
+Scientist mal_5   : peak_rss=480.5 MB (running total 7686.3 MB)
+Scientist mal_6   : peak_rss=480.5 MB (running total 8166.8 MB)
+Scientist mal_7   : peak_rss=480.5 MB (running total 8647.4 MB)
+Scientist mal_8   : peak_rss=480.5 MB (running total 9127.9 MB)
+Scientist mal_9   : peak_rss=480.5 MB (running total 9608.4 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 40.9878  max_loss: -38.9079  val_loss: 0.8785
+Epoch 2/15 - min_loss: 39.2350  max_loss: -37.6954  val_loss: 0.6610
+Epoch 3/15 - min_loss: 38.7961  max_loss: -37.5616  val_loss: 0.5507
+Epoch 4/15 - min_loss: 40.1860  max_loss: -39.1640  val_loss: 0.4903
+Epoch 5/15 - min_loss: 43.5501  max_loss: -42.5822  val_loss: 0.4575
+Epoch 6/15 - min_loss: 48.1687  max_loss: -47.3247  val_loss: 0.4428
+Epoch 7/15 - min_loss: 53.9814  max_loss: -53.1405  val_loss: 0.4435
+Epoch 8/15 - min_loss: 60.0283  max_loss: -59.1574  val_loss: 0.4414
+Epoch 9/15 - min_loss: 64.1013  max_loss: -63.1413  val_loss: 0.4069
+Epoch 10/15 - min_loss: 66.7528  max_loss: -65.8507  val_loss: 0.3630
+Epoch 11/15 - min_loss: 69.5870  max_loss: -68.8092  val_loss: 0.3309
+Epoch 12/15 - min_loss: 72.9258  max_loss: -72.1265  val_loss: 0.3098
+Epoch 13/15 - min_loss: 75.6138  max_loss: -74.8292  val_loss: 0.2900
+Epoch 14/15 - min_loss: 77.5334  max_loss: -76.7967  val_loss: 0.2727
+Epoch 15/15 - min_loss: 78.5784  max_loss: -77.8303  val_loss: 0.2611
+Restored best model (val_loss: 0.2611)
+[AT] threshold=2.3250  peak_rss=525.7 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=483.4 MB  scientist(sum of 20)=9608.4 MB  AT=525.7 MB  total=10617.5 MB
+
+Saved results -> sae_ffnn_4k-3-0.3-0.02.csv
+
+real	6m26.627s
+user	241m52.170s
+sys	0m15.960s
+Model: FourKMLP  (family=ffnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 10000 rows  ->  miner 3000, scientist 10000
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 1175 snapshots  peak_rss=483.4 MB
+Scientist ben_0   : peak_rss=480.3 MB (running total 480.3 MB)
+Scientist ben_1   : peak_rss=480.3 MB (running total 960.7 MB)
+Scientist ben_2   : peak_rss=480.3 MB (running total 1441.0 MB)
+Scientist ben_3   : peak_rss=480.3 MB (running total 1921.3 MB)
+Scientist ben_4   : peak_rss=480.3 MB (running total 2401.6 MB)
+Scientist ben_5   : peak_rss=480.4 MB (running total 2882.0 MB)
+Scientist ben_6   : peak_rss=480.3 MB (running total 3362.3 MB)
+Scientist ben_7   : peak_rss=480.4 MB (running total 3842.7 MB)
+Scientist ben_8   : peak_rss=480.4 MB (running total 4323.0 MB)
+Scientist ben_9   : peak_rss=480.3 MB (running total 4803.4 MB)
+Scientist mal_0   : peak_rss=480.5 MB (running total 5283.9 MB)
+Scientist mal_1   : peak_rss=480.6 MB (running total 5764.5 MB)
+Scientist mal_2   : peak_rss=480.6 MB (running total 6245.0 MB)
+Scientist mal_3   : peak_rss=480.6 MB (running total 6725.6 MB)
+Scientist mal_4   : peak_rss=480.6 MB (running total 7206.2 MB)
+Scientist mal_5   : peak_rss=480.6 MB (running total 7686.7 MB)
+Scientist mal_6   : peak_rss=481.1 MB (running total 8167.8 MB)
+Scientist mal_7   : peak_rss=480.5 MB (running total 8648.3 MB)
+Scientist mal_8   : peak_rss=480.5 MB (running total 9128.8 MB)
+Scientist mal_9   : peak_rss=480.5 MB (running total 9609.4 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 40.5902  max_loss: -38.5214  val_loss: 0.7616
+Epoch 2/15 - min_loss: 38.5840  max_loss: -37.0307  val_loss: 0.5678
+Epoch 3/15 - min_loss: 37.3715  max_loss: -36.1279  val_loss: 0.4735
+Epoch 4/15 - min_loss: 38.4058  max_loss: -37.3470  val_loss: 0.4567
+Epoch 5/15 - min_loss: 42.3554  max_loss: -41.3638  val_loss: 0.4810
+Epoch 6/15 - min_loss: 49.0205  max_loss: -47.9923  val_loss: 0.5013
+Epoch 7/15 - min_loss: 56.2173  max_loss: -55.2583  val_loss: 0.5070
+Epoch 8/15 - min_loss: 60.8843  max_loss: -59.7893  val_loss: 0.4897
+Epoch 9/15 - min_loss: 64.1728  max_loss: -62.9773  val_loss: 0.4436
+Epoch 10/15 - min_loss: 66.3104  max_loss: -65.2601  val_loss: 0.4077
+Epoch 11/15 - min_loss: 67.8678  max_loss: -66.9113  val_loss: 0.3784
+Epoch 12/15 - min_loss: 68.9102  max_loss: -68.1218  val_loss: 0.3714
+Epoch 13/15 - min_loss: 69.3678  max_loss: -68.5571  val_loss: 0.3635
+Epoch 14/15 - min_loss: 69.4183  max_loss: -68.5020  val_loss: 0.3456
+Epoch 15/15 - min_loss: 69.0378  max_loss: -68.0825  val_loss: 0.3335
+Restored best model (val_loss: 0.3335)
+[AT] threshold=6.6704  peak_rss=525.6 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=483.4 MB  scientist(sum of 20)=9609.4 MB  AT=525.6 MB  total=10618.4 MB
+
+Saved results -> sae_ffnn_4k-4-0.3-0.02.csv
+
+real	6m29.605s
+user	244m23.524s
+sys	0m14.960s
+Model: FourKMLP  (family=ffnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 10000 rows  ->  miner 3000, scientist 10000
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 1175 snapshots  peak_rss=483.5 MB
+Scientist ben_0   : peak_rss=480.3 MB (running total 480.3 MB)
+Scientist ben_1   : peak_rss=480.3 MB (running total 960.6 MB)
+Scientist ben_2   : peak_rss=480.3 MB (running total 1440.9 MB)
+Scientist ben_3   : peak_rss=480.3 MB (running total 1921.3 MB)
+Scientist ben_4   : peak_rss=480.3 MB (running total 2401.6 MB)
+Scientist ben_5   : peak_rss=480.3 MB (running total 2881.9 MB)
+Scientist ben_6   : peak_rss=480.3 MB (running total 3362.3 MB)
+Scientist ben_7   : peak_rss=480.4 MB (running total 3842.6 MB)
+Scientist ben_8   : peak_rss=480.4 MB (running total 4323.0 MB)
+Scientist ben_9   : peak_rss=480.3 MB (running total 4803.3 MB)
+Scientist mal_0   : peak_rss=480.5 MB (running total 5283.8 MB)
+Scientist mal_1   : peak_rss=480.5 MB (running total 5764.4 MB)
+Scientist mal_2   : peak_rss=480.5 MB (running total 6244.9 MB)
+Scientist mal_3   : peak_rss=480.5 MB (running total 6725.4 MB)
+Scientist mal_4   : peak_rss=480.5 MB (running total 7205.9 MB)
+Scientist mal_5   : peak_rss=480.5 MB (running total 7686.4 MB)
+Scientist mal_6   : peak_rss=480.5 MB (running total 8167.0 MB)
+Scientist mal_7   : peak_rss=480.5 MB (running total 8647.5 MB)
+Scientist mal_8   : peak_rss=480.5 MB (running total 9128.0 MB)
+Scientist mal_9   : peak_rss=480.5 MB (running total 9608.5 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 39.5832  max_loss: -37.3614  val_loss: 0.8919
+Epoch 2/15 - min_loss: 37.7366  max_loss: -36.0441  val_loss: 0.6716
+Epoch 3/15 - min_loss: 37.3783  max_loss: -36.0137  val_loss: 0.5548
+Epoch 4/15 - min_loss: 39.1308  max_loss: -37.9683  val_loss: 0.4953
+Epoch 5/15 - min_loss: 42.9662  max_loss: -41.8783  val_loss: 0.4532
+Epoch 6/15 - min_loss: 48.0354  max_loss: -47.0687  val_loss: 0.4245
+Epoch 7/15 - min_loss: 54.4952  max_loss: -53.5339  val_loss: 0.4080
+Epoch 8/15 - min_loss: 59.4721  max_loss: -58.5174  val_loss: 0.3639
+Epoch 9/15 - min_loss: 61.9931  max_loss: -61.1110  val_loss: 0.3150
+Epoch 10/15 - min_loss: 64.0089  max_loss: -63.1181  val_loss: 0.2864
+Epoch 11/15 - min_loss: 66.6071  max_loss: -65.8141  val_loss: 0.2706
+Epoch 12/15 - min_loss: 69.6335  max_loss: -68.9656  val_loss: 0.2557
+Epoch 13/15 - min_loss: 72.1319  max_loss: -71.4776  val_loss: 0.2459
+Epoch 14/15 - min_loss: 73.8060  max_loss: -73.0664  val_loss: 0.2307
+Epoch 15/15 - min_loss: 74.8351  max_loss: -74.1185  val_loss: 0.2188
+Restored best model (val_loss: 0.2188)
+[AT] threshold=0.7030  peak_rss=527.8 MB
+TP=10  FP=3  TN=7  FN=0
+Precision=0.769  Recall=1.000  F1=0.870
+Memory: miner=483.5 MB  scientist(sum of 20)=9608.5 MB  AT=527.8 MB  total=10619.8 MB
+
+Saved results -> sae_ffnn_4k-5-0.3-0.02.csv
+
+real	6m24.053s
+user	241m4.681s
+sys	0m15.899s
+Finished running the Scalability Experiment for the FFNN.

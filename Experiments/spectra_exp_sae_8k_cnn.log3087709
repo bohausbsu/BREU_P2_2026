@@ -1,0 +1,271 @@
+Date              = Mon Jul 13 23:48:58 MDT 2026
+Working Directory = /bsuhome/dylangresham/scratch/BREU_P2_2026/AccuracyExperiment
+
+Number of Nodes Allocated  = 1
+Number of Tasks Allocated  = 1
+Number of CPUs Allocated   = 48
+
+/bsuhome/dylangresham/miniforge3/envs/reu26_ab/bin/python
+Python 3.10.20
+Testing Scalability for CNN...
+Model: EightKCNN  (family=cnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 1500 rows  ->  miner 450, scientist 1500
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 200 snapshots  peak_rss=529.2 MB
+Scientist ben_0   : peak_rss=553.2 MB (running total 553.2 MB)
+Scientist ben_1   : peak_rss=555.2 MB (running total 1108.4 MB)
+Scientist ben_2   : peak_rss=555.2 MB (running total 1663.7 MB)
+Scientist ben_3   : peak_rss=550.0 MB (running total 2213.7 MB)
+Scientist ben_4   : peak_rss=555.3 MB (running total 2769.0 MB)
+Scientist ben_5   : peak_rss=560.5 MB (running total 3329.5 MB)
+Scientist ben_6   : peak_rss=558.4 MB (running total 3888.0 MB)
+Scientist ben_7   : peak_rss=560.5 MB (running total 4448.5 MB)
+Scientist ben_8   : peak_rss=555.7 MB (running total 5004.2 MB)
+Scientist ben_9   : peak_rss=553.1 MB (running total 5557.3 MB)
+Scientist mal_0   : peak_rss=555.4 MB (running total 6112.7 MB)
+Scientist mal_1   : peak_rss=550.3 MB (running total 6663.0 MB)
+Scientist mal_2   : peak_rss=553.4 MB (running total 7216.3 MB)
+Scientist mal_3   : peak_rss=552.3 MB (running total 7768.6 MB)
+Scientist mal_4   : peak_rss=550.2 MB (running total 8318.8 MB)
+Scientist mal_5   : peak_rss=553.3 MB (running total 8872.1 MB)
+Scientist mal_6   : peak_rss=553.4 MB (running total 9425.5 MB)
+Scientist mal_7   : peak_rss=556.0 MB (running total 9981.5 MB)
+Scientist mal_8   : peak_rss=555.4 MB (running total 10536.8 MB)
+Scientist mal_9   : peak_rss=558.6 MB (running total 11095.4 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 41.1946  max_loss: -38.2677  val_loss: 1.7396
+Epoch 2/15 - min_loss: 40.6976  max_loss: -38.0485  val_loss: 1.6116
+Epoch 3/15 - min_loss: 40.3145  max_loss: -37.8182  val_loss: 1.5038
+Epoch 4/15 - min_loss: 39.8905  max_loss: -37.5100  val_loss: 1.4218
+Epoch 5/15 - min_loss: 39.5129  max_loss: -37.2493  val_loss: 1.3571
+Epoch 6/15 - min_loss: 39.1851  max_loss: -36.9692  val_loss: 1.3044
+Epoch 7/15 - min_loss: 38.8286  max_loss: -36.7283  val_loss: 1.2580
+Epoch 8/15 - min_loss: 38.4850  max_loss: -36.4384  val_loss: 1.2196
+Epoch 9/15 - min_loss: 38.2012  max_loss: -36.2102  val_loss: 1.1850
+Epoch 10/15 - min_loss: 37.8785  max_loss: -35.9840  val_loss: 1.1533
+Epoch 11/15 - min_loss: 37.5490  max_loss: -35.7095  val_loss: 1.1256
+Epoch 12/15 - min_loss: 37.3065  max_loss: -35.4780  val_loss: 1.0992
+Epoch 13/15 - min_loss: 37.0639  max_loss: -35.2293  val_loss: 1.0765
+Epoch 14/15 - min_loss: 36.8370  max_loss: -35.0599  val_loss: 1.0538
+Epoch 15/15 - min_loss: 36.6115  max_loss: -34.8635  val_loss: 1.0345
+Restored best model (val_loss: 1.0345)
+[AT] threshold=2.7085  peak_rss=523.9 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=529.2 MB  scientist(sum of 20)=11095.4 MB  AT=523.9 MB  total=12148.5 MB
+
+Saved results -> sae_cnn_8k-1-0.3-0.02.csv
+
+real	3m38.522s
+user	83m1.901s
+sys	0m31.726s
+Model: EightKCNN  (family=cnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 1500 rows  ->  miner 450, scientist 1500
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 200 snapshots  peak_rss=529.2 MB
+Scientist ben_0   : peak_rss=555.2 MB (running total 555.2 MB)
+Scientist ben_1   : peak_rss=553.1 MB (running total 1108.3 MB)
+Scientist ben_2   : peak_rss=558.4 MB (running total 1666.7 MB)
+Scientist ben_3   : peak_rss=553.2 MB (running total 2219.9 MB)
+Scientist ben_4   : peak_rss=557.4 MB (running total 2777.3 MB)
+Scientist ben_5   : peak_rss=553.2 MB (running total 3330.5 MB)
+Scientist ben_6   : peak_rss=552.2 MB (running total 3882.7 MB)
+Scientist ben_7   : peak_rss=550.0 MB (running total 4432.7 MB)
+Scientist ben_8   : peak_rss=555.3 MB (running total 4987.9 MB)
+Scientist ben_9   : peak_rss=555.3 MB (running total 5543.3 MB)
+Scientist mal_0   : peak_rss=556.5 MB (running total 6099.7 MB)
+Scientist mal_1   : peak_rss=558.0 MB (running total 6657.8 MB)
+Scientist mal_2   : peak_rss=560.7 MB (running total 7218.4 MB)
+Scientist mal_3   : peak_rss=555.4 MB (running total 7773.9 MB)
+Scientist mal_4   : peak_rss=550.1 MB (running total 8324.0 MB)
+Scientist mal_5   : peak_rss=556.0 MB (running total 8880.0 MB)
+Scientist mal_6   : peak_rss=553.4 MB (running total 9433.4 MB)
+Scientist mal_7   : peak_rss=555.4 MB (running total 9988.9 MB)
+Scientist mal_8   : peak_rss=553.4 MB (running total 10542.3 MB)
+Scientist mal_9   : peak_rss=553.4 MB (running total 11095.6 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 40.4821  max_loss: -37.8761  val_loss: 1.4906
+Epoch 2/15 - min_loss: 40.0154  max_loss: -37.5607  val_loss: 1.4136
+Epoch 3/15 - min_loss: 39.5137  max_loss: -37.2583  val_loss: 1.3431
+Epoch 4/15 - min_loss: 39.0615  max_loss: -36.8780  val_loss: 1.2894
+Epoch 5/15 - min_loss: 38.5434  max_loss: -36.4272  val_loss: 1.2379
+Epoch 6/15 - min_loss: 38.0462  max_loss: -36.0584  val_loss: 1.1944
+Epoch 7/15 - min_loss: 37.5249  max_loss: -35.6114  val_loss: 1.1569
+Epoch 8/15 - min_loss: 37.0428  max_loss: -35.1731  val_loss: 1.1212
+Epoch 9/15 - min_loss: 36.5723  max_loss: -34.7545  val_loss: 1.0883
+Epoch 10/15 - min_loss: 36.1893  max_loss: -34.4178  val_loss: 1.0610
+Epoch 11/15 - min_loss: 35.8149  max_loss: -34.0864  val_loss: 1.0321
+Epoch 12/15 - min_loss: 35.5066  max_loss: -33.8159  val_loss: 1.0044
+Epoch 13/15 - min_loss: 35.2159  max_loss: -33.6026  val_loss: 0.9760
+Epoch 14/15 - min_loss: 35.0082  max_loss: -33.4520  val_loss: 0.9535
+Epoch 15/15 - min_loss: 34.8930  max_loss: -33.2852  val_loss: 0.9339
+Restored best model (val_loss: 0.9339)
+[AT] threshold=0.9464  peak_rss=527.5 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=529.2 MB  scientist(sum of 20)=11095.6 MB  AT=527.5 MB  total=12152.3 MB
+
+Saved results -> sae_cnn_8k-2-0.3-0.02.csv
+
+real	3m10.328s
+user	83m37.060s
+sys	0m31.600s
+Model: EightKCNN  (family=cnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 1500 rows  ->  miner 450, scientist 1500
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 200 snapshots  peak_rss=529.2 MB
+Scientist ben_0   : peak_rss=555.3 MB (running total 555.3 MB)
+Scientist ben_1   : peak_rss=555.3 MB (running total 1110.6 MB)
+Scientist ben_2   : peak_rss=554.2 MB (running total 1664.8 MB)
+Scientist ben_3   : peak_rss=554.7 MB (running total 2219.5 MB)
+Scientist ben_4   : peak_rss=550.1 MB (running total 2769.6 MB)
+Scientist ben_5   : peak_rss=555.2 MB (running total 3324.9 MB)
+Scientist ben_6   : peak_rss=550.0 MB (running total 3874.9 MB)
+Scientist ben_7   : peak_rss=550.1 MB (running total 4424.9 MB)
+Scientist ben_8   : peak_rss=563.5 MB (running total 4988.5 MB)
+Scientist ben_9   : peak_rss=558.5 MB (running total 5546.9 MB)
+Scientist mal_0   : peak_rss=553.3 MB (running total 6100.3 MB)
+Scientist mal_1   : peak_rss=555.4 MB (running total 6655.7 MB)
+Scientist mal_2   : peak_rss=553.3 MB (running total 7208.9 MB)
+Scientist mal_3   : peak_rss=558.1 MB (running total 7767.0 MB)
+Scientist mal_4   : peak_rss=553.4 MB (running total 8320.4 MB)
+Scientist mal_5   : peak_rss=556.0 MB (running total 8876.4 MB)
+Scientist mal_6   : peak_rss=555.5 MB (running total 9431.9 MB)
+Scientist mal_7   : peak_rss=554.4 MB (running total 9986.4 MB)
+Scientist mal_8   : peak_rss=552.3 MB (running total 10538.7 MB)
+Scientist mal_9   : peak_rss=555.5 MB (running total 11094.2 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 41.6481  max_loss: -39.1103  val_loss: 1.2857
+Epoch 2/15 - min_loss: 41.2807  max_loss: -38.7846  val_loss: 1.2709
+Epoch 3/15 - min_loss: 40.8564  max_loss: -38.5089  val_loss: 1.2502
+Epoch 4/15 - min_loss: 40.4390  max_loss: -38.2533  val_loss: 1.2262
+Epoch 5/15 - min_loss: 40.0520  max_loss: -37.9344  val_loss: 1.2015
+Epoch 6/15 - min_loss: 39.6545  max_loss: -37.6347  val_loss: 1.1727
+Epoch 7/15 - min_loss: 39.3844  max_loss: -37.3748  val_loss: 1.1479
+Epoch 8/15 - min_loss: 39.0357  max_loss: -37.1481  val_loss: 1.1205
+Epoch 9/15 - min_loss: 38.8919  max_loss: -36.9864  val_loss: 1.0912
+Epoch 10/15 - min_loss: 38.6226  max_loss: -36.8155  val_loss: 1.0656
+Epoch 11/15 - min_loss: 38.4773  max_loss: -36.6767  val_loss: 1.0432
+Epoch 12/15 - min_loss: 38.3743  max_loss: -36.6928  val_loss: 1.0237
+Epoch 13/15 - min_loss: 38.3601  max_loss: -36.7006  val_loss: 1.0047
+Epoch 14/15 - min_loss: 38.3492  max_loss: -36.6766  val_loss: 0.9863
+Epoch 15/15 - min_loss: 38.4238  max_loss: -36.8244  val_loss: 0.9712
+Restored best model (val_loss: 0.9712)
+[AT] threshold=1.7749  peak_rss=523.9 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=529.2 MB  scientist(sum of 20)=11094.2 MB  AT=523.9 MB  total=12147.4 MB
+
+Saved results -> sae_cnn_8k-3-0.3-0.02.csv
+
+real	3m13.994s
+user	85m59.421s
+sys	0m32.780s
+Model: EightKCNN  (family=cnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 1500 rows  ->  miner 450, scientist 1500
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 200 snapshots  peak_rss=529.2 MB
+Scientist ben_0   : peak_rss=552.7 MB (running total 552.7 MB)
+Scientist ben_1   : peak_rss=555.8 MB (running total 1108.5 MB)
+Scientist ben_2   : peak_rss=553.2 MB (running total 1661.7 MB)
+Scientist ben_3   : peak_rss=552.3 MB (running total 2213.9 MB)
+Scientist ben_4   : peak_rss=550.0 MB (running total 2763.9 MB)
+Scientist ben_5   : peak_rss=553.2 MB (running total 3317.1 MB)
+Scientist ben_6   : peak_rss=553.2 MB (running total 3870.4 MB)
+Scientist ben_7   : peak_rss=555.8 MB (running total 4426.2 MB)
+Scientist ben_8   : peak_rss=554.5 MB (running total 4980.7 MB)
+Scientist ben_9   : peak_rss=555.2 MB (running total 5535.9 MB)
+Scientist mal_0   : peak_rss=555.4 MB (running total 6091.4 MB)
+Scientist mal_1   : peak_rss=558.6 MB (running total 6650.0 MB)
+Scientist mal_2   : peak_rss=558.7 MB (running total 7208.6 MB)
+Scientist mal_3   : peak_rss=552.3 MB (running total 7760.9 MB)
+Scientist mal_4   : peak_rss=553.4 MB (running total 8314.3 MB)
+Scientist mal_5   : peak_rss=558.6 MB (running total 8872.9 MB)
+Scientist mal_6   : peak_rss=553.4 MB (running total 9426.3 MB)
+Scientist mal_7   : peak_rss=558.6 MB (running total 9985.0 MB)
+Scientist mal_8   : peak_rss=553.3 MB (running total 10538.3 MB)
+Scientist mal_9   : peak_rss=558.0 MB (running total 11096.3 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 42.4057  max_loss: -39.7110  val_loss: 1.5124
+Epoch 2/15 - min_loss: 41.8522  max_loss: -39.3904  val_loss: 1.4283
+Epoch 3/15 - min_loss: 41.3884  max_loss: -39.0812  val_loss: 1.3620
+Epoch 4/15 - min_loss: 40.9212  max_loss: -38.6710  val_loss: 1.3063
+Epoch 5/15 - min_loss: 40.5452  max_loss: -38.3730  val_loss: 1.2602
+Epoch 6/15 - min_loss: 40.0931  max_loss: -38.0585  val_loss: 1.2216
+Epoch 7/15 - min_loss: 39.7483  max_loss: -37.7349  val_loss: 1.1841
+Epoch 8/15 - min_loss: 39.3492  max_loss: -37.4083  val_loss: 1.1476
+Epoch 9/15 - min_loss: 39.0608  max_loss: -37.2487  val_loss: 1.1130
+Epoch 10/15 - min_loss: 38.7860  max_loss: -37.0231  val_loss: 1.0829
+Epoch 11/15 - min_loss: 38.5887  max_loss: -36.8406  val_loss: 1.0542
+Epoch 12/15 - min_loss: 38.4091  max_loss: -36.7607  val_loss: 1.0271
+Epoch 13/15 - min_loss: 38.3226  max_loss: -36.6414  val_loss: 1.0014
+Epoch 14/15 - min_loss: 38.2100  max_loss: -36.6019  val_loss: 0.9827
+Epoch 15/15 - min_loss: 38.1978  max_loss: -36.6338  val_loss: 0.9622
+Restored best model (val_loss: 0.9622)
+[AT] threshold=8.5285  peak_rss=527.0 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=529.2 MB  scientist(sum of 20)=11096.3 MB  AT=527.0 MB  total=12152.6 MB
+
+Saved results -> sae_cnn_8k-4-0.3-0.02.csv
+
+real	3m11.290s
+user	83m57.293s
+sys	0m31.157s
+Model: EightKCNN  (family=cnn)  |  seed: 1
+Device: cpu (hardcoded -- memory accounting is RSS-based)
+Dataset: 1500 rows  ->  miner 450, scientist 1500
+[Miner] Training model and collecting snapshots (isolated)...
+[Miner] 200 snapshots  peak_rss=529.2 MB
+Scientist ben_0   : peak_rss=553.1 MB (running total 553.1 MB)
+Scientist ben_1   : peak_rss=552.2 MB (running total 1105.2 MB)
+Scientist ben_2   : peak_rss=553.2 MB (running total 1658.4 MB)
+Scientist ben_3   : peak_rss=560.6 MB (running total 2219.0 MB)
+Scientist ben_4   : peak_rss=550.1 MB (running total 2769.0 MB)
+Scientist ben_5   : peak_rss=555.3 MB (running total 3324.3 MB)
+Scientist ben_6   : peak_rss=558.4 MB (running total 3882.7 MB)
+Scientist ben_7   : peak_rss=553.1 MB (running total 4435.8 MB)
+Scientist ben_8   : peak_rss=552.1 MB (running total 4987.9 MB)
+Scientist ben_9   : peak_rss=555.3 MB (running total 5543.2 MB)
+Scientist mal_0   : peak_rss=553.3 MB (running total 6096.4 MB)
+Scientist mal_1   : peak_rss=555.5 MB (running total 6651.9 MB)
+Scientist mal_2   : peak_rss=555.4 MB (running total 7207.4 MB)
+Scientist mal_3   : peak_rss=553.3 MB (running total 7760.7 MB)
+Scientist mal_4   : peak_rss=555.0 MB (running total 8315.7 MB)
+Scientist mal_5   : peak_rss=550.3 MB (running total 8865.9 MB)
+Scientist mal_6   : peak_rss=553.3 MB (running total 9419.3 MB)
+Scientist mal_7   : peak_rss=550.2 MB (running total 9969.5 MB)
+Scientist mal_8   : peak_rss=553.4 MB (running total 10522.8 MB)
+Scientist mal_9   : peak_rss=560.7 MB (running total 11083.6 MB)
+[AT] Training + scoring (isolated)...
+Epoch 1/15 - min_loss: 41.6123  max_loss: -38.8013  val_loss: 1.4457
+Epoch 2/15 - min_loss: 41.1620  max_loss: -38.5796  val_loss: 1.3831
+Epoch 3/15 - min_loss: 40.8036  max_loss: -38.3634  val_loss: 1.3348
+Epoch 4/15 - min_loss: 40.3509  max_loss: -38.0687  val_loss: 1.2902
+Epoch 5/15 - min_loss: 40.0539  max_loss: -37.8762  val_loss: 1.2561
+Epoch 6/15 - min_loss: 39.6278  max_loss: -37.6027  val_loss: 1.2231
+Epoch 7/15 - min_loss: 39.3289  max_loss: -37.3060  val_loss: 1.1947
+Epoch 8/15 - min_loss: 38.9293  max_loss: -37.0020  val_loss: 1.1635
+Epoch 9/15 - min_loss: 38.6358  max_loss: -36.7398  val_loss: 1.1361
+Epoch 10/15 - min_loss: 38.2527  max_loss: -36.4568  val_loss: 1.1086
+Epoch 11/15 - min_loss: 38.0568  max_loss: -36.3051  val_loss: 1.0851
+Epoch 12/15 - min_loss: 37.7481  max_loss: -36.0919  val_loss: 1.0611
+Epoch 13/15 - min_loss: 37.6039  max_loss: -35.9516  val_loss: 1.0401
+Epoch 14/15 - min_loss: 37.4675  max_loss: -35.8489  val_loss: 1.0209
+Epoch 15/15 - min_loss: 37.3827  max_loss: -35.8040  val_loss: 1.0032
+Restored best model (val_loss: 1.0032)
+[AT] threshold=5.9353  peak_rss=526.1 MB
+TP=10  FP=0  TN=10  FN=0
+Precision=1.000  Recall=1.000  F1=1.000
+Memory: miner=529.2 MB  scientist(sum of 20)=11083.6 MB  AT=526.1 MB  total=12138.9 MB
+
+Saved results -> sae_cnn_8k-5-0.3-0.02.csv
+
+real	3m10.569s
+user	83m56.950s
+sys	0m30.626s
+Finished running the Scalability Experiment for the CNN.
