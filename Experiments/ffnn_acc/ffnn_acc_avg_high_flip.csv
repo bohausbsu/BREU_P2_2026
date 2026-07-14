@@ -1,0 +1,6 @@
+experiment,n_seeds,model_class,size_label,precision,recall,f1
+,30,FourKMLP,4k,0.86411,1.0,0.91481
+,30,SixKMLP,6k,0.86411,1.0,0.91481
+,30,EightKMLP,8k,0.86411,1.0,0.91481
+,30,TenKMLP,10k,0.86411,1.0,0.91481
+,30,TwelveKMLP,12k,0.86411,1.0,0.91481
