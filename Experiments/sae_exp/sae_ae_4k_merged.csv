@@ -1,0 +1,2 @@
+model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
+FourKAE,ae,10.0,9.8,0.2,0.0,0.50526,1.0,0.6713,905906585.6,905.9066,18118131712.0,18118.1316,905906585.6,905.9066,19929944883.2,19929.944800000005

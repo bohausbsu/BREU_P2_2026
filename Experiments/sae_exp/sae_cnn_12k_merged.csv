@@ -1,0 +1,2 @@
+model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
+TwelveKCNN,cnn,10.0,3.6,6.4,0.0,0.7381000000000001,1.0,0.84846,528850944.0,528.8512000000001,11225101926.4,11225.101999999999,525570867.2,525.5708000000001,12279523737.6,12279.5238

@@ -1,0 +1,2 @@
+model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
+FourKMLP,ffnn,10.0,0.8,9.2,0.0,0.93566,1.0,0.9644,483454156.8,483.4542,9608806400.0,9608.8062,526136934.4,526.137,10618397491.2,10618.3978
