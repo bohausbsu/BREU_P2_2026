@@ -30,5 +30,6 @@ nvidia-smi
 
 python -c "import torch; print(torch.cuda.get_device_name()); print(torch.cuda.get_device_properties())"
 
-python ExperimentRuntime.py --model cnn --dataset-root PetImages --out-csv "runtime/cnn_runtime.csv"
-
+for i in {1..5}; do
+	python ExperimentRuntime.py --model cnn --dataset-root PetImages --out-csv "runtime/cnn_$i-runtime.csv"
+done
