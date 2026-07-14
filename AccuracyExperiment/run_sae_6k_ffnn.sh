@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J spectra_exp_sae_ffnn
-#SBATCH -o spectra_exp_sae_ffnn.log%j
+#SBATCH -J spectra_exp_sae_6k_ffnn
+#SBATCH -o spectra_exp_sae_6k_ffnn.log%j
 #SBATCH --cpus-per-task=48
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
