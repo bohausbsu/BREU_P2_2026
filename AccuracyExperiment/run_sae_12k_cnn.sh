@@ -34,7 +34,7 @@ python --version
 echo "Testing Scalability for CNN..."
 
 for i in {1..5}; do
-	time python ExperimentSAE.py --seed 1 --model TwelveKCNN --data-root PetImages --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_cnn_12k-$i-$FLAG_FRAC-$AT_R.csv"
+	time python ExperimentSAE.py --seed 1 --model TwelveKCNN --dataset-root PetImages --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_cnn_12k-$i-$FLAG_FRAC-$AT_R.csv"
 	mv sae_*.csv sae_exp/
 done
 
