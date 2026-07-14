@@ -1,0 +1,261 @@
+Date              = Mon Jul 13 22:35:32 MDT 2026
+Working Directory = /bsuhome/dylangresham/scratch/BREU_P2_2026/AccuracyExperiment
+
+Number of Nodes Allocated  = 1
+Number of Tasks Allocated  = 1
+Number of CPUs Allocated   = 48
+GPU Allocated              = 0
+
+/bsuhome/dylangresham/miniforge3/envs/reu26_ab/bin/python
+Mon Jul 13 22:35:33 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 550.127.05             Driver Version: 550.127.05     CUDA Version: 12.4     |
+|-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  Tesla V100-PCIE-16GB           On  |   00000000:3B:00.0 Off |                  Off |
+| N/A   28C    P0             23W /  250W |       1MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+|   1  Tesla V100-PCIE-16GB           On  |   00000000:D8:00.0 Off |                  Off |
+| N/A   29C    P0             23W /  250W |       1MiB /  16384MiB |      0%      Default |
+|                                         |                        |                  N/A |
++-----------------------------------------+------------------------+----------------------+
+                                                                                         
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI        PID   Type   Process name                              GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+Tesla V100-PCIE-16GB
+_CudaDeviceProperties(name='Tesla V100-PCIE-16GB', major=7, minor=0, total_memory=16144MB, multi_processor_count=80, uuid=fd5d0c7f-fd9d-aa35-7195-45354096a2fa, L2_cache_size=6MB)
+Family: ae  |  Device: cuda  |  seed: 0
+Dataset: 3000 rows  ->  miner 900, scientist 3000  (load took 4.02s)
+
+=== FourKAE ===
+  [Miner] 375 snapshots  (4.22s)
+Epoch 1/15 - min_loss: 39.0707  max_loss: -37.2091  val_loss: 1.2535
+Epoch 2/15 - min_loss: 38.2516  max_loss: -36.6817  val_loss: 1.0645
+Epoch 3/15 - min_loss: 37.4903  max_loss: -36.1148  val_loss: 0.9006
+Epoch 4/15 - min_loss: 36.7678  max_loss: -35.5420  val_loss: 0.7831
+Epoch 5/15 - min_loss: 36.1520  max_loss: -35.0217  val_loss: 0.7123
+Epoch 6/15 - min_loss: 35.8283  max_loss: -34.8262  val_loss: 0.6583
+Epoch 7/15 - min_loss: 35.5686  max_loss: -34.6138  val_loss: 0.6141
+Epoch 8/15 - min_loss: 35.6110  max_loss: -34.7311  val_loss: 0.5765
+Epoch 9/15 - min_loss: 35.8565  max_loss: -35.0467  val_loss: 0.5518
+Epoch 10/15 - min_loss: 36.4668  max_loss: -35.6501  val_loss: 0.5298
+Epoch 11/15 - min_loss: 37.1296  max_loss: -36.4486  val_loss: 0.5126
+Epoch 12/15 - min_loss: 38.0690  max_loss: -37.4617  val_loss: 0.4987
+Epoch 13/15 - min_loss: 39.3023  max_loss: -38.6610  val_loss: 0.4881
+Epoch 14/15 - min_loss: 40.6805  max_loss: -39.9782  val_loss: 0.4766
+Epoch 15/15 - min_loss: 42.1261  max_loss: -41.4924  val_loss: 0.4704
+Restored best model (val_loss: 0.4704)
+  [AT] trained (2.38s), threshold=0.4118
+  Scientist ben_0   : train=2.60s  score=0.04s  -> BAD
+  Scientist ben_1   : train=2.85s  score=0.04s  -> BAD
+  Scientist ben_2   : train=2.74s  score=0.04s  -> BAD
+  Scientist ben_3   : train=2.51s  score=0.04s  -> BAD
+  Scientist ben_4   : train=2.51s  score=0.04s  -> BAD
+  Scientist ben_5   : train=2.61s  score=0.04s  -> BAD
+  Scientist ben_6   : train=2.57s  score=0.04s  -> BAD
+  Scientist ben_7   : train=2.57s  score=0.04s  -> BAD
+  Scientist ben_8   : train=2.49s  score=0.04s  -> BAD
+  Scientist ben_9   : train=2.53s  score=0.04s  -> BAD
+  Scientist mal_0   : train=3.61s  score=0.04s  -> BAD
+  Scientist mal_1   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_2   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_3   : train=3.20s  score=0.04s  -> BAD
+  Scientist mal_4   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_5   : train=3.23s  score=0.04s  -> BAD
+  Scientist mal_6   : train=3.33s  score=0.04s  -> BAD
+  Scientist mal_7   : train=3.28s  score=0.04s  -> BAD
+  Scientist mal_8   : train=3.22s  score=0.04s  -> BAD
+  Scientist mal_9   : train=3.19s  score=0.04s  -> BAD
+  TP=10  FP=10  TN=0  FN=0
+  Precision=0.500  Recall=1.000  F1=0.667
+  Runtime: miner=4.22s  scientist(sum of 20)=58.84s  AT(train+score)=3.17s  total=66.23s  (wall-clock check: 66.23s)
+
+=== SixKAE ===
+  [Miner] 375 snapshots  (1.13s)
+Epoch 1/15 - min_loss: 38.5752  max_loss: -36.7337  val_loss: 1.7145
+Epoch 2/15 - min_loss: 37.8154  max_loss: -36.2645  val_loss: 1.4594
+Epoch 3/15 - min_loss: 37.0370  max_loss: -35.7257  val_loss: 1.2493
+Epoch 4/15 - min_loss: 36.1924  max_loss: -35.0324  val_loss: 1.0816
+Epoch 5/15 - min_loss: 35.3777  max_loss: -34.2916  val_loss: 0.9925
+Epoch 6/15 - min_loss: 34.6469  max_loss: -33.6910  val_loss: 0.9279
+Epoch 7/15 - min_loss: 34.1157  max_loss: -33.2235  val_loss: 0.8684
+Epoch 8/15 - min_loss: 33.7378  max_loss: -32.9294  val_loss: 0.8491
+Epoch 9/15 - min_loss: 33.6979  max_loss: -32.9937  val_loss: 0.8281
+Epoch 10/15 - min_loss: 33.9535  max_loss: -33.2153  val_loss: 0.8180
+Epoch 11/15 - min_loss: 34.6087  max_loss: -33.9492  val_loss: 0.8135
+Epoch 12/15 - min_loss: 35.3936  max_loss: -34.7785  val_loss: 0.8083
+Epoch 13/15 - min_loss: 36.4511  max_loss: -35.8584  val_loss: 0.8056
+Epoch 14/15 - min_loss: 37.8133  max_loss: -37.1314  val_loss: 0.8069
+Epoch 15/15 - min_loss: 39.2873  max_loss: -38.6774  val_loss: 0.8069
+Restored best model (val_loss: 0.8056)
+  [AT] trained (1.77s), threshold=1.1399
+  Scientist ben_0   : train=2.57s  score=0.04s  -> ok
+  Scientist ben_1   : train=2.54s  score=0.04s  -> BAD
+  Scientist ben_2   : train=2.51s  score=0.04s  -> ok
+  Scientist ben_3   : train=2.50s  score=0.04s  -> ok
+  Scientist ben_4   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_5   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_6   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_7   : train=2.55s  score=0.04s  -> ok
+  Scientist ben_8   : train=2.52s  score=0.04s  -> ok
+  Scientist ben_9   : train=2.50s  score=0.04s  -> ok
+  Scientist mal_0   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_1   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_2   : train=3.20s  score=0.04s  -> BAD
+  Scientist mal_3   : train=3.20s  score=0.04s  -> BAD
+  Scientist mal_4   : train=3.20s  score=0.04s  -> BAD
+  Scientist mal_5   : train=3.22s  score=0.04s  -> BAD
+  Scientist mal_6   : train=3.28s  score=0.04s  -> BAD
+  Scientist mal_7   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_8   : train=3.24s  score=0.04s  -> BAD
+  Scientist mal_9   : train=3.19s  score=0.04s  -> BAD
+  TP=10  FP=1  TN=9  FN=0
+  Precision=0.909  Recall=1.000  F1=0.952
+  Runtime: miner=1.13s  scientist(sum of 20)=57.59s  AT(train+score)=2.54s  total=61.26s  (wall-clock check: 61.27s)
+
+=== EightKAE ===
+  [Miner] 375 snapshots  (0.80s)
+Epoch 1/15 - min_loss: 40.1113  max_loss: -38.1946  val_loss: 1.5152
+Epoch 2/15 - min_loss: 39.1693  max_loss: -37.6201  val_loss: 1.3140
+Epoch 3/15 - min_loss: 38.2510  max_loss: -36.9573  val_loss: 1.1811
+Epoch 4/15 - min_loss: 37.4541  max_loss: -36.3852  val_loss: 1.0739
+Epoch 5/15 - min_loss: 36.7871  max_loss: -35.8588  val_loss: 0.9992
+Epoch 6/15 - min_loss: 36.3521  max_loss: -35.4723  val_loss: 0.9390
+Epoch 7/15 - min_loss: 36.0479  max_loss: -35.3172  val_loss: 0.8990
+Epoch 8/15 - min_loss: 36.0283  max_loss: -35.2948  val_loss: 0.8789
+Epoch 9/15 - min_loss: 36.1867  max_loss: -35.5249  val_loss: 0.8652
+Epoch 10/15 - min_loss: 36.6919  max_loss: -36.0068  val_loss: 0.8616
+Epoch 11/15 - min_loss: 37.6211  max_loss: -36.9761  val_loss: 0.8585
+Epoch 12/15 - min_loss: 38.7495  max_loss: -38.1444  val_loss: 0.8629
+Epoch 13/15 - min_loss: 40.0089  max_loss: -39.3801  val_loss: 0.8707
+Epoch 14/15 - min_loss: 41.5108  max_loss: -40.9002  val_loss: 0.8749
+Epoch 15/15 - min_loss: 42.8606  max_loss: -42.3283  val_loss: 0.8806
+Restored best model (val_loss: 0.8585)
+  [AT] trained (1.69s), threshold=0.6577
+  Scientist ben_0   : train=2.57s  score=0.04s  -> BAD
+  Scientist ben_1   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_2   : train=2.55s  score=0.04s  -> BAD
+  Scientist ben_3   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_4   : train=2.61s  score=0.04s  -> ok
+  Scientist ben_5   : train=2.60s  score=0.04s  -> ok
+  Scientist ben_6   : train=2.60s  score=0.04s  -> ok
+  Scientist ben_7   : train=2.54s  score=0.04s  -> BAD
+  Scientist ben_8   : train=2.57s  score=0.04s  -> ok
+  Scientist ben_9   : train=2.53s  score=0.04s  -> BAD
+  Scientist mal_0   : train=3.24s  score=0.04s  -> BAD
+  Scientist mal_1   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_2   : train=3.29s  score=0.04s  -> BAD
+  Scientist mal_3   : train=3.24s  score=0.04s  -> BAD
+  Scientist mal_4   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_5   : train=3.24s  score=0.04s  -> BAD
+  Scientist mal_6   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_7   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_8   : train=3.25s  score=0.04s  -> BAD
+  Scientist mal_9   : train=3.24s  score=0.04s  -> BAD
+  TP=10  FP=4  TN=6  FN=0
+  Precision=0.714  Recall=1.000  F1=0.833
+  Runtime: miner=0.80s  scientist(sum of 20)=58.17s  AT(train+score)=2.47s  total=61.44s  (wall-clock check: 61.44s)
+
+=== TenKAE ===
+  [Miner] 375 snapshots  (0.81s)
+Epoch 1/15 - min_loss: 41.0301  max_loss: -39.1027  val_loss: 1.0265
+Epoch 2/15 - min_loss: 40.0149  max_loss: -38.3938  val_loss: 0.8247
+Epoch 3/15 - min_loss: 39.1252  max_loss: -37.7283  val_loss: 0.6701
+Epoch 4/15 - min_loss: 38.2515  max_loss: -37.0878  val_loss: 0.5430
+Epoch 5/15 - min_loss: 37.4800  max_loss: -36.4807  val_loss: 0.4590
+Epoch 6/15 - min_loss: 36.7792  max_loss: -35.9086  val_loss: 0.4111
+Epoch 7/15 - min_loss: 36.4248  max_loss: -35.5977  val_loss: 0.3767
+Epoch 8/15 - min_loss: 36.2059  max_loss: -35.4992  val_loss: 0.3588
+Epoch 9/15 - min_loss: 36.2549  max_loss: -35.5413  val_loss: 0.3440
+Epoch 10/15 - min_loss: 36.5472  max_loss: -35.8521  val_loss: 0.3364
+Epoch 11/15 - min_loss: 37.1044  max_loss: -36.4537  val_loss: 0.3362
+Epoch 12/15 - min_loss: 37.8636  max_loss: -37.2544  val_loss: 0.3388
+Epoch 13/15 - min_loss: 39.0855  max_loss: -38.4377  val_loss: 0.3464
+Epoch 14/15 - min_loss: 40.5671  max_loss: -39.8961  val_loss: 0.3505
+Epoch 15/15 - min_loss: 42.1094  max_loss: -41.4860  val_loss: 0.3583
+Restored best model (val_loss: 0.3362)
+  [AT] trained (1.71s), threshold=0.2696
+  Scientist ben_0   : train=2.57s  score=0.04s  -> ok
+  Scientist ben_1   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_2   : train=2.59s  score=0.04s  -> ok
+  Scientist ben_3   : train=2.56s  score=0.04s  -> ok
+  Scientist ben_4   : train=2.56s  score=0.04s  -> ok
+  Scientist ben_5   : train=2.56s  score=0.04s  -> ok
+  Scientist ben_6   : train=2.58s  score=0.04s  -> ok
+  Scientist ben_7   : train=2.54s  score=0.04s  -> ok
+  Scientist ben_8   : train=2.53s  score=0.04s  -> BAD
+  Scientist ben_9   : train=2.53s  score=0.04s  -> ok
+  Scientist mal_0   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_1   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_2   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_3   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_4   : train=3.31s  score=0.04s  -> BAD
+  Scientist mal_5   : train=3.27s  score=0.04s  -> BAD
+  Scientist mal_6   : train=3.39s  score=0.04s  -> BAD
+  Scientist mal_7   : train=3.35s  score=0.04s  -> BAD
+  Scientist mal_8   : train=3.30s  score=0.04s  -> BAD
+  Scientist mal_9   : train=3.29s  score=0.04s  -> BAD
+  TP=10  FP=1  TN=9  FN=0
+  Precision=0.909  Recall=1.000  F1=0.952
+  Runtime: miner=0.81s  scientist(sum of 20)=58.55s  AT(train+score)=2.48s  total=61.84s  (wall-clock check: 61.84s)
+
+=== TwelveKAE ===
+  [Miner] 375 snapshots  (0.81s)
+Epoch 1/15 - min_loss: 38.5603  max_loss: -36.8542  val_loss: 1.3512
+Epoch 2/15 - min_loss: 37.6890  max_loss: -36.3167  val_loss: 1.1823
+Epoch 3/15 - min_loss: 36.9126  max_loss: -35.7046  val_loss: 1.0267
+Epoch 4/15 - min_loss: 36.0731  max_loss: -35.0737  val_loss: 0.9392
+Epoch 5/15 - min_loss: 35.5048  max_loss: -34.6657  val_loss: 0.8798
+Epoch 6/15 - min_loss: 35.0474  max_loss: -34.2453  val_loss: 0.8191
+Epoch 7/15 - min_loss: 34.9455  max_loss: -34.2060  val_loss: 0.7825
+Epoch 8/15 - min_loss: 35.1003  max_loss: -34.4118  val_loss: 0.7478
+Epoch 9/15 - min_loss: 35.3687  max_loss: -34.7461  val_loss: 0.7098
+Epoch 10/15 - min_loss: 35.7907  max_loss: -35.1854  val_loss: 0.6885
+Epoch 11/15 - min_loss: 36.6540  max_loss: -36.0782  val_loss: 0.6772
+Epoch 12/15 - min_loss: 37.6382  max_loss: -36.9882  val_loss: 0.6728
+Epoch 13/15 - min_loss: 38.7607  max_loss: -38.2165  val_loss: 0.6728
+Epoch 14/15 - min_loss: 40.1586  max_loss: -39.4942  val_loss: 0.6784
+Epoch 15/15 - min_loss: 41.6744  max_loss: -41.0575  val_loss: 0.6875
+Restored best model (val_loss: 0.6728)
+  [AT] trained (1.70s), threshold=0.6928
+  Scientist ben_0   : train=2.54s  score=0.04s  -> BAD
+  Scientist ben_1   : train=2.55s  score=0.04s  -> ok
+  Scientist ben_2   : train=2.54s  score=0.04s  -> ok
+  Scientist ben_3   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_4   : train=2.54s  score=0.04s  -> ok
+  Scientist ben_5   : train=2.53s  score=0.04s  -> ok
+  Scientist ben_6   : train=2.53s  score=0.04s  -> BAD
+  Scientist ben_7   : train=2.52s  score=0.04s  -> BAD
+  Scientist ben_8   : train=2.52s  score=0.04s  -> ok
+  Scientist ben_9   : train=2.53s  score=0.04s  -> BAD
+  Scientist mal_0   : train=3.29s  score=0.04s  -> BAD
+  Scientist mal_1   : train=3.30s  score=0.04s  -> BAD
+  Scientist mal_2   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_3   : train=3.29s  score=0.04s  -> BAD
+  Scientist mal_4   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_5   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_6   : train=3.34s  score=0.04s  -> BAD
+  Scientist mal_7   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_8   : train=3.26s  score=0.04s  -> BAD
+  Scientist mal_9   : train=3.29s  score=0.04s  -> BAD
+  TP=10  FP=4  TN=6  FN=0
+  Precision=0.714  Recall=1.000  F1=0.833
+  Runtime: miner=0.81s  scientist(sum of 20)=58.11s  AT(train+score)=2.47s  total=61.38s  (wall-clock check: 61.39s)
+
+=== TOTAL RUNTIME (sum across all model sizes) ===
+  miner:           7.77 s
+  scientist:     291.26 s
+  AT model:       13.13 s
+  TOTAL:         312.15 s
+  (dataset load: 4.02s, full script wall-clock: 316.18s)
+
+Saved results -> runtime/ae_runtime.csv
