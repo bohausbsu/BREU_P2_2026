@@ -33,7 +33,9 @@ python --version
 
 echo "Testing Scalability for Auto-Encoder..."
 
-time python ExperimentSAE.py --seed 1 --model TenKAE --data-root mnist --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_ae_10k-$FLAG_FRAC-$AT_R.csv"
-mv sae_*.csv sae_exp/
+for i in {1..5}; do
+	time python ExperimentSAE.py --seed 1 --model TenKAE --data-root mnist --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_ae_10k-$i-$FLAG_FRAC-$AT_R.csv"
+	mv sae_*.csv sae_exp/
+done
 
 echo "Finished running the Scalability Experiment for the Auto-Encoder."
