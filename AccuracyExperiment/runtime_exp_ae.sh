@@ -28,7 +28,7 @@ which python
 
 nvidia-smi
 
-python -c "import torch; print(torch.cuda.get_device_name(); print(torch.cuda.get_device_properties()))"
+python -c "import torch; print(torch.cuda.get_device_name()); print(torch.cuda.get_device_properties())"
 
 python ExperimentRuntime.py --model ae --dataset-root mnist --out-csv "runtime/ae_runtime.csv"
 

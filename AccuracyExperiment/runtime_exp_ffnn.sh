@@ -28,6 +28,6 @@ which python
 
 nvidia-smi
 
-python -c "import torch; print(torch.cuda.get_device_name(); print(torch.cuda.get_device_properties()))"
+python -c "import torch; print(torch.cuda.get_device_name()); print(torch.cuda.get_device_properties())"
 
 python ExperimentRuntime.py --model ffnn --dataset college_student_placement_dataset.csv --target-col Placement --out-csv "runtime/ffnn_runtime.csv"
