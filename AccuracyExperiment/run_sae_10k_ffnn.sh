@@ -1,6 +1,6 @@
 #!/bin/bash
-#SBATCH -J spectra_exp_sae_cnn
-#SBATCH -o spectra_exp_sae_cnn.log%j
+#SBATCH -J spectra_exp_sae_ffnn
+#SBATCH -o spectra_exp_sae_ffnn.log%j
 #SBATCH --cpus-per-task=48
 #SBATCH --ntasks=1
 #SBATCH --nodes=1
@@ -31,9 +31,9 @@ which python
 # Find Python version
 python --version
 
-echo "Testing Scalability for CNN..."
+echo "Testing Scalability for FFNN..."
 
-time python ExperimentSAE.py --seed 1 --model FourKCNN --data-root-cnn PetImages --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_cnn_4k-$FLAG_FRAC-$AT_R.csv"
-mv sae_* sae_exp/
+time python ExperimentSAE.py --seed 1 --model TenKMLP --dataset college_student_placement_dataset.csv --target-col Placement --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_ffnn_10k-$FLAG_FRAC-$AT_R.csv"
+mv sae_*.csv sae_exp/
 
-echo "Finished running the Scalability Experiment for the CNN."
+echo "Finished running the Scalability Experiment for the FFNN."
