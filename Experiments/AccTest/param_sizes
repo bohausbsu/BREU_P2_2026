@@ -1,0 +1,10 @@
+model = FourKMLP()
+	4003
+model = SixKMLP()
+	7425
+model = EightKMLP()
+	10847
+model = TenKMLP()
+	14269
+model = TwelveKMLP()
+	17691
