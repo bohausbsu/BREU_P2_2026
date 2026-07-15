@@ -1,0 +1,298 @@
+Date              = Wed Jul 15 00:33:01 MDT 2026
+Hostname          = gpu104
+Working Directory = /bsuhome/dylangresham/scratch/BREU_P2_2026/Experiments/AccTest
+
+Number of Nodes Allocated  = 1
+Number of Tasks Allocated  = 1
+Number of CPUs Allocated   = 48
+GPU Allocated              = 0
+
+Run 1 of 5
+/bsuhome/dylangresham/miniforge3/envs/reu26_ab/lib/python3.10/site-packages/torch/nn/init.py:511: UserWarning: Initializing zero-element tensors is a no-op
+  warnings.warn("Initializing zero-element tensors is a no-op")
+Running an Accuracy Experiment with 10.0% of signs flipped.
+	Saving experiment results in ae_alt_acc_1_0.1.csv & ae_alt_acc_1_0.1.png.
+Device: cuda
+Seed set to: 1
+Dataset: 3000 digits  ->  miner 900, scientist 3000
+  [Miner] Training model and collecting snapshots...
+Saved 375 snapshots -> /tmp/tmpsfjkms0o/miner_FourKAE.csv
+  [Miner] 375 snapshots  (shape (375, 15))
+  [AT] Training Anomaly Transformer on miner snapshots...
+Epoch 1/15 - min_loss: 41.3781  max_loss: -39.1393  val_loss: 4.1897
+Epoch 2/15 - min_loss: 40.3318  max_loss: -38.4047  val_loss: 3.6675
+Epoch 3/15 - min_loss: 39.2741  max_loss: -37.6139  val_loss: 3.2249
+Epoch 4/15 - min_loss: 38.2270  max_loss: -36.8361  val_loss: 2.8864
+Epoch 5/15 - min_loss: 37.3598  max_loss: -36.1434  val_loss: 2.5888
+Epoch 6/15 - min_loss: 36.7195  max_loss: -35.5987  val_loss: 2.3730
+Epoch 7/15 - min_loss: 36.2018  max_loss: -35.2382  val_loss: 2.1996
+Epoch 8/15 - min_loss: 35.9791  max_loss: -35.0461  val_loss: 2.0500
+Epoch 9/15 - min_loss: 35.8419  max_loss: -35.0192  val_loss: 1.9639
+Epoch 10/15 - min_loss: 36.0426  max_loss: -35.3103  val_loss: 1.9026
+Epoch 11/15 - min_loss: 36.4474  max_loss: -35.6868  val_loss: 1.8564
+Epoch 12/15 - min_loss: 37.0994  max_loss: -36.4110  val_loss: 1.8248
+Epoch 13/15 - min_loss: 38.1887  max_loss: -37.4839  val_loss: 1.8000
+Epoch 14/15 - min_loss: 39.2663  max_loss: -38.5258  val_loss: 1.7839
+Epoch 15/15 - min_loss: 40.6650  max_loss: -40.1288  val_loss: 1.7670
+Restored best model (val_loss: 1.7670)
+  [AT] Threshold: 2.1303
+  [EffSignal] miner mean=0.07129  cutoff=0.02139 (eff_signal_ratio=0.3)
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_0.csv
+  Benign   run  1: flagged=0.934  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_1.csv
+  Benign   run  2: flagged=0.102  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_2.csv
+  Benign   run  3: flagged=0.136  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_3.csv
+  Benign   run  4: flagged=0.094  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_4.csv
+  Benign   run  5: flagged=0.368  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_5.csv
+  Benign   run  6: flagged=0.065  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_6.csv
+  Benign   run  7: flagged=0.104  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_7.csv
+  Benign   run  8: flagged=0.087  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_8.csv
+  Benign   run  9: flagged=0.322  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_9.csv
+  Benign   run 10: flagged=0.140  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_0.csv
+  Malicious run  1: flagged=0.143  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_1.csv
+  Malicious run  2: flagged=0.087  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_2.csv
+  Malicious run  3: flagged=0.407  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_3.csv
+  Malicious run  4: flagged=0.153  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_4.csv
+  Malicious run  5: flagged=0.138  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_5.csv
+  Malicious run  6: flagged=0.150  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_6.csv
+  Malicious run  7: flagged=0.058  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_7.csv
+  Malicious run  8: flagged=0.092  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_8.csv
+  Malicious run  9: flagged=0.094  -> ok
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_9.csv
+  Malicious run 10: flagged=0.102  -> BAD
+
+  TP=6  FP=7  TN=3  FN=4
+  Precision=0.462  Recall=0.600  F1=0.522
+  [Miner] Training model and collecting snapshots...
+Saved 375 snapshots -> /tmp/tmpsfjkms0o/miner_SixKAE.csv
+  [Miner] 375 snapshots  (shape (375, 17))
+  [AT] Training Anomaly Transformer on miner snapshots...
+Epoch 1/15 - min_loss: 41.1229  max_loss: -39.4814  val_loss: 2.4687
+Epoch 2/15 - min_loss: 40.1229  max_loss: -38.8638  val_loss: 1.9702
+Epoch 3/15 - min_loss: 39.1691  max_loss: -38.1733  val_loss: 1.5670
+Epoch 4/15 - min_loss: 38.2522  max_loss: -37.4253  val_loss: 1.3163
+Epoch 5/15 - min_loss: 37.3774  max_loss: -36.6848  val_loss: 1.1727
+Epoch 6/15 - min_loss: 36.6513  max_loss: -35.9935  val_loss: 1.0880
+Epoch 7/15 - min_loss: 36.2364  max_loss: -35.6589  val_loss: 1.0146
+Epoch 8/15 - min_loss: 36.0061  max_loss: -35.5114  val_loss: 0.9785
+Epoch 9/15 - min_loss: 36.3033  max_loss: -35.8131  val_loss: 0.9564
+Epoch 10/15 - min_loss: 36.7025  max_loss: -36.2064  val_loss: 0.9467
+Epoch 11/15 - min_loss: 37.5325  max_loss: -37.1013  val_loss: 0.9212
+Epoch 12/15 - min_loss: 38.7754  max_loss: -38.4013  val_loss: 0.8966
+Epoch 13/15 - min_loss: 40.1239  max_loss: -39.7196  val_loss: 0.8787
+Epoch 14/15 - min_loss: 41.5583  max_loss: -41.1040  val_loss: 0.8566
+Epoch 15/15 - min_loss: 43.1888  max_loss: -42.7726  val_loss: 0.8292
+Restored best model (val_loss: 0.8292)
+  [AT] Threshold: 4.9903
+  [EffSignal] miner mean=0.11857  cutoff=0.03557 (eff_signal_ratio=0.3)
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_0.csv
+  Benign   run  1: flagged=0.974  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_1.csv
+  Benign   run  2: flagged=0.288  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_2.csv
+  Benign   run  3: flagged=0.974  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_3.csv
+  Benign   run  4: flagged=0.976  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_4.csv
+  Benign   run  5: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_5.csv
+  Benign   run  6: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_6.csv
+  Benign   run  7: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_7.csv
+  Benign   run  8: flagged=0.973  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_8.csv
+  Benign   run  9: flagged=0.119  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_9.csv
+  Benign   run 10: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_0.csv
+  Malicious run  1: flagged=0.371  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_1.csv
+  Malicious run  2: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_2.csv
+  Malicious run  3: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_3.csv
+  Malicious run  4: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_4.csv
+  Malicious run  5: flagged=0.974  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_5.csv
+  Malicious run  6: flagged=0.969  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_6.csv
+  Malicious run  7: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_7.csv
+  Malicious run  8: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_8.csv
+  Malicious run  9: flagged=0.952  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_9.csv
+  Malicious run 10: flagged=0.971  -> BAD
+
+  TP=10  FP=10  TN=0  FN=0
+  Precision=0.500  Recall=1.000  F1=0.667
+  [Miner] Training model and collecting snapshots...
+Saved 375 snapshots -> /tmp/tmpsfjkms0o/miner_EightKAE.csv
+  [Miner] 375 snapshots  (shape (375, 19))
+  [AT] Training Anomaly Transformer on miner snapshots...
+Epoch 1/15 - min_loss: 38.9188  max_loss: -38.1515  val_loss: 0.3062
+Epoch 2/15 - min_loss: 37.7652  max_loss: -37.2233  val_loss: 0.2361
+Epoch 3/15 - min_loss: 36.7083  max_loss: -36.3057  val_loss: 0.2061
+Epoch 4/15 - min_loss: 35.9496  max_loss: -35.6007  val_loss: 0.1888
+Epoch 5/15 - min_loss: 35.5293  max_loss: -35.1977  val_loss: 0.1824
+Epoch 6/15 - min_loss: 35.4211  max_loss: -35.1480  val_loss: 0.1785
+Epoch 7/15 - min_loss: 35.6005  max_loss: -35.4049  val_loss: 0.1703
+Epoch 8/15 - min_loss: 36.1573  max_loss: -35.9473  val_loss: 0.1656
+Epoch 9/15 - min_loss: 36.8905  max_loss: -36.7447  val_loss: 0.1605
+Epoch 10/15 - min_loss: 37.9043  max_loss: -37.8244  val_loss: 0.1520
+Epoch 11/15 - min_loss: 39.0944  max_loss: -39.0176  val_loss: 0.1462
+Epoch 12/15 - min_loss: 40.4986  max_loss: -40.3982  val_loss: 0.1416
+Epoch 13/15 - min_loss: 41.9174  max_loss: -41.8197  val_loss: 0.1412
+Epoch 14/15 - min_loss: 43.3578  max_loss: -43.2166  val_loss: 0.1361
+Epoch 15/15 - min_loss: 44.8604  max_loss: -44.7916  val_loss: 0.1362
+Restored best model (val_loss: 0.1361)
+  [AT] Threshold: 0.1747
+  [EffSignal] miner mean=0.00000  cutoff=0.00000 (eff_signal_ratio=0.3)
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_0.csv
+  Benign   run  1: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_1.csv
+  Benign   run  2: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_2.csv
+  Benign   run  3: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_3.csv
+  Benign   run  4: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_4.csv
+  Benign   run  5: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_5.csv
+  Benign   run  6: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_6.csv
+  Benign   run  7: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_7.csv
+  Benign   run  8: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_8.csv
+  Benign   run  9: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_9.csv
+  Benign   run 10: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_0.csv
+  Malicious run  1: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_1.csv
+  Malicious run  2: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_2.csv
+  Malicious run  3: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_3.csv
+  Malicious run  4: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_4.csv
+  Malicious run  5: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_5.csv
+  Malicious run  6: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_6.csv
+  Malicious run  7: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_7.csv
+  Malicious run  8: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_8.csv
+  Malicious run  9: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_9.csv
+  Malicious run 10: flagged=1.000  -> BAD
+
+  TP=10  FP=10  TN=0  FN=0
+  Precision=0.500  Recall=1.000  F1=0.667
+  [Miner] Training model and collecting snapshots...
+Saved 375 snapshots -> /tmp/tmpsfjkms0o/miner_TenKAE.csv
+  [Miner] 375 snapshots  (shape (375, 21))
+  [AT] Training Anomaly Transformer on miner snapshots...
+Epoch 1/15 - min_loss: 40.4218  max_loss: -39.5540  val_loss: 0.4881
+Epoch 2/15 - min_loss: 39.2037  max_loss: -38.5822  val_loss: 0.3397
+Epoch 3/15 - min_loss: 38.2336  max_loss: -37.7773  val_loss: 0.2729
+Epoch 4/15 - min_loss: 37.5815  max_loss: -37.1961  val_loss: 0.2408
+Epoch 5/15 - min_loss: 37.1628  max_loss: -36.8279  val_loss: 0.2269
+Epoch 6/15 - min_loss: 37.1148  max_loss: -36.8143  val_loss: 0.2078
+Epoch 7/15 - min_loss: 37.2927  max_loss: -37.0399  val_loss: 0.1960
+Epoch 8/15 - min_loss: 37.7909  max_loss: -37.6463  val_loss: 0.1814
+Epoch 9/15 - min_loss: 38.5458  max_loss: -38.3916  val_loss: 0.1778
+Epoch 10/15 - min_loss: 39.5530  max_loss: -39.4376  val_loss: 0.1731
+Epoch 11/15 - min_loss: 40.7587  max_loss: -40.6124  val_loss: 0.1663
+Epoch 12/15 - min_loss: 42.0947  max_loss: -41.9797  val_loss: 0.1606
+Epoch 13/15 - min_loss: 43.5077  max_loss: -43.3702  val_loss: 0.1561
+Epoch 14/15 - min_loss: 44.9593  max_loss: -44.7852  val_loss: 0.1504
+Epoch 15/15 - min_loss: 46.5262  max_loss: -46.4624  val_loss: 0.1478
+Restored best model (val_loss: 0.1478)
+  [AT] Threshold: 0.2328
+  [EffSignal] miner mean=0.00000  cutoff=0.00000 (eff_signal_ratio=0.3)
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_0.csv
+  Benign   run  1: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_1.csv
+  Benign   run  2: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_2.csv
+  Benign   run  3: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_3.csv
+  Benign   run  4: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_4.csv
+  Benign   run  5: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_5.csv
+  Benign   run  6: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_6.csv
+  Benign   run  7: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_7.csv
+  Benign   run  8: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_8.csv
+  Benign   run  9: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_ben_9.csv
+  Benign   run 10: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_0.csv
+  Malicious run  1: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_1.csv
+  Malicious run  2: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_2.csv
+  Malicious run  3: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_3.csv
+  Malicious run  4: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_4.csv
+  Malicious run  5: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_5.csv
+  Malicious run  6: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_6.csv
+  Malicious run  7: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_7.csv
+  Malicious run  8: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_8.csv
+  Malicious run  9: flagged=1.000  -> BAD
+Saved 1175 snapshots -> /tmp/tmpsfjkms0o/sci_mal_9.csv
+  Malicious run 10: flagged=1.000  -> BAD
+
+  TP=10  FP=10  TN=0  FN=0
+  Precision=0.500  Recall=1.000  F1=0.667
+  [Miner] Training model and collecting snapshots...
+Traceback (most recent call last):
+  File "/bsuscratch/dylangresham/BREU_P2_2026/Experiments/AccTest/Experiment1c.py", line 467, in <module>
+    run_experiment(
+  File "/bsuscratch/dylangresham/BREU_P2_2026/Experiments/AccTest/Experiment1c.py", line 202, in run_experiment
+    miner_snaps = snapshot_run(
+  File "/bsuscratch/dylangresham/BREU_P2_2026/Experiments/AccTest/snapshot_trainer_c.py", line 345, in run
+    preds = model(X_batch)
+  File "/bsuhome/dylangresham/miniforge3/envs/reu26_ab/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/bsuhome/dylangresham/miniforge3/envs/reu26_ab/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/bsuscratch/dylangresham/BREU_P2_2026/Experiments/AccTest/snapshot_trainer_c.py", line 181, in forward
+    z_9 = self.act(self.decoder_3(z_8))
+  File "/bsuhome/dylangresham/miniforge3/envs/reu26_ab/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1739, in _wrapped_call_impl
+    return self._call_impl(*args, **kwargs)
+  File "/bsuhome/dylangresham/miniforge3/envs/reu26_ab/lib/python3.10/site-packages/torch/nn/modules/module.py", line 1750, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/bsuhome/dylangresham/miniforge3/envs/reu26_ab/lib/python3.10/site-packages/torch/nn/modules/linear.py", line 125, in forward
+    return F.linear(input, self.weight, self.bias)
+RuntimeError: mat1 and mat2 shapes cannot be multiplied (64x1 and 0x1)
