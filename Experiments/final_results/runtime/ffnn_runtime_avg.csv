@@ -1,0 +1,6 @@
+experiment,n_seeds,model_class,size_label,precision,recall,f1,total_time_sec
+rt_ffnn,1,FourKMLP,4k,1.0,1.0,1.0,234.17624
+rt_ffnn,1,SixKMLP,6k,0.9091000000000001,1.0,0.9524000000000001,236.18760000000003
+rt_ffnn,1,EightKMLP,8k,0.7143,1.0,0.8333,231.52800000000002
+rt_ffnn,1,TenKMLP,10k,1.0,1.0,1.0,233.58542000000003
+rt_ffnn,1,TwelveKMLP,12k,1.0,1.0,1.0,232.84247999999997

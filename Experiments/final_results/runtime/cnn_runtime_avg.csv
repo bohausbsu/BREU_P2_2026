@@ -1,0 +1,6 @@
+experiment,n_seeds,model_class,size_label,precision,recall,f1,total_time_sec
+rt_cnn,1,FourKCNN,4k,0.9091000000000001,1.0,0.9524000000000001,52.14642
+rt_cnn,1,SixKCNN,6k,0.75822,1.0,0.86234,48.677620000000005
+rt_cnn,1,EightKCNN,8k,0.5882,1.0,0.7407,48.96884
+rt_cnn,1,TenKCNN,10k,0.5263,1.0,0.6897,49.57602
+rt_cnn,1,TwelveKCNN,12k,0.5,1.0,0.6667,49.62192
