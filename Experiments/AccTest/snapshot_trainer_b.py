@@ -45,37 +45,8 @@ except ImportError as e:  # pragma: no cover
 
 # ---------------------------------------------------------------------------
 # Model definitions
-#
-# All four models share the same shape:
-#   Conv2d(3, w, 3x3, pad=1) -> ReLU -> MaxPool2d(2)
-#   Conv2d(w, 2w, 3x3, pad=1) -> ReLU -> AdaptiveAvgPool2d(1)
-#   Linear(2w, 1)                                   (raw logit, binary)
-#
-# Parameter count = 18w^2 + 32w + 1, independent of input resolution.
 # ---------------------------------------------------------------------------
-class _BaseCNN(nn.Module):
-    def __init__(self, width):
-        super().__init__()
-        w = width
-        self.features = nn.Sequential(
-            nn.Conv2d(3, w, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.MaxPool2d(2),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
-            nn.AdaptiveAvgPool2d(1),
-        )
-        self.classifier = nn.Linear(2 * w, 1)
-
-    def forward(self, x):
-        x = self.features(x)
-        x = torch.flatten(x, 1)
-        return self.classifier(x)
-
-
 class FourKCNN(nn.Module):
-    """~4k params (w=14)."""
-
     def __init__(self, width=14):
         super().__init__()
         w = width
@@ -96,8 +67,6 @@ class FourKCNN(nn.Module):
 
 
 class SixKCNN(nn.Module):
-    """~5.7k params (w=17)."""
-
     def __init__(self, width=14):
         super().__init__()
         w = width
@@ -107,12 +76,12 @@ class SixKCNN(nn.Module):
             nn.MaxPool2d(2),
             nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(2 * w, 4 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(1),
         )
-        self.classifier = nn.Linear(2 * w, 1)
+        self.classifier = nn.Linear(4 * w, 1)
 
     def forward(self, x):
         x = self.features(x)
@@ -121,8 +90,6 @@ class SixKCNN(nn.Module):
 
 
 class EightKCNN(nn.Module):
-    """~7.8k params (w=20)."""
-
     def __init__(self, width=14):
         super().__init__()
         w = width
@@ -132,15 +99,15 @@ class EightKCNN(nn.Module):
             nn.MaxPool2d(2),
             nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(2 * w, 4 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(4 * w, 8 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(1),
         )
-        self.classifier = nn.Linear(2 * w, 1)
+        self.classifier = nn.Linear(8 * w, 1)
 
     def forward(self, x):
         x = self.features(x)
@@ -149,8 +116,6 @@ class EightKCNN(nn.Module):
 
 
 class TenKCNN(nn.Module):
-    """~10.3k params (w=23)."""
-
     def __init__(self, width=14):
         super().__init__()
         w = width
@@ -160,18 +125,18 @@ class TenKCNN(nn.Module):
             nn.MaxPool2d(2),
             nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(2 * w, 4 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(4 * w, 8 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(8 * w, 16 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(1),
         )
-        self.classifier = nn.Linear(2 * w, 1)
+        self.classifier = nn.Linear(16 * w, 1)
 
     def forward(self, x):
         x = self.features(x)
@@ -180,8 +145,6 @@ class TenKCNN(nn.Module):
 
 
 class TwelveKCNN(nn.Module):
-    """~12.1k params (w=25)."""
-
     def __init__(self, width=14):
         super().__init__()
         w = width
@@ -191,21 +154,21 @@ class TwelveKCNN(nn.Module):
             nn.MaxPool2d(2),
             nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(2 * w, 4 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(4 * w, 8 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(8 * w, 16 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
-            nn.Conv2d(w, 2 * w, kernel_size=3, padding=1),
+            nn.Conv2d(16 * w, 32 * w, kernel_size=3, padding=1),
             nn.MaxPool2d(2),
             nn.ReLU(inplace=True),
             nn.AdaptiveAvgPool2d(1),
         )
-        self.classifier = nn.Linear(2 * w, 1)
+        self.classifier = nn.Linear(32 * w, 1)
 
     def forward(self, x):
         x = self.features(x)
