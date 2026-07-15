@@ -222,6 +222,7 @@ def run_experiment(
                 flip_frac=flip_frac,
                 X_data=X_miner,
                 y_data=y_miner,
+                model_class_str=model_class_str,
             )
 
             print(
@@ -267,6 +268,7 @@ def run_experiment(
                     X_data=X_sci,
                     y_data=y_sci,
                     device=device,
+                    model_class_str=model_class_str,
                 )
 
                 sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
@@ -311,6 +313,7 @@ def run_experiment(
                     X_data=X_sci,
                     y_data=y_sci,
                     device=device,
+                    model_class_str=model_class_str,
                 )
                 sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
 
