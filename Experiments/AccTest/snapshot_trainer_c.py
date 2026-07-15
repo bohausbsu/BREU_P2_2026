@@ -32,7 +32,7 @@ from torch.utils.data import DataLoader, TensorDataset
 # Parameter count = 1569h + 784, independent of anything but h.
 # ---------------------------------------------------------------------------
 class _BaseAE(nn.Module):
-    def __init__(self, bottleneck, in_features=784):
+    def __init__(self, bottleneck=3, in_features=784):
         super().__init__()
         self.encoder = nn.Linear(in_features, bottleneck)
         self.decoder = nn.Linear(bottleneck, in_features)
@@ -47,7 +47,7 @@ class _BaseAE(nn.Module):
 class FourKAE(nn.Module):
     """~4k params (bottleneck=3)."""
 
-    def __init__(self, bottleneck, in_features=784):
+    def __init__(self, bottleneck=3, in_features=784):
         super().__init__()
         self.encoder_1 = nn.Linear(in_features, bottleneck)
 
@@ -67,7 +67,7 @@ class FourKAE(nn.Module):
 class SixKAE(nn.Module):
     """~5.5k params (bottleneck=3)."""
 
-    def __init__(self, bottleneck, in_features=784):
+    def __init__(self, bottleneck=3, in_features=784):
         super().__init__()
         self.encoder_1 = nn.Linear(in_features, bottleneck)
         self.encoder_2 = nn.Linear(bottleneck, bottleneck // 2)
@@ -91,7 +91,7 @@ class SixKAE(nn.Module):
 class EightKAE(nn.Module):
     """~8.6k params (bottleneck=5)."""
 
-    def __init__(self, bottleneck, in_features=784):
+    def __init__(self, bottleneck=3, in_features=784):
         super().__init__()
         self.encoder_1 = nn.Linear(in_features, bottleneck)
         self.encoder_2 = nn.Linear(bottleneck, bottleneck // 2)
@@ -119,7 +119,7 @@ class EightKAE(nn.Module):
 class TenKAE(nn.Module):
     """~10.2k params (bottleneck=6)."""
 
-    def __init__(self, bottleneck, in_features=784):
+    def __init__(self, bottleneck=3, in_features=784):
         super().__init__()
         self.encoder_1 = nn.Linear(in_features, bottleneck)
         self.encoder_2 = nn.Linear(bottleneck, bottleneck // 2)
@@ -151,7 +151,7 @@ class TenKAE(nn.Module):
 class TwelveKAE(nn.Module):
     """~11.8k params (bottleneck=7)."""
 
-    def __init__(self, bottleneck, in_features=784):
+    def __init__(self, bottleneck=3, in_features=784):
         super().__init__()
         self.encoder_1 = nn.Linear(in_features, bottleneck)
         self.encoder_2 = nn.Linear(bottleneck, bottleneck // 2)
