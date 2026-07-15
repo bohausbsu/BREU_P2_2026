@@ -26,11 +26,25 @@ mkdir -p ffnn_acc
 
 FLAG_FRAC=0.1
 AT_R=0.01
+EFF_SIGNAL_RATIO=0.3
 
 which python
 for i in {1..5}; do
 	echo "Run $i of 5"
-	python Experiment1a.py --seed "$i" --dataset college_student_placement_dataset.csv --target-col Placement --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "ffnn_alt_acc_$i.csv" --out "ffnn_alt_acc_$i.png"
+	python Experiment1a.py \
+		--seed "$i" \
+		--dataset college_student_placement_dataset.csv \
+		--target-col Placement \
+		--flag-frac "$FLAG_FRAC" \
+		--at-r "$AT_R" \
+		--eff-signal-ratio "$EFF_SIGNAL_RATIO" \
+		--out-csv "ffnn_alt_acc_$i-$EFF_SIGNAL_RATIO.csv" \
+		--out "ffnn_alt_acc_$i-$EFF_SIGNAL_RATIO.png"
 done
 
-python combine_results.py --results-dir ffnn_acc --out-csv "ffnn_alt_acc_avg.csv" --out-png "ffnn_alt_acc_avg.png" --title "SPECTRA Alt FFNN Detection Scores" --pattern "ffnn_alt_acc_*.csv"
+python combine_results.py \
+	--results-dir ffnn_acc \
+	--out-csv "ffnn_alt_acc_avg-$EFF_SIGNAL_RATIO.csv" \
+	--out-png "ffnn_alt_acc_avg-$EFF_SIGNAL_RATIO.png" \
+	--title "SPECTRA Alt FFNN Detection Scores at $EFF_SIGNAL_RATIO" \
+	--pattern "ffnn_alt_acc_*.csv"

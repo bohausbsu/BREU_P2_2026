@@ -27,10 +27,23 @@ mkdir -p cnn_acc
 
 FLAG_FRAC=0.1
 AT_R=0.01
+EFF_SIGNAL_RATIO=0.3
 
 for i in {1..5}; do
 	echo "Run $i of 5"
-	python Experiment1b.py --seed "$i" --data-root PetImages --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "cnn_alt_acc_$i.csv" --out "cnn_alt_acc_$i.png"
+	python Experiment1b.py \
+		--seed "$i" \
+		--data-root PetImages \
+		--flag-frac "$FLAG_FRAC" \
+		--at-r "$AT_R" \
+		--eff-signal-ratio "$EFF_SIGNAL_RATIO" \
+		--out-csv "cnn_alt_acc_$i-$EFF_SIGNAL_RATIO.csv" \
+		--out "cnn_alt_acc_$i-$EFF_SIGNAL_RATIO.png"
 done
 
-python combine_results.py --results-dir cnn_acc --out-csv "cnn_alt_acc_avg.csv" --out-png "cnn_alt_acc_avg.png" --title "SPECTRA Alt-CNN Detection Scores Averaged Over 10 Runs" --pattern "cnn_alt_acc_*.csv"
+python combine_results.py \
+	--results-dir cnn_acc \
+	--out-csv "cnn_alt_acc_avg-$EFF_SIGNAL_RATIO.csv" \
+	--out-png "cnn_alt_acc_avg-$EFF_SIGNAL_RATIO.png" \
+	--title "SPECTRA Alt-CNN Detection Scores Averaged Over 10 Runs at $EFF_SIGNAL_RATIO" \
+	--pattern "cnn_alt_acc_*.csv"

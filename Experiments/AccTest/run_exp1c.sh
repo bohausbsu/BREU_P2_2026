@@ -27,10 +27,23 @@ mkdir -p ae_acc
 
 FLAG_FRAC=0.1
 AT_R=0.01
+EFF_SIGNAL_RATIO=0.3
 
 for i in {1..5}; do
 	echo "Run $i of 5"
-	python Experiment1c.py --seed "$i" --data-root mnist --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "ae_alt_acc_$i.csv" --out "ae_alt_acc_$i.png"
+	python Experiment1c.py \
+		--seed "$i" \
+	--data-root mnist \
+	--flag-frac "$FLAG_FRAC" \
+	--at-r "$AT_R" \
+	--eff-signal-ratio "$EFF_SIGNAL_RATIO" \
+	--out-csv "ae_alt_acc_$i-$EFF_SIGNAL_RATIO.csv" \
+	--out "ae_alt_acc_$i-$EFF_SIGNAL_RATIO.png"
 done
 
-python combine_results.py --results-dir ae_acc --out-csv "ae_alt_acc_avg.csv" --out-png "ae_alt_acc_avg.png" --title "SPECTRA Alt AE Detection Scores Averaged Over 10 Runs" --pattern "ae_alt_acc_*.csv"
+python combine_results.py \
+	--results-dir ae_acc \
+	--out-csv "ae_alt_acc_avg-$EFF_SIGNAL_RATIO.csv" \
+	--out-png "ae_alt_acc_avg-$EFF_SIGNAL_RATIO.png" \
+	--title "SPECTRA Alt AE Detection Scores Averaged Over 10 Runs at $EFF_SIGNAL_RATIO" \
+	--pattern "ae_alt_acc_*.csv"
