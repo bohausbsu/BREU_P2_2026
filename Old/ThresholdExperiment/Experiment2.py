@@ -56,7 +56,7 @@ sys.path.insert(0, _AT_DIR)
 sys.path.insert(0, _AT_PKG_DIR)
 sys.path.insert(0, _HERE)
 
-from snapshot_trainer import run as snapshot_run, load_full_dataset
+from Old.ThresholdExperiment.snapshot_trainer import run as snapshot_run, load_full_dataset
 from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
 from AnomalyTransformer.dataset import split_data, get_dataloader
 from AnomalyTransformer import train as at_train

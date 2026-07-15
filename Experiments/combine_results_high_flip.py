@@ -60,10 +60,6 @@ def combine_and_average(results_dir, pattern, out_csv, out_png, title, min_flip_
     combined = pd.concat(dfs, ignore_index=True)
 
     n_seeds = combined["seed"].nunique() if "seed" in combined.columns else len(paths)
-    experiment_id = (
-        combined["experiment"].iloc[0] if "experiment" in combined.columns else ""
-    )
-
     grouped = (
         combined.groupby("model_class")[["precision", "recall", "f1"]]
         .mean()
@@ -75,7 +71,6 @@ def combine_and_average(results_dir, pattern, out_csv, out_png, title, min_flip_
 
     out_df = grouped[["model_class", "size_label", "precision", "recall", "f1"]].copy()
     out_df.insert(0, "n_seeds", n_seeds)
-    out_df.insert(0, "experiment", experiment_id)
     out_df.to_csv(out_csv, index=False)
     print(f"Saved averaged results ({n_seeds} seeds, {len(paths)} files) -> {out_csv}")
 
