@@ -27,10 +27,12 @@ sys.path.insert(0, _AT_DIR)
 sys.path.insert(0, _AT_PKG_DIR)
 sys.path.insert(0, _HERE)
 
-from snapshot_trainer_a import EightKMLP, FourKMLP, SixKMLP, TenKMLP, TwelveKMLP
+from snapshot_trainer_a import (EightKMLP, FourKMLP, SixKMLP, TenKMLP,
+                                TwelveKMLP)
 from snapshot_trainer_a import load_full_dataset as load_full_dataset_a
 from snapshot_trainer_a import run as snapshot_run_a
-from snapshot_trainer_b import EightKCNN, FourKCNN, SixKCNN, TenKCNN, TwelveKCNN
+from snapshot_trainer_b import (EightKCNN, FourKCNN, SixKCNN, TenKCNN,
+                                TwelveKCNN)
 from snapshot_trainer_b import load_full_dataset as load_full_dataset_b
 from snapshot_trainer_b import run as snapshot_run_b
 from snapshot_trainer_c import EightKAE, FourKAE, SixKAE, TenKAE, TwelveKAE
@@ -501,6 +503,7 @@ def parse_args():
     p.add_argument("--n-malicious", type=int, default=10)
     p.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--out-csv", default="experimentRuntime_results.csv")
+    p.add_argument("--eff-signal-ratio", default=0.3, type=float)
 
     fg = p.add_argument_group("FFNN dataset (--model ffnn)")
     fg.add_argument("--dataset", help="Path to CSV dataset")
@@ -608,4 +611,5 @@ if __name__ == "__main__":
         dataset_root=os.path.abspath(args.dataset_root) if args.dataset_root else None,
         image_size=args.image_size,
         max_samples=args.max_samples,
+        eff_signal_ratio=args.eff_signal_ratio,
     )

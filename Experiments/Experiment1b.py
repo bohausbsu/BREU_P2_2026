@@ -405,6 +405,7 @@ def parse_args():
     p.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--out", default="experiment1_cnn_results.png")
     p.add_argument("--out-csv", default="experiment1_cnn_results.csv")
+    p.add_argument("--eff-signal-ratio", default=0.3, type=float)
 
     mg = p.add_argument_group("miner snapshot trainer")
     mg.add_argument("--miner-batch-size", type=int, default=32)
@@ -487,4 +488,5 @@ if __name__ == "__main__":
             base_seed=args.seed,
             benign_seed_base=args.benign_seed_base,
             malicious_seed_base=args.malicious_seed_base,
+            eff_signal_ratio=args.eff_signal_ratio,
         )

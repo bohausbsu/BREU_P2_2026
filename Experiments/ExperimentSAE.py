@@ -541,6 +541,7 @@ def parse_args():
     p.add_argument("--n-benign", type=int, default=10)
     p.add_argument("--n-malicious", type=int, default=10)
     p.add_argument("--out-csv", default="experimentSAE_mem_results.csv")
+    p.add_argument("--eff-signal-ratio", default=0.3, type=float)
 
     fg = p.add_argument_group("FFNN dataset (--model *KMLP)")
     fg.add_argument("--dataset", help="Path to CSV dataset")
@@ -654,4 +655,5 @@ if __name__ == "__main__":
         image_size=args.image_size,
         data_root=os.path.abspath(args.data_root) if args.data_root else None,
         max_samples=args.max_samples,
+        eff_signal_ratio=args.eff_signal_ratio,
     )

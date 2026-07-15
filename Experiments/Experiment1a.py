@@ -457,6 +457,7 @@ def parse_args():
     )
     p.add_argument("--out", default="experiment10_results.png")
     p.add_argument("--out-csv", default="experiment10_results.csv")
+    p.add_argument("--eff-signal-ratio", default=0.3, type=float)
 
     mg = p.add_argument_group("miner snapshot trainer")
     mg.add_argument("--miner-batch-size", type=int, default=64)
@@ -500,12 +501,14 @@ if __name__ == "__main__":
         "lr": args.miner_lr,
         "hidden": args.miner_hidden,
     }
+
     snap_cfg = {
         "batch_size": args.snap_batch_size,
         "n_epochs": args.snap_epochs,
         "lr": args.snap_lr,
         "hidden": args.snap_hidden,
     }
+
     at_cfg = {
         "d_model": args.at_d_model,
         "n_heads": args.at_n_heads,
@@ -549,4 +552,5 @@ if __name__ == "__main__":
             base_seed=args.seed,
             benign_seed_base=args.benign_seed_base,
             malicious_seed_base=args.malicious_seed_base,
+            eff_signal_ratio=args.eff_signal_ratio,
         )
