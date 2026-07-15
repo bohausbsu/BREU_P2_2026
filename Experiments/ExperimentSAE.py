@@ -137,27 +137,24 @@ def _miner_worker_ffnn(**kwargs):
     return snapshot_run_a(out_csv=None, **kwargs)
 
 
-def _scientist_worker_ffnn(cutoff, **kwargs):
-    snaps = snapshot_run_a(out_csv=None, **kwargs)
-    return snaps[: int(len(snaps) * cutoff)]
+def _scientist_worker_ffnn(**kwargs):
+    return snapshot_run_a(out_csv=None, **kwargs)
 
 
 def _miner_worker_cnn(**kwargs):
     return snapshot_run_b(out_csv=None, **kwargs)
 
 
-def _scientist_worker_cnn(cutoff, **kwargs):
-    snaps = snapshot_run_b(out_csv=None, **kwargs)
-    return snaps[: int(len(snaps) * cutoff)]
+def _scientist_worker_cnn(**kwargs):
+    return snapshot_run_b(out_csv=None, **kwargs)
 
 
 def _miner_worker_ae(**kwargs):
     return snapshot_run_c(out_csv=None, **kwargs)
 
 
-def _scientist_worker_ae(cutoff, **kwargs):
-    snaps = snapshot_run_c(out_csv=None, **kwargs)
-    return snaps[: int(len(snaps) * cutoff)]
+def _scientist_worker_ae(**kwargs):
+    return snapshot_run_c(out_csv=None, **kwargs)
 
 
 def _at_worker(
@@ -281,7 +278,6 @@ def run_experiment(
     train_frac,
     out_csv,
     flip_frac=0.5,
-    cutoff=0.5,
     seed=0,
     benign_seed_base=1000,
     malicious_seed_base=2000,
@@ -397,7 +393,7 @@ def run_experiment(
             lr=snap_cfg["lr"],
         )
 
-        snaps, peak_rss = run_isolated(scientist_worker, cutoff=cutoff, **kwargs)
+        snaps, peak_rss = run_isolated(scientist_worker, **kwargs)
         scientist_mem_total += peak_rss
         scientist_payloads.append({"label": label, "actual": actual, "snaps": snaps})
 

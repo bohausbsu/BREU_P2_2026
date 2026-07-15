@@ -28,7 +28,7 @@ mkdir -p ae_acc
 FLAG_FRAC=0.3
 AT_R=0.02
 
-for i in {1..1}; do
+for i in {1..10}; do
 	echo "Run $i of 10"
 	python Experiment1c.py --seed "$i" --data-root mnist --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "ae_acc_$i-$FLAG_FRAC-$AT_R.csv" --out "ae_acc_$i-$FLAG_FRAC-$AT_R.png"
 	mv ae_acc_* ae_acc/

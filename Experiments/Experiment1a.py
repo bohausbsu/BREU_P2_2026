@@ -177,7 +177,6 @@ def run_experiment(
     out_png,
     flip_frac=0.5,
     device="auto",
-    cutoff=0.5,
     eff_signal_ratio=0.3,
     base_seed=42,
     benign_seed_base=1000,
@@ -222,6 +221,7 @@ def run_experiment(
                 flip_frac=flip_frac,
                 X_data=X_miner,
                 y_data=y_miner,
+                model_class_str=model_class_str
             )
 
             print(
@@ -267,9 +267,8 @@ def run_experiment(
                     X_data=X_sci,
                     y_data=y_sci,
                     device=device,
+                    model_class_str=model_class_str
                 )
-
-                sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
 
                 frac = _score_run(
                     at_model,
@@ -311,8 +310,8 @@ def run_experiment(
                     X_data=X_sci,
                     y_data=y_sci,
                     device=device,
+                    model_class_str=model_class_str
                 )
-                sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
 
                 frac = _score_run(
                     at_model,

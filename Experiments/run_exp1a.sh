@@ -28,7 +28,7 @@ FLAG_FRAC=0.3
 AT_R=0.02
 
 which python
-for i in {1..1}; do
+for i in {1..10}; do
 	echo "Run $i of 10"
 	python Experiment1a.py --seed "$i" --dataset college_student_placement_dataset.csv --target-col Placement --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "ffnn_acc_$i-$FLAG_FRAC-$AT_R.csv" --out "ffnn_acc_$i-$FLAG_FRAC-$AT_R.png"
 	mv ffnn_acc_* ffnn_acc/

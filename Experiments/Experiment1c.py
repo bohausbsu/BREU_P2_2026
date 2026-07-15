@@ -166,7 +166,6 @@ def run_experiment(
     max_samples=3000,
     flip_frac=0.5,
     device="auto",
-    cutoff=0.5,
     base_seed=42,
     benign_seed_base=1000,
     malicious_seed_base=2000,
@@ -254,8 +253,6 @@ def run_experiment(
                     device=device,
                     model_class_str=model_class_str,
                 )
-                sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
-
                 frac = _score_run(
                     at_model,
                     sci_snaps,

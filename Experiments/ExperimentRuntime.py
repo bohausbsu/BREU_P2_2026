@@ -161,7 +161,6 @@ def run_experiment(
     train_frac,
     out_csv,
     flip_frac=0.5,
-    cutoff=0.5,
     seed=0,
     benign_seed_base=1000,
     malicious_seed_base=2000,
@@ -299,7 +298,6 @@ def run_experiment(
             )
 
             snaps = snapshot_run(**kwargs)
-            snaps = snaps[: int(len(snaps) * cutoff)]
             train_time = time.perf_counter() - t_train0
             scientist_time_total += train_time
 

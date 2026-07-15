@@ -177,7 +177,6 @@ def run_experiment(
     out_png,
     flip_frac=0.5,
     device="auto",
-    cutoff=0.5,
     eff_signal_ratio=0.3,
     base_seed=42,
     benign_seed_base=1000,
@@ -269,8 +268,6 @@ def run_experiment(
                     device=device,
                 )
 
-                sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
-
                 frac = _score_run(
                     at_model,
                     sci_snaps,
@@ -312,7 +309,6 @@ def run_experiment(
                     y_data=y_sci,
                     device=device,
                 )
-                sci_snaps = sci_snaps[: int(len(sci_snaps) * cutoff)]
 
                 frac = _score_run(
                     at_model,
