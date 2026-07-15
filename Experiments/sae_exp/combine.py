@@ -18,12 +18,6 @@ def merge_dfs(
     four: pd.DataFrame,
     five: pd.DataFrame,
 ):
-    one.drop(columns=["experiment", "seed"], inplace=True)
-    two.drop(columns=["experiment", "seed"], inplace=True)
-    three.drop(columns=["experiment", "seed"], inplace=True)
-    four.drop(columns=["experiment", "seed"], inplace=True)
-    five.drop(columns=["experiment", "seed"], inplace=True)
-
     merged = pd.DataFrame(
         {
             "model_class": one["model_class"][0],
