@@ -178,8 +178,8 @@ class TwelveKAE(nn.Module):
         z_6 = self.act(self.decoder_1(z_5))
         z_7 = self.act(self.decoder_2(z_6))
         z_8 = self.act(self.decoder_3(z_7))
-        z_9 = self.act(self.decoder_3(z_8))
-        z_fin = self.out_act(self.decoder_4(z_9))
+        z_9 = self.act(self.decoder_4(z_8))
+        z_fin = self.out_act(self.decoder_5(z_9))
 
         return z_fin
 
