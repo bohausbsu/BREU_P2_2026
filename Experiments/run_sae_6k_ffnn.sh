@@ -34,8 +34,7 @@ python --version
 echo "Testing Scalability for FFNN..."
 
 for i in {1..5}; do
-	time python ExperimentSAE.py --seed 1 --model SixKMLP --dataset college_student_placement_dataset.csv --target-col Placement --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_ffnn_6k-$i-$FLAG_FRAC-$AT_R.csv"
-	mv sae_*.csv sae_exp/
+	time python ExperimentSAE.py --seed 1 --model SixKMLP --dataset college_student_placement_dataset.csv --target-col Placement --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "sae_exp/sae_ffnn_6k-$i-$FLAG_FRAC-$AT_R.csv"
 done
 
 echo "Finished running the Scalability Experiment for the FFNN."

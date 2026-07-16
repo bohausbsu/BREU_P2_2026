@@ -29,8 +29,8 @@ AT_R=0.01
 EFF_SIGNAL_RATIO=0.5
 
 which python
-for i in {1..10}; do
-	echo "Run $i of 10"
+for i in {1..5}; do
+	echo "Run $i of 5"
 	python Experiment1a.py \
 		--seed "$i" \
 		--dataset college_student_placement_dataset.csv \
@@ -48,5 +48,5 @@ python combine_results.py \
 	--results-dir ffnn_acc \
 	--out-csv "ffnn_acc/ffnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.csv" \
 	--out-png "ffnn_acc/ffnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.png" \
-	--title "SPECTRA FFNN Detection Scores Averaged Over 10 Runs at $EFF_SIGNAL_RATIO" \
+	--title "SPECTRA FFNN Detection Scores Averaged Over 5 Runs at $EFF_SIGNAL_RATIO" \
 	--pattern "ffnn_acc_*-$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO_*.csv"

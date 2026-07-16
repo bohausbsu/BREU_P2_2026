@@ -54,7 +54,7 @@ sys.path.insert(0, _AT_DIR)
 sys.path.insert(0, _AT_PKG_DIR)
 sys.path.insert(0, _HERE)
 
-from snapshot_trainer_c import (
+from Experiments.ExperimentsV2.AccTest.snapshot_trainer_c import (
     EightKAE,
     FourKAE,
     SixKAE,
@@ -62,7 +62,7 @@ from snapshot_trainer_c import (
     TwelveKAE,
     load_full_dataset,
 )
-from snapshot_trainer_c import run as snapshot_run
+from Experiments.ExperimentsV2.AccTest.snapshot_trainer_c import run as snapshot_run
 
 from AnomalyTransformer import train as at_train
 from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel

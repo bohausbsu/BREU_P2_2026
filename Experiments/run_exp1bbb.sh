@@ -29,8 +29,8 @@ FLAG_FRAC=0.1
 AT_R=0.01
 EFF_SIGNAL_RATIO=0.5
 
-for i in {1..10}; do
-	echo "Run $i of 10"
+for i in {1..5}; do
+	echo "Run $i of 5"
 	python Experiment1b.py \
 	--seed "$i" \
 	--data-root PetImages \
@@ -47,5 +47,5 @@ python combine_results.py \
 	--results-dir cnn_acc \
 	--out-csv "cnn_acc/cnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.csv" \
 	--out-png "cnn_acc/cnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.png" \
-	--title "SPECTRA CNN Detection Scores Averaged Over 10 Runs at $EFF_SIGNAL_RATIO" \
+	--title "SPECTRA CNN Detection Scores Averaged Over 5 Runs at $EFF_SIGNAL_RATIO" \
 	--pattern "cnn_acc_*-$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO_*.csv"
