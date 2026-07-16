@@ -166,7 +166,7 @@ def run_experiment(
     seed=0,
     benign_seed_base=1000,
     malicious_seed_base=2000,
-    eff_signal_ratio=0.3,
+    eff_signal_ratio=0.5,
     device="auto",
     # ffnn-only
     dataset_path=None,
@@ -498,12 +498,12 @@ def parse_args():
 
     p.add_argument("--train-frac", type=float, default=0.3)
     p.add_argument("--window-size", type=int, default=30)
-    p.add_argument("--flag-frac", type=float, default=0.3)
+    p.add_argument("--flag-frac", type=float, default=0.1)
     p.add_argument("--n-benign", type=int, default=10)
     p.add_argument("--n-malicious", type=int, default=10)
     p.add_argument("--device", choices=["auto", "cpu", "cuda"], default="auto")
     p.add_argument("--out-csv", default="experimentRuntime_results.csv")
-    p.add_argument("--eff-signal-ratio", default=0.3, type=float)
+    p.add_argument("--eff-signal-ratio", default=0.5, type=float)
 
     fg = p.add_argument_group("FFNN dataset (--model ffnn)")
     fg.add_argument("--dataset", help="Path to CSV dataset")
@@ -542,7 +542,7 @@ def parse_args():
     at.add_argument("--at-patience", type=int, default=5)
     at.add_argument("--at-lam", type=float, default=3.0)
     at.add_argument("--at-lr", type=float, default=1e-4)
-    at.add_argument("--at-r", type=float, default=0.02)
+    at.add_argument("--at-r", type=float, default=0.01)
     at.add_argument("--at-batch-size", type=int, default=32)
 
     args = p.parse_args()

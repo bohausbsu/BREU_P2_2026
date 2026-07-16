@@ -24,6 +24,9 @@ mamba activate reu26_ab
 
 mkdir -p runtime
 
+FLAG_FRAC=0.1
+AT_R=0.01
+
 which python
 
 nvidia-smi
@@ -31,5 +34,5 @@ nvidia-smi
 python -c "import torch; print(torch.cuda.get_device_name()); print(torch.cuda.get_device_properties())"
 
 for i in {1..5}; do
-	python ExperimentRuntime.py --seed "$i" --model ae --dataset-root mnist --out-csv "runtime/ae_$i-runtime.csv"
+	python ExperimentRuntime.py --model ae --dataset-root mnist --flag-frac "$FLAG_FRAC" --at-r "$AT_R" --out-csv "runtime/ae_$i-runtime.csv"
 done

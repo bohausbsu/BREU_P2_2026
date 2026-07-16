@@ -431,7 +431,7 @@ def parse_args():
     p.add_argument(
         "--flag-frac",
         type=float,
-        default=0.3,
+        default=0.1,
         help="Flagged-fraction threshold to classify a run as malicious",
     )
     p.add_argument("--n-benign", type=int, default=10)
@@ -485,7 +485,7 @@ def parse_args():
     ag.add_argument("--at-patience", type=int, default=5)
     ag.add_argument("--at-lam", type=float, default=3.0)
     ag.add_argument("--at-lr", type=float, default=1e-4)
-    ag.add_argument("--at-r", type=float, default=0.02)
+    ag.add_argument("--at-r", type=float, default=0.01)
     ag.add_argument("--at-batch-size", type=int, default=32)
 
     return p.parse_args()

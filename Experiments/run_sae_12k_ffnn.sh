@@ -22,8 +22,8 @@ mamba activate reu26_ab
 
 mkdir -p sae_exp
 
-FLAG_FRAC=0.3
-AT_R=0.02
+FLAG_FRAC=0.1
+AT_R=0.01
 
 # Find Python executable
 which python
