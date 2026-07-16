@@ -1,22 +1,12 @@
 """
 Experiment 1a (memory-instrumented) - SPECTRA memory profiling (FFNN / tabular).
 
- Each phase below runs in its own isolated subprocess, and the peak RSS
- reported for that phase is measured *relative to that subprocess's own
- baseline RSS taken right after it starts* (i.e. after the fixed cost of
- importing torch/numpy/etc. into the fresh process, before any model- or
- dataset-specific work begins). This isolates the marginal memory the
- phase itself needed, rather than being dominated by process cold-start
- overhead.
-
  The totals reported are:
 
-  miner_mem      = peak-RSS delta of the subprocess that trains the miner
-                   model and collects its snapshots
-  scientist_mem  = peak-RSS delta of the single subprocess that runs all
-                   20 scientist trainings (10 benign + 10 malicious) back
-                   to back
-  at_mem         = peak-RSS delta of the subprocess that trains the Anomaly
+  miner_mem      = sum of each miner training subprocess's peak RSS
+  scientist_mem  = sum of each of the 20 scientist training subprocesses'
+                   peak RSS (10 benign + 10 malicious)
+  at_mem         = peak RSS of the subprocess that trains the Anomaly
                    Transformer on the miner snapshots AND scores all 20
                    scientist snapshot sequences against it (training +
                    inference are both "what the AT model uses")
@@ -114,23 +104,17 @@ def _peak_rss_bytes():
 
 
 def _subprocess_entrypoint(target, args, kwargs, result_queue):
-    baseline_rss = _peak_rss_bytes()
     try:
         result = target(*args, **kwargs)
-        result_queue.put(("ok", result, max(_peak_rss_bytes() - baseline_rss, 0)))
+        result_queue.put(("ok", result, _peak_rss_bytes()))
     except Exception:
-        result_queue.put(
-            ("error", traceback.format_exc(), max(_peak_rss_bytes() - baseline_rss, 0))
-        )
+        result_queue.put(("error", traceback.format_exc(), _peak_rss_bytes()))
 
 
 def run_isolated(target, *args, **kwargs):
     """Run target(*args, **kwargs) in a subprocess.
 
-    Returns (result, peak_rss_delta), where peak_rss_delta is the
-    subprocess's peak RSS *above its own baseline* (RSS measured right
-    after the subprocess starts, before `target` runs) -- this excludes
-    the fixed cost of importing torch/numpy/etc. into the fresh process.
+    Returns the subprocess's peak memory over its entire lifetime.
     """
     ctx = mp.get_context("spawn")
     result_queue = ctx.Queue()
@@ -139,14 +123,14 @@ def run_isolated(target, *args, **kwargs):
     )
     proc.start()
 
-    status, payload, peak_rss_delta = result_queue.get()
+    status, payload, peak_rss = result_queue.get()
 
     proc.join()
 
     if status == "error":
         raise RuntimeError(f"Subprocess for {target.__name__} failed:\n{payload}")
 
-    return payload, peak_rss_delta
+    return payload, peak_rss
 
 
 def _miner_worker_ffnn(**kwargs):
@@ -171,20 +155,6 @@ def _miner_worker_ae(**kwargs):
 
 def _scientist_worker_ae(**kwargs):
     return snapshot_run_c(out_csv=None, **kwargs)
-
-
-def _scientist_batch_worker(scientist_worker, run_specs):
-    """Run every scientist snapshot training back to back in one subprocess.
-
-    run_specs is a list of (label, actual, kwargs) tuples. Batching all
-    N runs into a single subprocess (instead of one subprocess per run)
-    avoids paying the fixed process/import cold-start cost N times over.
-    """
-    payloads = []
-    for label, actual, kwargs in run_specs:
-        snaps = scientist_worker(**kwargs)
-        payloads.append({"label": label, "actual": actual, "snaps": snaps})
-    return payloads
 
 
 def _at_worker(
@@ -409,35 +379,34 @@ def run_experiment(
         lr=miner_snap_cfg["lr"],
     )
     miner_snaps, miner_mem = run_isolated(miner_worker, **miner_kwargs)
-    print(
-        f"[Miner] {len(miner_snaps)} snapshots  peak_rss_delta={miner_mem / 1e6:.1f} MB"
-    )
+    print(f"[Miner] {len(miner_snaps)} snapshots  peak_rss={miner_mem / 1e6:.1f} MB")
 
-    def _scientist_kwargs(is_malicious, run_seed):
+    scientist_payloads = []
+    scientist_mem_total = 0
+
+    def _run_scientist(is_malicious, run_seed, label, actual):
+        nonlocal scientist_mem_total
         kwargs = _base_kwargs(is_malicious, run_seed, X_sci, y_sci)
         kwargs.update(
             batch_size=snap_cfg["batch_size"],
             n_epochs=snap_cfg["n_epochs"],
             lr=snap_cfg["lr"],
         )
-        return kwargs
 
-    run_specs = [
-        (f"ben_{i}", 0, _scientist_kwargs(False, benign_seed_base + i))
-        for i in range(n_benign)
-    ] + [
-        (f"mal_{i}", 1, _scientist_kwargs(True, malicious_seed_base + i))
-        for i in range(n_malicious)
-    ]
+        snaps, peak_rss = run_isolated(scientist_worker, **kwargs)
+        scientist_mem_total += peak_rss
+        scientist_payloads.append({"label": label, "actual": actual, "snaps": snaps})
 
-    print(
-        f"[Scientist] Running {len(run_specs)} benign+malicious trainings "
-        "(single isolated subprocess)..."
-    )
-    scientist_payloads, scientist_mem_total = run_isolated(
-        _scientist_batch_worker, scientist_worker, run_specs
-    )
-    print(f"[Scientist] peak_rss_delta={scientist_mem_total / 1e6:.1f} MB")
+        print(
+            f"Scientist {label:8s}: peak_rss={peak_rss / 1e6:.1f} MB "
+            f"(running total {scientist_mem_total / 1e6:.1f} MB)"
+        )
+
+    for i in range(n_benign):
+        _run_scientist(False, benign_seed_base + i, f"ben_{i}", 0)
+
+    for i in range(n_malicious):
+        _run_scientist(True, malicious_seed_base + i, f"mal_{i}", 1)
 
     print("[AT] Training + scoring (isolated)...")
     at_result, at_mem = run_isolated(
@@ -451,8 +420,7 @@ def run_experiment(
     )
 
     print(
-        f"[AT] threshold={at_result['threshold']:.4f}  "
-        f"peak_rss_delta={at_mem / 1e6:.1f} MB"
+        f"[AT] threshold={at_result['threshold']:.4f}  peak_rss={at_mem / 1e6:.1f} MB"
     )
 
     tp = sum(
@@ -484,9 +452,8 @@ def run_experiment(
     print(f"TP={tp}  FP={fp}  TN={tn}  FN={fn}")
     print(f"Precision={precision:.3f}  Recall={recall:.3f}  F1={f1:.3f}")
     print(
-        f"Memory (peak-RSS deltas): miner={miner_mem / 1e6:.1f} MB  "
-        f"scientist({n_benign + n_malicious} runs, 1 subprocess)="
-        f"{scientist_mem_total / 1e6:.1f} MB  "
+        f"Memory: miner={miner_mem / 1e6:.1f} MB  "
+        f"scientist(sum of {n_benign + n_malicious})={scientist_mem_total / 1e6:.1f} MB  "
         f"AT={at_mem / 1e6:.1f} MB  total={total_mem / 1e6:.1f} MB"
     )
 
