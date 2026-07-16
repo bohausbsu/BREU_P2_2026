@@ -1,6 +1,0 @@
-model_class,tp,fp,tn,fn,precision,recall,f1
-FourKCNN,0,2,8,10,0.0,0.0,0.0
-SixKCNN,7,8,2,3,0.4667,0.7,0.56
-EightKCNN,3,2,8,7,0.6,0.3,0.4
-TenKCNN,10,10,0,0,0.5,1.0,0.6667
-TwelveKCNN,2,0,10,8,1.0,0.2,0.3333

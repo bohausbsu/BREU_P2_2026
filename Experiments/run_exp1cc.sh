@@ -48,4 +48,4 @@ python combine_results.py \
 	--out-csv "ae_acc/ae_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.csv" \
 	--out-png "ae_acc/ae_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.png" \
 	--title "SPECTRA AE Detection Scores Averaged Over 10 Runs at $EFF_SIGNAL_RATIO" \
-	--pattern "ae_acc_*.csv"
+	--pattern "ae_acc_*-$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO_*.csv"

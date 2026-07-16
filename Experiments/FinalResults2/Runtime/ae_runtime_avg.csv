@@ -1,0 +1,6 @@
+experiment,n_seeds,model_class,size_label,precision,recall,f1,total_time_sec
+rt_ae,5,FourKAE,4k,0.50526,1.0,0.6712999999999999,64.73436000000001
+rt_ae,5,SixKAE,6k,0.6895,1.0,0.805,66.14276
+rt_ae,5,EightKAE,8k,0.8068199999999999,1.0,0.8861399999999999,63.9499
+rt_ae,5,TenKAE,10k,0.78388,1.0,0.8745,62.66459999999999
+rt_ae,5,TwelveKAE,12k,0.6509,1.0,0.78312,63.64912

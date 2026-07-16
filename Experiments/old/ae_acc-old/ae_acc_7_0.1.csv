@@ -1,0 +1,6 @@
+model_class,tp,fp,tn,fn,precision,recall,f1
+FourKAE,10,10,0,0,0.5,1.0,0.6667
+SixKAE,10,10,0,0,0.5,1.0,0.6667
+EightKAE,1,1,9,9,0.5,0.1,0.1667
+TenKAE,7,5,5,3,0.5833,0.7,0.6364
+TwelveKAE,1,0,10,9,1.0,0.1,0.1818
