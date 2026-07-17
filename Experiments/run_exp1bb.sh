@@ -48,4 +48,4 @@ python combine_results.py \
 	--out-csv "cnn_acc/cnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.csv" \
 	--out-png "cnn_acc/cnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.png" \
 	--title "SPECTRA CNN Detection Scores Averaged Over 10 Runs at $EFF_SIGNAL_RATIO" \
-	--pattern "cnn_acc_*-$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO_*.csv"
+	--pattern "cnn_acc_*-$FLAG_FRAC-$AT_R-${EFF_SIGNAL_RATIO}_*.csv"

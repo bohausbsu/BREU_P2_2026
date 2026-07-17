@@ -49,4 +49,4 @@ python combine_results.py \
 	--out-csv "ffnn_acc/ffnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.csv" \
 	--out-png "ffnn_acc/ffnn_acc_avg_$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO.png" \
 	--title "SPECTRA FFNN Detection Scores Averaged Over 5 Runs at $EFF_SIGNAL_RATIO" \
-	--pattern "ffnn_acc_*-$FLAG_FRAC-$AT_R-$EFF_SIGNAL_RATIO_*.csv"
+	--pattern "ffnn_acc_*-$FLAG_FRAC-$AT_R-${EFF_SIGNAL_RATIO}_*.csv"
