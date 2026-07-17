@@ -6,7 +6,7 @@
 #SBATCH --nodes=1
 #SBATCH --gres=gpu:1
 #SBATCH -p gpu-v100
-#SBATCH -t 24:00:00
+#SBATCH -t 32:00:00
 echo "Date              = $(date)"
 echo "Working Directory = $(pwd)"
 echo ""
