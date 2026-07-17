@@ -1,0 +1,6 @@
+model_class,tp,fp,tn,fn,precision,recall,f1
+FourKMLP,10,5,5,0,0.6667,1.0,0.8
+SixKMLP,4,3,7,6,0.5714,0.4,0.4706
+EightKMLP,9,0,10,1,1.0,0.9,0.9474
+TenKMLP,9,0,10,1,1.0,0.9,0.9474
+TwelveKMLP,10,10,0,0,0.5,1.0,0.6667

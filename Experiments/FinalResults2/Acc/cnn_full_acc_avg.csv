@@ -1,0 +1,6 @@
+n_seeds,model_class,size_label,precision,recall,f1
+1,FourKCNN,4k,0.53506,0.52,0.52214
+1,SixKCNN,6k,0.5,1.0,0.6667
+1,EightKCNN,8k,0.60668,0.74,0.6599999999999999
+1,TenKCNN,10k,0.5,1.0,0.6667
+1,TwelveKCNN,12k,0.76254,0.9,0.8215
