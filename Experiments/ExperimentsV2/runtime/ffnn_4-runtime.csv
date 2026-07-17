@@ -1,0 +1,7 @@
+experiment,seed,model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_time_sec,scientist_time_sec,at_time_sec,total_time_sec,model_wall_time_sec
+rt_ffnn,0,FourKMLP,ffnn,10,0,10,0,1.0,1.0,1.0,5.1288,218.7108,8.6274,232.467,232.4713
+rt_ffnn,0,SixKMLP,ffnn,10,1,9,0,0.9091,1.0,0.9524,2.8068,219.1153,5.7134,227.6355,227.6373
+rt_ffnn,0,EightKMLP,ffnn,10,4,6,0,0.7143,1.0,0.8333,2.7573,217.0348,7.7217,227.5137,227.5154
+rt_ffnn,0,TenKMLP,ffnn,10,0,10,0,1.0,1.0,1.0,2.7521,231.3379,8.0507,242.1406,242.1432
+rt_ffnn,0,TwelveKMLP,ffnn,10,0,10,0,1.0,1.0,1.0,2.8244,229.1817,7.7648,239.7709,239.7726
+rt_ffnn,0,ALL,ffnn,50,5,45,0,0.9091,1.0,0.9524,16.2694,1115.3806,37.878,1169.5279,1169.5651

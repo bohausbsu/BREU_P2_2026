@@ -1,2 +1,0 @@
-experiment,seed,model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
-sae_mem_EightKCNN,1,EightKCNN,cnn,10,0,10,0,1.0,1.0,1.0,529211392,529.211,11095433216,11095.433,523890688,523.891,12148535296,12148.535

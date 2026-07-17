@@ -1,7 +1,0 @@
-experiment,seed,model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_time_sec,scientist_time_sec,at_time_sec,total_time_sec,model_wall_time_sec
-rt_cnn,0,FourKCNN,cnn,10,1,9,0,0.9091,1.0,0.9524,2.6602,46.5945,1.4392,50.6939,50.6961
-rt_cnn,0,SixKCNN,cnn,10,3,7,0,0.7692,1.0,0.8696,0.6875,47.2687,1.32,49.2763,49.278
-rt_cnn,0,EightKCNN,cnn,10,7,3,0,0.5882,1.0,0.7407,0.6665,47.2972,1.3149,49.2786,49.2802
-rt_cnn,0,TenKCNN,cnn,10,9,1,0,0.5263,1.0,0.6897,0.6727,47.8684,1.3172,49.8583,49.86
-rt_cnn,0,TwelveKCNN,cnn,10,10,0,0,0.5,1.0,0.6667,0.6767,47.9999,1.3149,49.9914,49.993
-rt_cnn,0,ALL,cnn,50,30,20,0,0.625,1.0,0.7692,5.3636,237.0287,6.7062,249.0985,252.4377

@@ -1,2 +1,0 @@
-experiment,seed,model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
-sae_mem_TwelveKAE,1,TwelveKAE,ae,10,4,6,0,0.7143,1.0,0.8333,905879552,905.88,18117591040,18117.591,905879552,905.88,19929350144,19929.35

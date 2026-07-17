@@ -1,0 +1,2 @@
+experiment,seed,model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_mem_bytes,miner_mem_mb,scientist_mem_bytes,scientist_mem_mb,at_mem_bytes,at_mem_mb,total_mem_bytes,total_mem_mb
+sae_mem_EightKAE,1,EightKAE,ae,10,3,7,0,0.7692,1.0,0.8696,906031104,906.031,18120622080,18120.622,906031104,906.031,19932684288,19932.684
