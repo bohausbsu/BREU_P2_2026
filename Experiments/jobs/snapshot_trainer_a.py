@@ -9,82 +9,107 @@ import torch.nn as nn
 from torch.utils.data import DataLoader, TensorDataset
 
 
+# Define the models. Tried to get them as close to the thousand parameter count in their name
 class FourKMLP(nn.Module):
     def __init__(self, in_features=8, hidden=58, out_features=1):
-        super().__init__()
+        """Constructor"""
+        super().__init__()  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+
         self.net = nn.Sequential(
-            nn.Linear(in_features, hidden),
-            nn.ReLU(),
+            nn.Linear(in_features, hidden),  # Fully connected feed-forward layer
+            nn.ReLU(),  # Recitfied Linear Unit (ReLU) activation function. Full formula for ReLU is y = max(0, x) where `x` is the input.
             nn.Linear(hidden, hidden),
             nn.ReLU(),
             nn.Linear(hidden, out_features),
         )
 
     def forward(self, x):
+        """Computation function"""
         return self.net(x)
 
 
 class SixKMLP(nn.Module):
     def __init__(self, in_features=8, hidden=72, out_features=1):
-        super().__init__()
+        """Constructor"""
+        super().__init__()  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+
         self.net = nn.Sequential(
-            nn.Linear(in_features, hidden),
-            nn.ReLU(),
+            nn.Linear(
+                in_features, hidden
+            ),  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+            nn.ReLU(),  # Recitfied Linear Unit (ReLU) activation function. Full formula for ReLU is y = max(0, x) where `x` is the input.
             nn.Linear(hidden, hidden),
             nn.ReLU(),
             nn.Linear(hidden, out_features),
         )
 
     def forward(self, x):
+        """Computation function"""
         return self.net(x)
 
 
 class EightKMLP(nn.Module):
     def __init__(self, in_features=8, hidden=84, out_features=1):
-        super().__init__()
+        """Constructor"""
+        super().__init__()  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+
         self.net = nn.Sequential(
-            nn.Linear(in_features, hidden),
-            nn.ReLU(),
+            nn.Linear(
+                in_features, hidden
+            ),  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+            nn.ReLU(),  # Recitfied Linear Unit (ReLU) activation function. Full formula for ReLU is y = max(0, x) where `x` is the input.
             nn.Linear(hidden, hidden),
             nn.ReLU(),
             nn.Linear(hidden, out_features),
         )
 
     def forward(self, x):
+        """Computation function"""
         return self.net(x)
 
 
 class TenKMLP(nn.Module):
     def __init__(self, in_features=8, hidden=95, out_features=1):
-        super().__init__()
+        """Constructor"""
+        super().__init__()  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+
         self.net = nn.Sequential(
-            nn.Linear(in_features, hidden),
-            nn.ReLU(),
+            nn.Linear(
+                in_features, hidden
+            ),  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+            nn.ReLU(),  # Recitfied Linear Unit (ReLU) activation function. Full formula for ReLU is y = max(0, x) where `x` is the input.
             nn.Linear(hidden, hidden),
             nn.ReLU(),
             nn.Linear(hidden, out_features),
         )
 
     def forward(self, x):
+        """Computation function"""
         return self.net(x)
 
 
 class TwelveKMLP(nn.Module):
     def __init__(self, in_features=8, hidden=104, out_features=1):
-        super().__init__()
+        """Constructor"""
+        super().__init__()  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+
         self.net = nn.Sequential(
-            nn.Linear(in_features, hidden),
-            nn.ReLU(),
+            nn.Linear(
+                in_features, hidden
+            ),  # Initialize the pytorch stuff provided by the base class (`pytorch.nn.Module``)
+            nn.ReLU(),  # Recitfied Linear Unit (ReLU) activation function. Full formula for ReLU is y = max(0, x) where `x` is the input.
             nn.Linear(hidden, hidden),
             nn.ReLU(),
             nn.Linear(hidden, out_features),
         )
 
     def forward(self, x):
+        """Computation function"""
         return self.net(x)
 
 
 def make_loader(X_train, y_train, batch_size=64):
+    """Turns a numpy ndarray pair of data and labels into a PyTorch dataloader."""
     X_t = torch.from_numpy(X_train)
     y_t = torch.from_numpy(y_train).unsqueeze(1)
 
@@ -92,8 +117,10 @@ def make_loader(X_train, y_train, batch_size=64):
 
 
 def load_dataset(path, target_col, train_frac=0.7):
-    df = pd.read_csv(path)
+    """Loads a dataset from memory as a pandas DataFrame."""
+    df = pd.read_csv(path)  # Read the CSV file from the input path
 
+    # Iterate over columns
     for col in df.select_dtypes(include="object").columns:
         vals = df[col].dropna().str.lower().unique()
 
@@ -102,8 +129,9 @@ def load_dataset(path, target_col, train_frac=0.7):
 
     df = df.select_dtypes(include="number").dropna()
 
-    y = df[target_col].to_numpy(dtype=np.float32)
+    # Split data into a training data vector and a training labels vector
     X = df.drop(columns=[target_col]).to_numpy(dtype=np.float32)
+    y = df[target_col].to_numpy(dtype=np.float32)
 
     n_train = int(len(X) * train_frac)
     X_train, y_train = X[:n_train], y[:n_train]
@@ -115,7 +143,11 @@ def load_dataset(path, target_col, train_frac=0.7):
 
 
 def load_full_dataset(path, target_col):
-    """Return (X, y) for the whole file without any splitting or normalisation."""
+    """
+    Return (X, y) for the whole file without any splitting or normalisation.
+
+    *** Same as `load_dataset` but without splitting into the training data/labels vectors
+    """
     df = pd.read_csv(path)
 
     for col in df.select_dtypes(include="object").columns:
@@ -132,17 +164,23 @@ def load_full_dataset(path, target_col):
 
 
 def extract_snapshot(model, loss_val, prev_loss=0.0, prev_all_w=None):
-    """Return a 1-D numpy array of exactly `input_vec_size` features.
+    """
+    Return a 1-D numpy array of exactly `input_vec_size` features.
 
     The first 7 slots are phase-invariant dynamics features designed to expose
     Byzantine gradient attacks regardless of where in training a run is.
     Remaining slots are uniformly sampled gradient values so the AT can see
     the raw sign distribution (50% sign-flip makes it near-symmetric).
     """
+    # This is all Alex's work. Pretty sure all he's doing here is getting
+    #  all the weights and gradients and then using them to compute his 7
+    #  statistics that are supposed to represent the entire distribution
+    #  of the data that it was trained on.
     weights, grads = [], []
     for module in model.modules():
         if isinstance(module, nn.Linear):
             weights.append(module.weight.data.flatten())
+
             if module.weight.grad is not None:
                 grads.append(module.weight.grad.data.flatten())
 
@@ -201,6 +239,7 @@ def extract_snapshot(model, loss_val, prev_loss=0.0, prev_all_w=None):
 
 
 def gradient_norm(model):
+    """Normalizes the gradients of the input model."""
     total = 0.0
 
     for p in model.parameters():
@@ -225,7 +264,8 @@ def run(
     device=None,
     model_class_str="SixKMLP",
 ):
-    """Train a SimpleMLP and collect per-batch snapshots.
+    """
+    Train a SimpleMLP and collect per-batch snapshots.
 
     Parameters
     ----------
@@ -239,16 +279,17 @@ def run(
     X_data / y_data        : pre-split numpy arrays (skip file loading).
     device                 : torch.device to train on (defaults to CPU).
 
-    Returns
-    -------
-    numpy array of shape (n_total_batches, input_vec_size)
+    Returns: A numpy ndarray of shape (n_total_batches, input_vec_size)
     """
+    # Set device for training
     device = device or torch.device("cpu")
 
+    # Set the seed
     if seed is not None:
         torch.manual_seed(seed)
         np.random.seed(seed)
 
+    # Fix up data
     if X_data is not None and y_data is not None:
         X_train = X_data.astype(np.float32)
         y_train = y_data.astype(np.float32)
@@ -258,7 +299,10 @@ def run(
     else:
         X_train, y_train = load_dataset(data_path, target_col)
 
+    # Create a training dataloader from the data
     loader = make_loader(X_train, y_train, batch_size)
+
+    # Define model
     model = (
         FourKMLP(in_features=X_train.shape[1])
         if model_class_str == "FourKMLP"
@@ -284,15 +328,19 @@ def run(
     if model is None:
         raise RuntimeError(f"Invalid model class name: {model_class_str}")
 
+    # Put model on the training device
     model.to(device)
 
+    # Define optimizer and loss function
     optimizer = torch.optim.Adam(model.parameters(), lr=lr)
     loss_fn = nn.MSELoss()
 
+    # Containers
     snapshots = []
     prev_loss = 0.0
     prev_all_w = None
 
+    # Train
     for _ in range(n_epochs):
         for X_batch, y_batch in loader:
             X_batch = X_batch.to(device)
@@ -303,8 +351,8 @@ def run(
             optimizer.zero_grad()
             loss.backward()
 
+            # Byzantine attack: randomly flip sign of `flip_frac` of each gradient tensor
             if is_malicious:
-                # Byzantine attack: randomly flip sign of `flip_frac` of each gradient tensor
                 with torch.no_grad():
                     for p in model.parameters():
                         if p.grad is not None:
@@ -324,6 +372,7 @@ def run(
                         if isinstance(m, nn.Linear)
                     ]
                 ).cpu()
+
             prev_loss = loss.item()
 
     arr = np.array(snapshots, dtype=np.float32)
@@ -335,6 +384,7 @@ def run(
                 sum(p.numel() for p in model.parameters() if p.requires_grad)
             )
         ]
+
         with open(out_csv, "w", newline="") as f:
             writer = csv.DictWriter(f, fieldnames=fieldnames)
             writer.writeheader()
@@ -342,13 +392,16 @@ def run(
                 row = {"batch_idx": idx}
                 for j, v in enumerate(snap):
                     row[f"f{j}"] = round(float(v), 6)
+
                 writer.writerow(row)
+
         print(f"Saved {len(snapshots)} snapshots → {out_csv}")
 
     return arr
 
 
 if __name__ == "__main__":
+    # Define CLI args
     parser = argparse.ArgumentParser()
     parser.add_argument("--dataset", required=True)
     parser.add_argument("--target-col", required=True)
@@ -361,8 +414,10 @@ if __name__ == "__main__":
     parser.add_argument("--is-malicious", action="store_true")
     parser.add_argument("--flip-frac", type=float, default=0.5)
     parser.add_argument("--seed", type=int, default=None)
-    args = parser.parse_args()
 
+    args = parser.parse_args()  # Parse CLI args
+
+    # Run the experiment
     run(
         data_path=args.dataset,
         target_col=args.target_col,

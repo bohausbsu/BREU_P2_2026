@@ -1,5 +1,5 @@
 """
-Experiment 1a (memory-instrumented) - SPECTRA memory profiling (FFNN / tabular).
+Memory Experiment - SPECTRA memory profiling
 
  The totals reported are:
 
@@ -90,20 +90,27 @@ EFF_SIGNAL_COL = 2
 
 
 def resolve_family(model_name):
+    """Deterime model family."""
     if model_name in FFNN_MODELS:
         return "ffnn"
+
     if model_name in CNN_MODELS:
         return "cnn"
+
     if model_name in AE_MODELS:
         return "ae"
+
     raise ValueError(f"Unknown model: {model_name}")
 
 
 def _peak_rss_bytes():
+    """Determine CPU memory usage (RAM)."""
     return resource.getrusage(resource.RUSAGE_SELF).ru_maxrss * 1024
 
 
 def _subprocess_entrypoint(target, args, kwargs, result_queue):
+    """Where each subprocess starts off."""
+
     try:
         result = target(*args, **kwargs)
         result_queue.put(("ok", result, _peak_rss_bytes()))
@@ -161,21 +168,27 @@ def _at_worker(
     miner_snaps, window_size, at_cfg, scientist_payloads, flag_frac, eff_signal_ratio
 ):
     """Train the AT model on miner_snaps, then score every scientist run."""
+    # Has to be on CPU so that we can accurately track memory
     device = torch.device("cpu")
+
+    # Train the anomaly detector
     at_model, threshold, norm_mean, norm_std = _train_at(
         miner_snaps, window_size, at_cfg, device
     )
 
+    # Catch training errors
     if at_model is None:
         raise RuntimeError(
             f"need >= {window_size * 3} miner snapshots (got {len(miner_snaps)}). "
             "Increase --miner-epochs."
         )
 
+    # Alex's stuff
     miner_eff_signal = miner_snaps[:, EFF_SIGNAL_COL]
     eff_signal_mean = float(miner_eff_signal.mean())
     eff_signal_cutoff = eff_signal_mean * eff_signal_ratio
 
+    # Go through and score each of the scientists' results
     results = []
     for payload in scientist_payloads:
         snaps = payload["snaps"]
@@ -200,6 +213,7 @@ def _at_worker(
 
 
 def _train_at(miner_snaps, window_size, at_cfg, device):
+    """Standard anomaly detector training function. See Experiment1a.py for detailed comments."""
     if len(miner_snaps) < window_size * 3:
         return None, None, None, None
 
@@ -247,6 +261,7 @@ def _train_at(miner_snaps, window_size, at_cfg, device):
 def _score_run(
     model, snaps, window_size, threshold, norm_mean, norm_std, at_cfg, device
 ):
+    """Standard function. See Experiment1a.py for comments."""
     if len(snaps) < window_size:
         return None
 
@@ -262,9 +277,6 @@ def _score_run(
     return flagged_frac
 
 
-# ---------------------------------------------------------------------------
-# Main experiment
-# ---------------------------------------------------------------------------
 def run_experiment(
     model_name,
     family,
@@ -297,6 +309,7 @@ def run_experiment(
     print(f"Model: {model_name}  (family={family})  |  seed: {seed}")
     print("Device: cpu (hardcoded -- memory accounting is RSS-based)")
 
+    # Load data
     if family == "ffnn":
         X_all, y_all = load_full_dataset_a(dataset_path, target_col)
     elif family == "cnn":
@@ -307,6 +320,7 @@ def run_experiment(
         X_all = load_full_dataset_x(data_root, max_samples=max_samples)
         y_all = None
 
+    # Split data
     n_miner = int(len(X_all) * train_frac)
     X_miner = X_all[:n_miner]
     X_sci = X_all
@@ -318,6 +332,7 @@ def run_experiment(
     )
 
     def _base_kwargs(is_malicious, run_seed, X_data, y_data):
+        """Determines the arguments to pass to functions based on the model we're testing."""
         if family == "ffnn":
             return dict(
                 data_path=dataset_path,
@@ -372,6 +387,8 @@ def run_experiment(
     }[family]
 
     print("[Miner] Training model and collecting snapshots (isolated)...")
+
+    # Trains a miner and collects snapshots
     miner_kwargs = _base_kwargs(False, seed, X_miner, y_miner)
     miner_kwargs.update(
         batch_size=miner_snap_cfg["batch_size"],
@@ -385,6 +402,7 @@ def run_experiment(
     scientist_mem_total = 0
 
     def _run_scientist(is_malicious, run_seed, label, actual):
+        """Helper function to train scientists and get their snapshots."""
         nonlocal scientist_mem_total
         kwargs = _base_kwargs(is_malicious, run_seed, X_sci, y_sci)
         kwargs.update(
@@ -402,13 +420,17 @@ def run_experiment(
             f"(running total {scientist_mem_total / 1e6:.1f} MB)"
         )
 
+    # Train normal scientists
     for i in range(n_benign):
         _run_scientist(False, benign_seed_base + i, f"ben_{i}", 0)
 
+    # Train malicous scientists
     for i in range(n_malicious):
         _run_scientist(True, malicious_seed_base + i, f"mal_{i}", 1)
 
     print("[AT] Training + scoring (isolated)...")
+
+    # Score the scientsts
     at_result, at_mem = run_isolated(
         _at_worker,
         miner_snaps=miner_snaps,
@@ -423,6 +445,7 @@ def run_experiment(
         f"[AT] threshold={at_result['threshold']:.4f}  peak_rss={at_mem / 1e6:.1f} MB"
     )
 
+    # Compute metrics
     tp = sum(
         1 for r in at_result["results"] if r["actual"] == 1 and r["predicted"] == 1
     )
@@ -457,6 +480,7 @@ def run_experiment(
         f"AT={at_mem / 1e6:.1f} MB  total={total_mem / 1e6:.1f} MB"
     )
 
+    # Track results
     result_row = {
         "experiment": experiment_id,
         "seed": seed,
@@ -479,6 +503,7 @@ def run_experiment(
         "total_mem_mb": round(total_mem / 1e6, 3),
     }
 
+    # Outputs
     if out_csv:
         fields = [
             "experiment",
@@ -513,6 +538,7 @@ def run_experiment(
 
 
 def parse_args():
+    """Defines and parses CLI args"""
     p = argparse.ArgumentParser(
         description="SPECTRA single-model memory profiling (FFNN, CNN, or AE)",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -603,8 +629,9 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    args = parse_args()
+    args = parse_args()  # Parse CLI args
 
+    # Define configs
     miner_snap_cfg = {
         "batch_size": args.miner_batch_size,
         "n_epochs": args.miner_epochs,
@@ -630,9 +657,11 @@ if __name__ == "__main__":
         "batch_size": args.at_batch_size,
     }
 
+    # Compute seeds
     benign_seed_base = 1000 + args.seed * 100
     malicious_seed_base = 2000 + args.seed * 100
 
+    # Run the experiment
     run_experiment(
         model_name=args.model,
         family=args.family,

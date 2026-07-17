@@ -1,40 +1,5 @@
 """
-Experiment 1 – SPECTRA accuracy experiment (improved design).
-
-Dataset split
--------------
-  30 % → miner training set
-  100 % → scientist test set
-
-Miner phase
------------
-  Train a SimpleMLP on the miner set, collecting per-batch weight / gradient
-  snapshots.  These snapshots are used to train an Anomaly Transformer (AT)
-  that learns what *normal* training dynamics look like.
-
-Scientist phase  (20 independent runs)
---------------------------------------
-  10 benign runs   – standard training on the scientist set, unique seed each.
-  10 malicious runs – Byzantine gradient attack (random 50 % sign-flip),
-                      unique seed each.
-
-Detection
----------
-  The trained AT is applied to each scientist run's snapshot sequence.
-  If the percentage of the flagged timesteps > --flag-frac, the run is predicted
-  malicious.  TP / FP / TN / FN, precision, recall, and F1 are
-  computed per input-vector-size.
-
-Sweep
------
-  The full pipeline (miner → AT training → 20 scientist runs → metrics) is
-  repeated for each input-vector size in {32, 64, 96, 128, 160}.
-  The input-vector size is the number of features extracted from each model
-  snapshot (= d_input of the AT).
-
-Usage
------
-  python Experiment1a.py --dataset data.csv --target-col Placement
+Experiment 1 – SPECTRA accuracy experiment.
 """
 
 import argparse
@@ -51,6 +16,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import torch
 
+# Setup Python path to be able to import all of our own code
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _AT_DIR = os.path.join(_HERE, "..")
 _AT_PKG_DIR = os.path.join(_AT_DIR, "AnomalyTransformer")
@@ -58,6 +24,9 @@ sys.path.insert(0, _AT_DIR)
 sys.path.insert(0, _AT_PKG_DIR)
 sys.path.insert(0, _HERE)
 
+from AnomalyTransformer import train as at_train
+from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
+from AnomalyTransformer.dataset import get_dataloader, split_data
 from Experiments.jobs.snapshot_trainer_a import (
     EightKMLP,
     FourKMLP,
@@ -68,42 +37,44 @@ from Experiments.jobs.snapshot_trainer_a import (
 )
 from Experiments.jobs.snapshot_trainer_a import run as snapshot_run
 
-from AnomalyTransformer import train as at_train
-from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
-from AnomalyTransformer.dataset import get_dataloader, split_data
-
 MODEL_CLASSES = [FourKMLP, SixKMLP, EightKMLP, TenKMLP, TwelveKMLP]
 EFF_SIGNAL_COL = 2
 
-# ---------------------------------------------------------------------------
-# AT helpers
-# ---------------------------------------------------------------------------
-
 
 def _train_at(miner_snaps, window_size, at_cfg, device):
-    """Train AT on miner snapshots.
+    """Train an Anomaly Transformer on miner snapshots.
 
-    Returns (model, threshold, norm_mean, norm_std), or (None,)*4 if the
-    snapshot sequence is too short for the given window_size.
+    Returns either:
+      1. (model, threshold, norm_mean, norm_std) normally
+      2. (None, None, None, None) if the snapshot sequence
+         is too short for the given window_size.
     """
+    # Return early if the window size isn't big enough
     if len(miner_snaps) < window_size * 3:
         return None, None, None, None
 
+    # Split data
     train_data, val_data, test_data = split_data(miner_snaps)
     if len(val_data) < window_size or len(test_data) < window_size:
         return None, None, None, None
 
+    # Calculate the mean and standard deviation of the training data
     norm_mean = train_data.mean(axis=0)
     norm_std = train_data.std(axis=0) + 1e-8
 
     def norm(x):
+        """Helper function"""
         return (x - norm_mean) / norm_std
 
+    # Create dataloaders for training and validation
     train_loader = get_dataloader(norm(train_data), window_size, at_cfg["batch_size"])
     val_loader = get_dataloader(
         norm(val_data), window_size, at_cfg["batch_size"], shuffle=False
     )
 
+    # Define model and put it on the device for training
+    # Hyperparameters are set by the CLI args. Defaults are set too
+    #  if we don't want to set them ourselves.
     model = ATModel(
         d_input=miner_snaps.shape[1],
         d_model=at_cfg["d_model"],
@@ -112,6 +83,7 @@ def _train_at(miner_snaps, window_size, at_cfg, device):
         n_layers=at_cfg["n_layers"],
     ).to(device)
 
+    # Train the model
     at_train.train(
         model,
         train_loader,
@@ -123,6 +95,7 @@ def _train_at(miner_snaps, window_size, at_cfg, device):
         device=device,
     )
 
+    # Calculate validation score for return value
     val_scores = at_train.get_window_scores(model, val_loader, device)
     val_timeline = at_train.windows_to_timeline(val_scores, len(val_data))
     threshold = at_train.get_threshold(val_timeline, r=at_cfg["r"])
@@ -134,31 +107,38 @@ def _score_run(
     model, snaps, window_size, threshold, norm_mean, norm_std, at_cfg, device
 ):
     """Return fraction of timesteps flagged by the AT (or None if too short)."""
+    # Return early if the window size is too short
     if len(snaps) < window_size:
         return None
 
+    # Normalize the snapshots
     normalized = (snaps - norm_mean) / norm_std
+
+    # Create a dataloader for the normalized snapshots
     loader = get_dataloader(
         normalized, window_size, at_cfg["batch_size"], shuffle=False
     )
 
+    # Compute validation scores using the normalized data
     scores = at_train.get_window_scores(model, loader, device)
     timeline = at_train.windows_to_timeline(scores, len(normalized))
     flagged_frac = float((timeline > threshold).float().mean().item())
+
     return flagged_frac
 
 
-# ---------------------------------------------------------------------------
-# Main experiment
-# ---------------------------------------------------------------------------
 def resolve_device(device_arg):
     """Resolve the --device CLI choice ('auto' | 'cpu' | 'cuda') to a torch.device."""
+
     if device_arg == "cuda":
         if not torch.cuda.is_available():
             raise RuntimeError("--device cuda was requested but CUDA is not available")
+
         return torch.device("cuda")
+
     if device_arg == "cpu":
         return torch.device("cpu")
+
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
@@ -182,14 +162,16 @@ def run_experiment(
     benign_seed_base=1000,
     malicious_seed_base=2000,
 ):
+    # Determine which device to do training on
     device = resolve_device(device)
     print(f"Device: {device}")
 
+    # Set seeds
     torch.manual_seed(base_seed)
     np.random.seed(base_seed)
     print(f"Seed set to: {base_seed}")
 
-    # ── Dataset split ────────────────────────────────────────────────────────
+    # Split the dataset into chunks
     X_all, y_all = load_full_dataset(dataset_path, target_col)
     n_miner = int(len(X_all) * train_frac)
     X_miner, y_miner = X_all[:n_miner], y_all[:n_miner]
@@ -203,12 +185,17 @@ def run_experiment(
     all_results = []
 
     with tempfile.TemporaryDirectory() as tmpdir:
+        # Conduct the experiment per model class
         for model_class in MODEL_CLASSES:
             model_class_str = model_class.__name__
 
-            # ── Miner phase ──────────────────────────────────────────────────
+            # Miner phase
             print("  [Miner] Training model and collecting snapshots...")
+
+            # Set output path for miner logs/stats
             miner_csv = os.path.join(tmpdir, f"miner_{model_class_str}.csv")
+
+            # Train the miner on the data and collect snapshots
             miner_snaps = snapshot_run(
                 data_path=dataset_path,
                 target_col=target_col,
@@ -228,32 +215,45 @@ def run_experiment(
                 f"  [Miner] {len(miner_snaps)} snapshots  (shape {miner_snaps.shape})"
             )
 
-            # ── AT training phase ────────────────────────────────────────────
+            # AT training phase
             print("  [AT] Training Anomaly Transformer on miner snapshots...")
+
+            # Train the anomaly detector
             at_model, threshold, norm_mean, norm_std = _train_at(
                 miner_snaps, window_size, at_cfg, device
             )
+
+            # Handle possible error in anomaly detector training
             if at_model is None:
                 raise RuntimeError(
                     f"need ≥ {window_size * 3} miner snapshots (got {len(miner_snaps)}). "
                     "Increase --miner-epochs."
                 )
+
             print(f"  [AT] Threshold: {threshold:.4f}")
 
+            # Frankly idk what this part is actually doing. Ask Alex to explain
             miner_eff_signal = miner_snaps[:, EFF_SIGNAL_COL]
             eff_signal_mean = float(miner_eff_signal.mean())
             eff_signal_cutoff = eff_signal_mean * eff_signal_ratio
+
             print(
                 f"  [EffSignal] miner mean={eff_signal_mean:.5f}  "
                 f"cutoff={eff_signal_cutoff:.5f} (eff_signal_ratio={eff_signal_ratio})"
             )
 
-            # ── Scientist phase ──────────────────────────────────────────────
+            # Scientist phase
             run_records = []
 
+            # Train `n_benign` scientists without flipping gradients
             for i in range(n_benign):
+                # Compute seed so each scientist is training a different model
                 seed = base_seed + benign_seed_base + i
+
+                # Set scientist output logfile
                 sci_csv = os.path.join(tmpdir, f"sci_ben_{i}.csv")
+
+                # Train the scientist model and collect snapshots
                 sci_snaps = snapshot_run(
                     data_path=dataset_path,
                     target_col=target_col,
@@ -270,6 +270,7 @@ def run_experiment(
                     model_class_str=model_class_str,
                 )
 
+                # Score the scientists snapshots using the anomaly detector
                 frac = _score_run(
                     at_model,
                     sci_snaps,
@@ -280,23 +281,36 @@ def run_experiment(
                     at_cfg,
                     device,
                 )
+
+                # Alex's stuff
                 eff_mean = float(sci_snaps[:, EFF_SIGNAL_COL].mean())
                 at_pred = (1 if frac > flag_frac else 0) if frac is not None else -1
                 eff_pred = 1 if eff_mean < eff_signal_cutoff else 0
+
+                # Determine the actual anomalous/benign prediction of the scientist's training
                 pred = (
                     at_pred
                     if at_pred < 0
                     else (1 if (at_pred == 1 or eff_pred == 1) else 0)
                 )
+
+                # Track results
                 run_records.append({"actual": 0, "predicted": pred, "frac": frac})
                 frac_str = f"{frac:.3f}" if frac is not None else "N/A"
+
                 print(
                     f"  Benign   run {i+1:2d}: flagged={frac_str}  → {'BAD' if pred == 1 else 'ok'}"
                 )
 
+            # Repeat the same process but for malicious scientists with anomalies
             for i in range(n_malicious):
+                # Compute seed
                 seed = base_seed + malicious_seed_base + i
+
+                # Set logfile
                 sci_csv = os.path.join(tmpdir, f"sci_mal_{i}.csv")
+
+                # Train & collect snapshots
                 sci_snaps = snapshot_run(
                     data_path=dataset_path,
                     target_col=target_col,
@@ -313,6 +327,7 @@ def run_experiment(
                     model_class_str=model_class_str,
                 )
 
+                # Score snapshots
                 frac = _score_run(
                     at_model,
                     sci_snaps,
@@ -324,27 +339,32 @@ def run_experiment(
                     device,
                 )
 
+                # Alex's stuff
                 eff_mean = float(sci_snaps[:, EFF_SIGNAL_COL].mean())
                 at_pred = (1 if frac > flag_frac else 0) if frac is not None else -1
                 eff_pred = 1 if eff_mean < eff_signal_cutoff else 0
+
+                # Compute actual prediction
                 pred = (
                     at_pred
                     if at_pred < 0
                     else (1 if (at_pred == 1 or eff_pred == 1) else 0)
                 )
+
+                # Track
                 run_records.append({"actual": 1, "predicted": pred, "frac": frac})
                 frac_str = f"{frac:.3f}" if frac is not None else "N/A"
+
                 print(
                     f"  Malicious run {i+1:2d}: flagged={frac_str}  → {'BAD' if pred == 1 else 'ok'}"
                 )
 
-            # ── Metrics ──────────────────────────────────────────────────────
+            # Compute metrics for comparison and evaluation
             valid = [r for r in run_records if r["predicted"] >= 0]
             tp = sum(1 for r in valid if r["actual"] == 1 and r["predicted"] == 1)
             fp = sum(1 for r in valid if r["actual"] == 0 and r["predicted"] == 1)
             tn = sum(1 for r in valid if r["actual"] == 0 and r["predicted"] == 0)
             fn = sum(1 for r in valid if r["actual"] == 1 and r["predicted"] == 0)
-
             precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
             recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
             f1 = (
@@ -356,6 +376,7 @@ def run_experiment(
             print(f"\n  TP={tp}  FP={fp}  TN={tn}  FN={fn}")
             print(f"  Precision={precision:.3f}  Recall={recall:.3f}  " f"F1={f1:.3f}")
 
+            # Track results
             all_results.append(
                 {
                     "model_class": model_class_str,
@@ -369,19 +390,28 @@ def run_experiment(
                 }
             )
 
-    # ── Outputs ──────────────────────────────────────────────────────────────
+            # Repeat for the number of models that we're attempting in this run
+
+    # Outputs
     if out_csv and all_results:
+        # Define the fields that we're outputting
         fields = ["model_class", "tp", "fp", "tn", "fn", "precision", "recall", "f1"]
+
+        # Create a writable file
         with open(out_csv, "w", newline="") as f:
+            # Write the data
             writer = csv.DictWriter(f, fieldnames=fields)
             writer.writeheader()
             writer.writerows(all_results)
+
         print(f"\nSaved results → {out_csv}")
 
     if out_png and all_results:
+        # Define axes values
         sizes = ["4k", "6k", "8k", "10k", "12k"]
         f1s = [r["f1"] for r in all_results]
 
+        # Create the figure
         fig, ax = plt.subplots(figsize=(9, 5))
         ax.plot(sizes, f1s, "b-o", label="F1 score")
         ax.set_xlabel("Model Size")
@@ -394,18 +424,15 @@ def run_experiment(
         ax.legend()
         ax.grid(True)
         fig.tight_layout()
-        fig.savefig(out_png)
+        fig.savefig(out_png)  # Save to file
+
         print(f"Saved plot → {out_png}")
 
     return all_results
 
 
-# ---------------------------------------------------------------------------
-# CLI
-# ---------------------------------------------------------------------------
-
-
 def parse_args():
+    """Parses the command line arguments using Python's built-in `argparse` library."""
     p = argparse.ArgumentParser(
         description="SPECTRA Experiment 0",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -493,8 +520,9 @@ def parse_args():
 
 if __name__ == "__main__":
     print("Started python")
-    args = parse_args()
+    args = parse_args()  # Parse CLI args
 
+    # Define configs
     miner_snap_cfg = {
         "batch_size": args.miner_batch_size,
         "n_epochs": args.miner_epochs,
@@ -522,7 +550,9 @@ if __name__ == "__main__":
         "batch_size": args.at_batch_size,
     }
 
+    # Iterate over the list of gradient flippins to be done
     for flip_frac in [0.1, 0.2, 0.3, 0.4, 0.5]:
+        # Define final output CSV and PNG file paths
         csv_filename = Path(args.out_csv)
         csv_name = csv_filename.with_stem(csv_filename.stem + f"_{flip_frac}")
         png_filename = Path(args.out)
@@ -534,6 +564,7 @@ if __name__ == "__main__":
 
         print(f"\tSaving experiment results in {csv_name} & {png_name}.")
 
+        # Run the experiment using the computed paths and the CLI args/defaults
         run_experiment(
             dataset_path=os.path.abspath(args.dataset),
             target_col=args.target_col,

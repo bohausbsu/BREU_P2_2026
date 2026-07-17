@@ -1,5 +1,6 @@
 """
 Experiment 1 – SPECTRA runtime experiment.
+
 Usage
 -----
   # For FFNN
@@ -20,6 +21,7 @@ import time
 
 import torch
 
+# Set paths for our scripts so that imports work properly
 _HERE = os.path.dirname(os.path.abspath(__file__))
 _AT_DIR = os.path.join(_HERE, "..")
 _AT_PKG_DIR = os.path.join(_AT_DIR, "AnomalyTransformer")
@@ -27,21 +29,24 @@ sys.path.insert(0, _AT_DIR)
 sys.path.insert(0, _AT_PKG_DIR)
 sys.path.insert(0, _HERE)
 
-from Experiments.jobs.snapshot_trainer_a import (EightKMLP, FourKMLP, SixKMLP, TenKMLP,
-                                TwelveKMLP)
-from Experiments.jobs.snapshot_trainer_a import load_full_dataset as load_full_dataset_a
-from Experiments.jobs.snapshot_trainer_a import run as snapshot_run_a
-from Experiments.jobs.snapshot_trainer_b import (EightKCNN, FourKCNN, SixKCNN, TenKCNN,
-                                TwelveKCNN)
-from Experiments.jobs.snapshot_trainer_b import load_full_dataset as load_full_dataset_b
-from Experiments.jobs.snapshot_trainer_b import run as snapshot_run_b
-from Experiments.jobs.snapshot_trainer_c import EightKAE, FourKAE, SixKAE, TenKAE, TwelveKAE
-from Experiments.jobs.snapshot_trainer_c import load_full_dataset as load_full_dataset_x
-from Experiments.jobs.snapshot_trainer_c import run as snapshot_run_c
-
 from AnomalyTransformer import train as at_train
 from AnomalyTransformer.AnomalyAttention import AnomalyTransformer as ATModel
 from AnomalyTransformer.dataset import get_dataloader, split_data
+from Experiments.jobs.snapshot_trainer_a import (EightKMLP, FourKMLP, SixKMLP,
+                                                 TenKMLP, TwelveKMLP)
+from Experiments.jobs.snapshot_trainer_a import \
+    load_full_dataset as load_full_dataset_a
+from Experiments.jobs.snapshot_trainer_a import run as snapshot_run_a
+from Experiments.jobs.snapshot_trainer_b import (EightKCNN, FourKCNN, SixKCNN,
+                                                 TenKCNN, TwelveKCNN)
+from Experiments.jobs.snapshot_trainer_b import \
+    load_full_dataset as load_full_dataset_b
+from Experiments.jobs.snapshot_trainer_b import run as snapshot_run_b
+from Experiments.jobs.snapshot_trainer_c import (EightKAE, FourKAE, SixKAE,
+                                                 TenKAE, TwelveKAE)
+from Experiments.jobs.snapshot_trainer_c import \
+    load_full_dataset as load_full_dataset_x
+from Experiments.jobs.snapshot_trainer_c import run as snapshot_run_c
 
 EFF_SIGNAL_COL = 2
 
@@ -57,6 +62,7 @@ FAMILY_SNAPSHOT_RUN = {
     "ae": snapshot_run_c,
 }
 
+# This is just here so my LSP doesn't scream at me
 _MODEL_CLASS_REGISTRY = {
     "FourKMLP": FourKMLP,
     "SixKMLP": SixKMLP,
@@ -77,6 +83,7 @@ _MODEL_CLASS_REGISTRY = {
 
 
 def _train_at(miner_snaps, window_size, at_cfg, device):
+    """Same function as the Experiment1a.py"""
     if len(miner_snaps) < window_size * 3:
         return None, None, None, None
 
@@ -88,6 +95,7 @@ def _train_at(miner_snaps, window_size, at_cfg, device):
     norm_std = train_data.std(axis=0) + 1e-8
 
     def norm(x):
+        """Same function as the Experiment1a.py"""
         return (x - norm_mean) / norm_std
 
     train_loader = get_dataloader(norm(train_data), window_size, at_cfg["batch_size"])
@@ -124,6 +132,7 @@ def _train_at(miner_snaps, window_size, at_cfg, device):
 def _score_run(
     model, snaps, window_size, threshold, norm_mean, norm_std, at_cfg, device
 ):
+    """Same function as the Experiment1a.py"""
     if len(snaps) < window_size:
         return None
 
@@ -140,6 +149,7 @@ def _score_run(
 
 
 def resolve_device(device_arg):
+    """Same function as the Experiment1a.py"""
     if device_arg == "cuda":
         if not torch.cuda.is_available():
             raise RuntimeError("--device cuda was requested but CUDA is not available")
@@ -176,15 +186,21 @@ def run_experiment(
     image_size=32,
     max_samples=None,
 ):
+    # Set device
     device = resolve_device(device)
+
+    # Set experiment variables
     snapshot_run = FAMILY_SNAPSHOT_RUN[family]
     model_names = FAMILY_MODEL_NAMES[family]
     experiment_id = f"rt_{family}"
 
     print(f"Family: {family}  |  Device: {device}  |  seed: {seed}")
-    script_t0 = time.perf_counter()
 
+    # Start time
+    script_t0 = time.perf_counter()
     t0 = time.perf_counter()
+
+    # Load proper dataset depending on which type of model we're testing
     if family == "ffnn":
         X_all, y_all = load_full_dataset_a(dataset_path, target_col)
     elif family == "cnn":
@@ -197,7 +213,8 @@ def run_experiment(
 
     dataset_load_time = time.perf_counter() - t0
 
-    n_miner = int(len(X_all) * train_frac)
+    # Split into data and labels
+    n_miner = int(len(X_all) * train_frac)  # Size of the dataset
     X_miner = X_all[:n_miner]
     X_sci = X_all
     y_miner = y_all[:n_miner] if y_all is not None else None
@@ -209,6 +226,7 @@ def run_experiment(
     )
 
     def _base_kwargs(is_malicious, run_seed, X_data, y_data, model_name):
+        """Arguments to the run function based on the model."""
         if family == "ffnn":
             return dict(
                 data_path=dataset_path,
@@ -235,6 +253,7 @@ def run_experiment(
                 device=device,
             )
 
+        # Else it's the auto-encoder (ae)
         return dict(
             data_root=dataset_root,
             is_malicious=is_malicious,
@@ -245,14 +264,16 @@ def run_experiment(
             device=device,
         )
 
+    # Containers
     all_results = []
     grand_miner_time = grand_scientist_time = grand_at_time = 0.0
 
+    # Iterate through the different models
     for model_name in model_names:
         print(f"\n=== {model_name} ===")
         model_t0 = time.perf_counter()
-
         t0 = time.perf_counter()
+
         miner_kwargs = _base_kwargs(False, seed, X_miner, y_miner, model_name)
         miner_kwargs.update(
             out_csv=None,
@@ -261,24 +282,29 @@ def run_experiment(
             lr=miner_snap_cfg["lr"],
         )
 
+        # Get snapshots out of the miner
         miner_snaps = snapshot_run(**miner_kwargs)
+
         miner_time = time.perf_counter() - t0
 
         print(f"  [Miner] {len(miner_snaps)} snapshots  ({miner_time:.2f}s)")
 
+        # Train the anomaly detector
         t0 = time.perf_counter()
         at_model, threshold, norm_mean, norm_std = _train_at(
             miner_snaps, window_size, at_cfg, device
         )
-
         at_train_time = time.perf_counter() - t0
+
         if at_model is None:
             raise RuntimeError(
                 f"need >= {window_size * 3} miner snapshots (got {len(miner_snaps)}). "
                 "Increase --miner-epochs."
             )
+
         print(f"  [AT] trained ({at_train_time:.2f}s), threshold={threshold:.4f}")
 
+        # Alex's stuff again
         miner_eff_signal = miner_snaps[:, EFF_SIGNAL_COL]
         eff_signal_mean = float(miner_eff_signal.mean())
         eff_signal_cutoff = eff_signal_mean * eff_signal_ratio
@@ -288,6 +314,7 @@ def run_experiment(
         run_records = []
 
         def _scientist_run(is_malicious, run_seed, label, actual):
+            """Train scientist models and get the snapshots."""
             nonlocal scientist_time_total, at_score_time_total
 
             t_train0 = time.perf_counter()
@@ -334,19 +361,22 @@ def run_experiment(
                 f"-> {'BAD' if pred == 1 else 'ok'}"
             )
 
+        # Train and collect regular scientist snapshots
         for i in range(n_benign):
             _scientist_run(False, benign_seed_base + i, f"ben_{i}", 0)
 
+        # Train and collect malicious scientist snapshots
         for i in range(n_malicious):
             _scientist_run(True, malicious_seed_base + i, f"mal_{i}", 1)
 
+        # Compute total time
         at_time_total = at_train_time + at_score_time_total
 
+        # Compute metrics
         tp = sum(1 for r in run_records if r["actual"] == 1 and r["predicted"] == 1)
         fp = sum(1 for r in run_records if r["actual"] == 0 and r["predicted"] == 1)
         tn = sum(1 for r in run_records if r["actual"] == 0 and r["predicted"] == 0)
         fn = sum(1 for r in run_records if r["actual"] == 1 and r["predicted"] == 0)
-
         precision = tp / (tp + fp) if (tp + fp) > 0 else 0.0
         recall = tp / (tp + fn) if (tp + fn) > 0 else 0.0
         f1 = (
@@ -392,6 +422,7 @@ def run_experiment(
             }
         )
 
+    # Compute overall totals for metrics and times
     grand_total_time = grand_miner_time + grand_scientist_time + grand_at_time
     grand_tp = sum(r["tp"] for r in all_results)
     grand_fp = sum(r["fp"] for r in all_results)
@@ -443,6 +474,7 @@ def run_experiment(
         f"  (dataset load: {dataset_load_time:.2f}s, full script wall-clock: {script_total_time:.2f}s)"
     )
 
+    # Output to files
     if out_csv and all_results:
         fields = [
             "experiment",
@@ -474,6 +506,7 @@ def run_experiment(
 
 
 def parse_args():
+    """Defines the CLI args and parses them."""
     p = argparse.ArgumentParser(
         description="SPECTRA runtime profiling (FFNN, CNN, or AE)",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter,
@@ -560,8 +593,9 @@ def parse_args():
 
 
 if __name__ == "__main__":
-    args = parse_args()
+    args = parse_args()  # Parse CLI args
 
+    # Define configs
     miner_snap_cfg = {
         "batch_size": args.miner_batch_size,
         "n_epochs": args.miner_epochs,
@@ -587,9 +621,11 @@ if __name__ == "__main__":
         "batch_size": args.at_batch_size,
     }
 
+    # Compute seeds
     benign_seed_base = 1000 + args.seed * 100
     malicious_seed_base = 2000 + args.seed * 100
 
+    # Run the experiment
     run_experiment(
         family=args.model,
         window_size=args.window_size,
