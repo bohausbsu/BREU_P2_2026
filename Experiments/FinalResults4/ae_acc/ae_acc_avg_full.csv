@@ -1,0 +1,6 @@
+n_seeds,model_class,size_label,precision,recall,f1
+5,FourKAE,4k,0.51112,1.0,0.67622
+5,SixKAE,6k,0.51764,1.0,0.6814999999999999
+5,EightKAE,8k,0.61426,1.0,0.75964
+5,TenKAE,10k,0.54972,1.0,0.70748
+5,TwelveKAE,12k,0.59294,1.0,0.73336

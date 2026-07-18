@@ -117,7 +117,7 @@ def parse_args():
     )
     p.add_argument(
         "--pattern",
-        default="ae_acc_[0-5]*-0.1-0.01-0.5_0.*.csv",
+        default="ffnn_acc_[0-5]*-0.1-0.01-0.4_0.*.csv",
         help="Glob (relative to --results-dir) matching per-seed result CSVs",
     )
     p.add_argument("--out-csv", required=True, help="Path for the averaged CSV")
