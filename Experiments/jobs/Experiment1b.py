@@ -45,7 +45,7 @@ import matplotlib.pyplot as plt
 import torch
 
 _HERE = os.path.dirname(os.path.abspath(__file__))
-_AT_DIR = os.path.join(_HERE, "..")
+_AT_DIR = os.path.join(_HERE, "../..")
 _AT_PKG_DIR = os.path.join(_AT_DIR, "AnomalyTransformer")
 sys.path.insert(0, _AT_DIR)
 sys.path.insert(0, _AT_PKG_DIR)

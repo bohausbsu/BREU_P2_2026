@@ -27,7 +27,7 @@ mkdir -p cnn_acc
 
 FLAG_FRAC=0.1
 AT_R=0.01
-EFF_SIGNAL_RATIO=0.5
+EFF_SIGNAL_RATIO=0.4
 
 for i in {1..5}; do
 	echo "Run $i of 5"
