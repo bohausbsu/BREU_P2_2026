@@ -1,2 +1,0 @@
-model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_time_sec,scientist_time_sec,at_time_sec,total_time_sec,model_wall_time_sec
-FourKCNN,cnn,10.0,1.0,9.0,0.0,0.9091000000000001,1.0,0.9524000000000001,17.227,236.2006,7.304500000000001,260.7321,260.743

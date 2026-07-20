@@ -1,2 +1,0 @@
-model_class,family,tp,fp,tn,fn,precision,recall,f1,miner_time_sec,scientist_time_sec,at_time_sec,total_time_sec,model_wall_time_sec
-FourKAE,ae,10.0,9.8,0.2,0.0,0.50526,1.0,0.6713,6.89,303.2366,13.545099999999998,323.6718,323.6819
